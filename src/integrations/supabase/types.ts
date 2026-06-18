@@ -14,7 +14,110 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categorias: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
+      drink_ingredientes: {
+        Row: {
+          drink_id: string
+          ingrediente_id: string
+        }
+        Insert: {
+          drink_id: string
+          ingrediente_id: string
+        }
+        Update: {
+          drink_id?: string
+          ingrediente_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_ingredientes_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_ingredientes_ingrediente_id_fkey"
+            columns: ["ingrediente_id"]
+            isOneToOne: false
+            referencedRelation: "ingredientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drinks: {
+        Row: {
+          created_at: string
+          id: string
+          imagem_url: string | null
+          nome: string
+          preparo: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          nome: string
+          preparo?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          imagem_url?: string | null
+          nome?: string
+          preparo?: string
+        }
+        Relationships: []
+      }
+      ingredientes: {
+        Row: {
+          categoria_id: string | null
+          created_at: string
+          id: string
+          nome: string
+          quantidade: number
+        }
+        Insert: {
+          categoria_id?: string | null
+          created_at?: string
+          id?: string
+          nome: string
+          quantidade?: number
+        }
+        Update: {
+          categoria_id?: string | null
+          created_at?: string
+          id?: string
+          nome?: string
+          quantidade?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ingredientes_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "categorias"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
