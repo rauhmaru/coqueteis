@@ -9,38 +9,63 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
 
+const DrinksRoute = DrinksRouteImport.update({
+  id: '/drinks',
+  path: '/drinks',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DrinksIndexRoute = DrinksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DrinksRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/drinks': typeof DrinksRouteWithChildren
+  '/drinks/': typeof DrinksIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/drinks': typeof DrinksIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/drinks': typeof DrinksRouteWithChildren
+  '/drinks/': typeof DrinksIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/drinks' | '/drinks/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/drinks'
+  id: '__root__' | '/' | '/drinks' | '/drinks/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DrinksRoute: typeof DrinksRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/drinks': {
+      id: '/drinks'
+      path: '/drinks'
+      fullPath: '/drinks'
+      preLoaderRoute: typeof DrinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +73,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/drinks/': {
+      id: '/drinks/'
+      path: '/'
+      fullPath: '/drinks/'
+      preLoaderRoute: typeof DrinksIndexRouteImport
+      parentRoute: typeof DrinksRoute
+    }
   }
 }
 
+interface DrinksRouteChildren {
+  DrinksIndexRoute: typeof DrinksIndexRoute
+}
+
+const DrinksRouteChildren: DrinksRouteChildren = {
+  DrinksIndexRoute: DrinksIndexRoute,
+}
+
+const DrinksRouteWithChildren =
+  DrinksRoute._addFileChildren(DrinksRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DrinksRoute: DrinksRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
