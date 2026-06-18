@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
 
 export const Route = createFileRoute("/drinks/$id/")({
-  head: ({ loaderData }) => ({
-    meta: [{ title: `${loaderData?.nome ?? "Drink"} — Destilados & Coquetéis` }],
+  head: () => ({
+    meta: [{ title: "Drink — Destilados & Coquetéis" }],
   }),
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));

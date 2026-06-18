@@ -9,13 +9,29 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IngredientesRouteImport } from './routes/ingredientes'
 import { Route as DrinksRouteImport } from './routes/drinks'
+import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
+import { Route as DrinksNovoRouteImport } from './routes/drinks.novo'
+import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
+import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
+import { Route as DrinksIdEditarRouteImport } from './routes/drinks.$id.editar'
 
+const IngredientesRoute = IngredientesRouteImport.update({
+  id: '/ingredientes',
+  path: '/ingredientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DrinksRoute = DrinksRouteImport.update({
   id: '/drinks',
   path: '/drinks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CategoriasRoute = CategoriasRouteImport.update({
+  id: '/categorias',
+  path: '/categorias',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -28,42 +44,121 @@ const DrinksIndexRoute = DrinksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DrinksRoute,
 } as any)
+const DrinksNovoRoute = DrinksNovoRouteImport.update({
+  id: '/novo',
+  path: '/novo',
+  getParentRoute: () => DrinksRoute,
+} as any)
+const DrinksIdRoute = DrinksIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DrinksRoute,
+} as any)
+const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DrinksIdRoute,
+} as any)
+const DrinksIdEditarRoute = DrinksIdEditarRouteImport.update({
+  id: '/editar',
+  path: '/editar',
+  getParentRoute: () => DrinksIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/ingredientes': typeof IngredientesRoute
+  '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/drinks/novo': typeof DrinksNovoRoute
   '/drinks/': typeof DrinksIndexRoute
+  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/drinks/$id/': typeof DrinksIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
+  '/ingredientes': typeof IngredientesRoute
+  '/drinks/novo': typeof DrinksNovoRoute
   '/drinks': typeof DrinksIndexRoute
+  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/drinks/$id': typeof DrinksIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/ingredientes': typeof IngredientesRoute
+  '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/drinks/novo': typeof DrinksNovoRoute
   '/drinks/': typeof DrinksIndexRoute
+  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/drinks/$id/': typeof DrinksIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/drinks' | '/drinks/'
+  fullPaths:
+    | '/'
+    | '/categorias'
+    | '/drinks'
+    | '/ingredientes'
+    | '/drinks/$id'
+    | '/drinks/novo'
+    | '/drinks/'
+    | '/drinks/$id/editar'
+    | '/drinks/$id/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/drinks'
-  id: '__root__' | '/' | '/drinks' | '/drinks/'
+  to:
+    | '/'
+    | '/categorias'
+    | '/ingredientes'
+    | '/drinks/novo'
+    | '/drinks'
+    | '/drinks/$id/editar'
+    | '/drinks/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/categorias'
+    | '/drinks'
+    | '/ingredientes'
+    | '/drinks/$id'
+    | '/drinks/novo'
+    | '/drinks/'
+    | '/drinks/$id/editar'
+    | '/drinks/$id/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CategoriasRoute: typeof CategoriasRoute
   DrinksRoute: typeof DrinksRouteWithChildren
+  IngredientesRoute: typeof IngredientesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ingredientes': {
+      id: '/ingredientes'
+      path: '/ingredientes'
+      fullPath: '/ingredientes'
+      preLoaderRoute: typeof IngredientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/drinks': {
       id: '/drinks'
       path: '/drinks'
       fullPath: '/drinks'
       preLoaderRoute: typeof DrinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/categorias': {
+      id: '/categorias'
+      path: '/categorias'
+      fullPath: '/categorias'
+      preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -80,14 +175,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIndexRouteImport
       parentRoute: typeof DrinksRoute
     }
+    '/drinks/novo': {
+      id: '/drinks/novo'
+      path: '/novo'
+      fullPath: '/drinks/novo'
+      preLoaderRoute: typeof DrinksNovoRouteImport
+      parentRoute: typeof DrinksRoute
+    }
+    '/drinks/$id': {
+      id: '/drinks/$id'
+      path: '/$id'
+      fullPath: '/drinks/$id'
+      preLoaderRoute: typeof DrinksIdRouteImport
+      parentRoute: typeof DrinksRoute
+    }
+    '/drinks/$id/': {
+      id: '/drinks/$id/'
+      path: '/'
+      fullPath: '/drinks/$id/'
+      preLoaderRoute: typeof DrinksIdIndexRouteImport
+      parentRoute: typeof DrinksIdRoute
+    }
+    '/drinks/$id/editar': {
+      id: '/drinks/$id/editar'
+      path: '/editar'
+      fullPath: '/drinks/$id/editar'
+      preLoaderRoute: typeof DrinksIdEditarRouteImport
+      parentRoute: typeof DrinksIdRoute
+    }
   }
 }
 
+interface DrinksIdRouteChildren {
+  DrinksIdEditarRoute: typeof DrinksIdEditarRoute
+  DrinksIdIndexRoute: typeof DrinksIdIndexRoute
+}
+
+const DrinksIdRouteChildren: DrinksIdRouteChildren = {
+  DrinksIdEditarRoute: DrinksIdEditarRoute,
+  DrinksIdIndexRoute: DrinksIdIndexRoute,
+}
+
+const DrinksIdRouteWithChildren = DrinksIdRoute._addFileChildren(
+  DrinksIdRouteChildren,
+)
+
 interface DrinksRouteChildren {
+  DrinksIdRoute: typeof DrinksIdRouteWithChildren
+  DrinksNovoRoute: typeof DrinksNovoRoute
   DrinksIndexRoute: typeof DrinksIndexRoute
 }
 
 const DrinksRouteChildren: DrinksRouteChildren = {
+  DrinksIdRoute: DrinksIdRouteWithChildren,
+  DrinksNovoRoute: DrinksNovoRoute,
   DrinksIndexRoute: DrinksIndexRoute,
 }
 
@@ -96,7 +237,9 @@ const DrinksRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CategoriasRoute: CategoriasRoute,
   DrinksRoute: DrinksRouteWithChildren,
+  IngredientesRoute: IngredientesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
