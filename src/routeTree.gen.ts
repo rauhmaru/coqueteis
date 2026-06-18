@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IngredientesRouteImport } from './routes/ingredientes'
+import { Route as ImportarRouteImport } from './routes/importar'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as IndexRouteImport } from './routes/index'
@@ -22,6 +23,11 @@ import { Route as DrinksIdEditarRouteImport } from './routes/drinks.$id.editar'
 const IngredientesRoute = IngredientesRouteImport.update({
   id: '/ingredientes',
   path: '/ingredientes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportarRoute = ImportarRouteImport.update({
+  id: '/importar',
+  path: '/importar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrinksRoute = DrinksRouteImport.update({
@@ -69,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/drinks/novo': typeof DrinksNovoRoute
@@ -79,6 +86,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
+  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/novo': typeof DrinksNovoRoute
   '/drinks': typeof DrinksIndexRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/drinks/novo': typeof DrinksNovoRoute
@@ -103,6 +112,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categorias'
     | '/drinks'
+    | '/importar'
     | '/ingredientes'
     | '/drinks/$id'
     | '/drinks/novo'
@@ -113,6 +123,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/categorias'
+    | '/importar'
     | '/ingredientes'
     | '/drinks/novo'
     | '/drinks'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categorias'
     | '/drinks'
+    | '/importar'
     | '/ingredientes'
     | '/drinks/$id'
     | '/drinks/novo'
@@ -135,6 +147,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriasRoute: typeof CategoriasRoute
   DrinksRoute: typeof DrinksRouteWithChildren
+  ImportarRoute: typeof ImportarRoute
   IngredientesRoute: typeof IngredientesRoute
 }
 
@@ -145,6 +158,13 @@ declare module '@tanstack/react-router' {
       path: '/ingredientes'
       fullPath: '/ingredientes'
       preLoaderRoute: typeof IngredientesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/importar': {
+      id: '/importar'
+      path: '/importar'
+      fullPath: '/importar'
+      preLoaderRoute: typeof ImportarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drinks': {
@@ -239,6 +259,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriasRoute: CategoriasRoute,
   DrinksRoute: DrinksRouteWithChildren,
+  ImportarRoute: ImportarRoute,
   IngredientesRoute: IngredientesRoute,
 }
 export const routeTree = rootRouteImport

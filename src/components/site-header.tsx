@@ -6,6 +6,7 @@ const nav = [
   { to: "/drinks", label: "Drinks" },
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/categorias", label: "Categorias" },
+  { to: "/importar", label: "Importar" },
 ] as const;
 
 export function SiteHeader() {
