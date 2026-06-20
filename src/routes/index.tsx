@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Martini, FlaskConical, Search, ArrowRight } from "lucide-react";
+import { Martini, Search, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
@@ -93,25 +93,13 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          <StatCard
-            icon={<FlaskConical className="h-6 w-6" />}
-            label="Ingredientes cadastrados"
-            value={counts.ingredientes}
-            to="/ingredientes"
-          />
+        <section className="max-w-2xl mx-auto">
           <StatCard
             icon={<Martini className="h-6 w-6" />}
             label="Receitas cadastradas"
             value={counts.drinks}
             to="/drinks"
           />
-        </section>
-
-        <section className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
-          <QuickLink to="/drinks" title="Ver drinks" desc="Filtre por ingredientes disponíveis" />
-          <QuickLink to="/ingredientes" title="Ingredientes" desc="Estoque do seu bar" />
-          <QuickLink to="/categorias" title="Categorias" desc="Organize por tipo" />
         </section>
       </main>
     </div>
@@ -138,14 +126,3 @@ function StatCard({
   );
 }
 
-function QuickLink({ to, title, desc }: { to: string; title: string; desc: string }) {
-  return (
-    <Link
-      to={to}
-      className="rounded-lg border border-border bg-card/50 hover:bg-card p-4 hover:border-primary/60 transition-colors"
-    >
-      <div className="font-serif text-lg text-foreground">{title}</div>
-      <div className="text-xs text-muted-foreground mt-1">{desc}</div>
-    </Link>
-  );
-}
