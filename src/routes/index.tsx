@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Martini, FlaskConical, Search, ArrowRight } from "lucide-react";
+import { Martini, Search, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
