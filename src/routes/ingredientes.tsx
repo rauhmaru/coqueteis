@@ -16,6 +16,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/ingredientes")({
   head: () => ({
@@ -40,6 +41,7 @@ function IngredientesPage() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(categoriasQuery);
   const qc = useQueryClient();
+  const { canEdit } = useAuth();
   const [editing, setEditing] = useState<Ingrediente | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [nome, setNome] = useState("");
@@ -99,39 +101,41 @@ function IngredientesPage() {
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 grid sm:grid-cols-12 gap-3 items-end">
-          <div className="sm:col-span-4 space-y-1.5">
-            <Label htmlFor="nome">Nome</Label>
-            <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Gin London Dry" />
-          </div>
-          <div className="sm:col-span-4 space-y-1.5">
-            <Label>Tipo</Label>
-            <Select value={categoriaId} onValueChange={setCategoriaId}>
-              <SelectTrigger>
-                <SelectValue placeholder={categorias.length ? "Selecione" : "Cadastre categorias primeiro"} />
-              </SelectTrigger>
-              <SelectContent>
-                {categorias.map((c) => (
-                  <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="sm:col-span-2 space-y-1.5">
-            <Label htmlFor="qtd">Quantidade</Label>
-            <Input id="qtd" type="number" step="0.01" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
-          </div>
-          <div className="sm:col-span-2 flex gap-2">
-            <Button type="submit" disabled={saving} className="flex-1">
-              {editing ? <><Pencil className="h-4 w-4 mr-1" /> Atualizar</> : <><Plus className="h-4 w-4 mr-1" /> Adicionar</>}
-            </Button>
-            {editing && (
-              <Button type="button" variant="outline" size="icon" onClick={reset}>
-                <X className="h-4 w-4" />
+        {canEdit && (
+          <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 grid sm:grid-cols-12 gap-3 items-end">
+            <div className="sm:col-span-4 space-y-1.5">
+              <Label htmlFor="nome">Nome</Label>
+              <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Gin London Dry" />
+            </div>
+            <div className="sm:col-span-4 space-y-1.5">
+              <Label>Tipo</Label>
+              <Select value={categoriaId} onValueChange={setCategoriaId}>
+                <SelectTrigger>
+                  <SelectValue placeholder={categorias.length ? "Selecione" : "Cadastre categorias primeiro"} />
+                </SelectTrigger>
+                <SelectContent>
+                  {categorias.map((c) => (
+                    <SelectItem key={c.id} value={c.id}>{c.nome}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="sm:col-span-2 space-y-1.5">
+              <Label htmlFor="qtd">Quantidade</Label>
+              <Input id="qtd" type="number" step="0.01" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
+            </div>
+            <div className="sm:col-span-2 flex gap-2">
+              <Button type="submit" disabled={saving} className="flex-1">
+                {editing ? <><Pencil className="h-4 w-4 mr-1" /> Atualizar</> : <><Plus className="h-4 w-4 mr-1" /> Adicionar</>}
               </Button>
-            )}
-          </div>
-        </form>
+              {editing && (
+                <Button type="button" variant="outline" size="icon" onClick={reset}>
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+          </form>
+        )}
 
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full text-sm">
@@ -154,12 +158,18 @@ function IngredientesPage() {
                   </td>
                   <td className="px-4 py-3 text-right">{Number(ing.quantidade)}</td>
                   <td className="px-4 py-3 text-right space-x-1">
-                    <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
-                      <Pencil className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => setConfirmId(ing.id)}>
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    {canEdit ? (
+                      <>
+                        <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => setConfirmId(ing.id)}>
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
                   </td>
                 </tr>
               ))}

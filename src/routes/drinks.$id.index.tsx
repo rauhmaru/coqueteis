@@ -6,6 +6,7 @@ import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/drinks/$id/")({
   head: () => ({
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/drinks/$id/")({
 function DrinkDetail() {
   const { id } = Route.useParams();
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
+  const { canEdit } = useAuth();
   if (!drink) return null;
 
   return (
@@ -67,11 +69,13 @@ function DrinkDetail() {
                 {drink.preparo || <span className="text-muted-foreground italic">Sem instruções de preparo.</span>}
               </p>
             </div>
-            <Button asChild>
-              <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
-                <Pencil className="h-4 w-4 mr-2" /> Editar
-              </Link>
-            </Button>
+            {canEdit && (
+              <Button asChild>
+                <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
+                  <Pencil className="h-4 w-4 mr-2" /> Editar
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </main>
