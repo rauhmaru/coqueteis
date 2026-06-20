@@ -107,7 +107,7 @@ function GerarImagensPage() {
       toast.info("Nada para processar.");
       return;
     }
-    cancelarRef.cancelado = false;
+    cancelarRef.current.cancelado = false;
     setEmExecucao(true);
 
     // Marca como gerando
@@ -125,7 +125,7 @@ function GerarImagensPage() {
     const conc = Math.min(Math.max(1, concorrencia), 6);
 
     const worker = async () => {
-      while (fila.length && !cancelarRef.cancelado) {
+      while (fila.length && !cancelarRef.current.cancelado) {
         const id = fila.shift();
         if (!id) break;
         const item = itens.get(id);
@@ -173,7 +173,7 @@ function GerarImagensPage() {
   };
 
   const cancelar = () => {
-    cancelarRef.cancelado = true;
+    cancelarRef.current.cancelado = true;
     toast("Cancelando após o lote atual…");
   };
 
