@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IngredientesRouteImport } from './routes/ingredientes'
 import { Route as ImportarRouteImport } from './routes/importar'
+import { Route as GerarImagensRouteImport } from './routes/gerar-imagens'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as IndexRouteImport } from './routes/index'
@@ -28,6 +29,11 @@ const IngredientesRoute = IngredientesRouteImport.update({
 const ImportarRoute = ImportarRouteImport.update({
   id: '/importar',
   path: '/importar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GerarImagensRoute = GerarImagensRouteImport.update({
+  id: '/gerar-imagens',
+  path: '/gerar-imagens',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrinksRoute = DrinksRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/gerar-imagens': typeof GerarImagensRoute
   '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -86,6 +93,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
+  '/gerar-imagens': typeof GerarImagensRoute
   '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/novo': typeof DrinksNovoRoute
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/gerar-imagens': typeof GerarImagensRoute
   '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categorias'
     | '/drinks'
+    | '/gerar-imagens'
     | '/importar'
     | '/ingredientes'
     | '/drinks/$id'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/categorias'
+    | '/gerar-imagens'
     | '/importar'
     | '/ingredientes'
     | '/drinks/novo'
@@ -134,6 +145,7 @@ export interface FileRouteTypes {
     | '/'
     | '/categorias'
     | '/drinks'
+    | '/gerar-imagens'
     | '/importar'
     | '/ingredientes'
     | '/drinks/$id'
@@ -147,6 +159,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CategoriasRoute: typeof CategoriasRoute
   DrinksRoute: typeof DrinksRouteWithChildren
+  GerarImagensRoute: typeof GerarImagensRoute
   ImportarRoute: typeof ImportarRoute
   IngredientesRoute: typeof IngredientesRoute
 }
@@ -165,6 +178,13 @@ declare module '@tanstack/react-router' {
       path: '/importar'
       fullPath: '/importar'
       preLoaderRoute: typeof ImportarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gerar-imagens': {
+      id: '/gerar-imagens'
+      path: '/gerar-imagens'
+      fullPath: '/gerar-imagens'
+      preLoaderRoute: typeof GerarImagensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drinks': {
@@ -259,6 +279,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CategoriasRoute: CategoriasRoute,
   DrinksRoute: DrinksRouteWithChildren,
+  GerarImagensRoute: GerarImagensRoute,
   ImportarRoute: ImportarRoute,
   IngredientesRoute: IngredientesRoute,
 }

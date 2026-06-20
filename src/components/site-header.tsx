@@ -7,6 +7,7 @@ const nav = [
   { to: "/ingredientes", label: "Ingredientes" },
   { to: "/categorias", label: "Categorias" },
   { to: "/importar", label: "Importar" },
+  { to: "/gerar-imagens", label: "Imagens" },
 ] as const;
 
 export function SiteHeader() {
