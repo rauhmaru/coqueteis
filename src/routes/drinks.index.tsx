@@ -13,6 +13,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
@@ -37,6 +38,7 @@ function DrinksList() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const qc = useQueryClient();
+  const { canEdit } = useAuth();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
@@ -86,10 +88,11 @@ function DrinksList() {
               {drinks.length} {drinks.length === 1 ? "receita cadastrada" : "receitas cadastradas"}
             </p>
           </div>
-          <Button asChild>
-            <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
-          </Button>
-        </div>
+          {canEdit && (
+            <Button asChild>
+              <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
+            </Button>
+          )}
 
         {/* Filtro */}
         <section className="rounded-xl border border-border bg-card p-5 space-y-3">
