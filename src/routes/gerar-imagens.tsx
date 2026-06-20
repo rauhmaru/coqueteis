@@ -62,12 +62,11 @@ function GerarImagensPage() {
   const [itens, setItens] = useState<Map<string, Item>>(new Map());
   const [concorrencia, setConcorrencia] = useState(3);
   const [emExecucao, setEmExecucao] = useState(false);
-  const cancelarRef = useState({ cancelado: false })[0];
+  const cancelarRef = useRef({ cancelado: false });
 
   const lista = semImagemQuery.data ?? [];
 
-  // Inicializa map quando dados carregam ou mudam de tamanho
-  useMemo(() => {
+  useEffect(() => {
     if (!lista.length) return;
     setItens((prev) => {
       const next = new Map(prev);
