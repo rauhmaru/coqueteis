@@ -25,7 +25,7 @@ const CATEGORIAS_DRINKS = [
   { id: "Espumantes", desc: "Mimosa, Bellini, Spritz" },
 ] as const;
 
-export const Route = createFileRoute("/importar")({
+export const Route = createFileRoute("/_authenticated/importar")({
   head: () => ({
     meta: [
       { title: "Importar drinks — Destilados & Coquetéis" },

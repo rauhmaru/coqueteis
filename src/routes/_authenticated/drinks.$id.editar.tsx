@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { drinkQuery, ingredientesQuery } from "@/lib/queries";
 import { DrinkForm } from "@/components/drink-form";
 
-export const Route = createFileRoute("/drinks/$id/editar")({
+export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
   head: () => ({ meta: [{ title: "Editar drink — Destilados & Coquetéis" }] }),
   loader: async ({ context, params }) => {
     const [drink] = await Promise.all([
