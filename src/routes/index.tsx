@@ -93,25 +93,13 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="grid sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
-          <StatCard
-            icon={<FlaskConical className="h-6 w-6" />}
-            label="Ingredientes cadastrados"
-            value={counts.ingredientes}
-            to="/ingredientes"
-          />
+        <section className="max-w-2xl mx-auto">
           <StatCard
             icon={<Martini className="h-6 w-6" />}
             label="Receitas cadastradas"
             value={counts.drinks}
             to="/drinks"
           />
-        </section>
-
-        <section className="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto pt-4">
-          <QuickLink to="/drinks" title="Ver drinks" desc="Filtre por ingredientes disponíveis" />
-          <QuickLink to="/ingredientes" title="Ingredientes" desc="Estoque do seu bar" />
-          <QuickLink to="/categorias" title="Categorias" desc="Organize por tipo" />
         </section>
       </main>
     </div>
