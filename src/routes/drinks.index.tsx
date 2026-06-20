@@ -93,6 +93,8 @@ function DrinksList() {
               <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
             </Button>
           )}
+        </div>
+
 
         {/* Filtro */}
         <section className="rounded-xl border border-border bg-card p-5 space-y-3">
