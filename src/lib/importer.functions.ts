@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export type ReceitaIA = {
   nome: string;
@@ -35,8 +36,14 @@ function validar(input: unknown) {
 }
 
 export const gerarReceitasIA = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(validar)
-  .handler(async ({ data }): Promise<{ receitas: ReceitaIA[] }> => {
+  .handler(async ({ data, context }): Promise<{ receitas: ReceitaIA[] }> => {
+    const { data: pode, error: roleErr } = await context.supabase
+      .rpc("can_edit", { _user_id: context.userId });
+    if (roleErr) throw new Error(roleErr.message);
+    if (!pode) throw new Error("Sem permissão para importar receitas");
+
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada");
 
