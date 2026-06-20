@@ -126,14 +126,3 @@ function StatCard({
   );
 }
 
-function QuickLink({ to, title, desc }: { to: string; title: string; desc: string }) {
-  return (
-    <Link
-      to={to}
-      className="rounded-lg border border-border bg-card/50 hover:bg-card p-4 hover:border-primary/60 transition-colors"
-    >
-      <div className="font-serif text-lg text-foreground">{title}</div>
-      <div className="text-xs text-muted-foreground mt-1">{desc}</div>
-    </Link>
-  );
-}
