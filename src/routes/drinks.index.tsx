@@ -13,6 +13,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
@@ -37,6 +38,7 @@ function DrinksList() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const qc = useQueryClient();
+  const { canEdit } = useAuth();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
@@ -86,10 +88,13 @@ function DrinksList() {
               {drinks.length} {drinks.length === 1 ? "receita cadastrada" : "receitas cadastradas"}
             </p>
           </div>
-          <Button asChild>
-            <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
-          </Button>
+          {canEdit && (
+            <Button asChild>
+              <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
+            </Button>
+          )}
         </div>
+
 
         {/* Filtro */}
         <section className="rounded-xl border border-border bg-card p-5 space-y-3">
@@ -166,21 +171,23 @@ function DrinksList() {
                     </div>
                   </div>
                 </Link>
-                <div className="flex border-t border-border">
-                  <Link
-                    to="/drinks/$id/editar"
-                    params={{ id: d.id }}
-                    className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
-                  >
-                    <Pencil className="h-3 w-3" /> Editar
-                  </Link>
-                  <button
-                    onClick={() => setConfirmId(d.id)}
-                    className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
-                  >
-                    <Trash2 className="h-3 w-3" /> Remover
-                  </button>
-                </div>
+                {canEdit && (
+                  <div className="flex border-t border-border">
+                    <Link
+                      to="/drinks/$id/editar"
+                      params={{ id: d.id }}
+                      className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                    >
+                      <Pencil className="h-3 w-3" /> Editar
+                    </Link>
+                    <button
+                      onClick={() => setConfirmId(d.id)}
+                      className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                    >
+                      <Trash2 className="h-3 w-3" /> Remover
+                    </button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

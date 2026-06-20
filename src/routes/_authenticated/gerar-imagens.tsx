@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/gerar-imagens")({
+export const Route = createFileRoute("/_authenticated/gerar-imagens")({
   head: () => ({
     meta: [
       { title: "Gerar imagens de drinks — Destilados & Coquetéis" },

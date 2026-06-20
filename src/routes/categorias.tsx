@@ -13,6 +13,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/categorias")({
   head: () => ({
@@ -32,6 +33,7 @@ export const Route = createFileRoute("/categorias")({
 function CategoriasPage() {
   const { data: categorias } = useSuspenseQuery(categoriasQuery);
   const qc = useQueryClient();
+  const { canEdit } = useAuth();
   const [editing, setEditing] = useState<Categoria | null>(null);
   const [nome, setNome] = useState("");
   const [saving, setSaving] = useState(false);
@@ -74,20 +76,22 @@ function CategoriasPage() {
           </p>
         </div>
 
-        <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 flex gap-3 items-end">
-          <div className="flex-1 space-y-1.5">
-            <Label htmlFor="nome">Nome da categoria</Label>
-            <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Destilados" />
-          </div>
-          <Button type="submit" disabled={saving}>
-            {editing ? <><Pencil className="h-4 w-4 mr-1" /> Atualizar</> : <><Plus className="h-4 w-4 mr-1" /> Adicionar</>}
-          </Button>
-          {editing && (
-            <Button type="button" variant="outline" size="icon" onClick={reset}>
-              <X className="h-4 w-4" />
+        {canEdit && (
+          <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 flex gap-3 items-end">
+            <div className="flex-1 space-y-1.5">
+              <Label htmlFor="nome">Nome da categoria</Label>
+              <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Destilados" />
+            </div>
+            <Button type="submit" disabled={saving}>
+              {editing ? <><Pencil className="h-4 w-4 mr-1" /> Atualizar</> : <><Plus className="h-4 w-4 mr-1" /> Adicionar</>}
             </Button>
-          )}
-        </form>
+            {editing && (
+              <Button type="button" variant="outline" size="icon" onClick={reset}>
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </form>
+        )}
 
         <ul className="rounded-xl border border-border divide-y divide-border overflow-hidden">
           {categorias.length === 0 ? (
@@ -95,14 +99,16 @@ function CategoriasPage() {
           ) : categorias.map((cat) => (
             <li key={cat.id} className="px-4 py-3 flex items-center justify-between hover:bg-secondary/20">
               <span className="text-foreground">{cat.nome}</span>
-              <div className="space-x-1">
-                <Button size="sm" variant="ghost" onClick={() => { setEditing(cat); setNome(cat.nome); }}>
-                  <Pencil className="h-3.5 w-3.5" />
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => setConfirmId(cat.id)}>
-                  <Trash2 className="h-3.5 w-3.5" />
-                </Button>
-              </div>
+              {canEdit && (
+                <div className="space-x-1">
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(cat); setNome(cat.nome); }}>
+                    <Pencil className="h-3.5 w-3.5" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => setConfirmId(cat.id)}>
+                    <Trash2 className="h-3.5 w-3.5" />
+                  </Button>
+                </div>
+              )}
             </li>
           ))}
         </ul>

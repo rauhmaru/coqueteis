@@ -1,4 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
 export type GerarImagemResult = {
   drinkId: string;
@@ -13,8 +14,14 @@ function validar(input: unknown) {
 }
 
 export const gerarImagemDrink = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(validar)
-  .handler(async ({ data }): Promise<GerarImagemResult> => {
+  .handler(async ({ data, context }): Promise<GerarImagemResult> => {
+    const { data: pode, error: roleErr } = await context.supabase
+      .rpc("can_edit", { _user_id: context.userId });
+    if (roleErr) throw new Error(roleErr.message);
+    if (!pode) throw new Error("Sem permissão para gerar imagens");
+
     const key = process.env.LOVABLE_API_KEY;
     if (!key) throw new Error("LOVABLE_API_KEY não configurada");
 
@@ -53,9 +60,8 @@ export const gerarImagemDrink = createServerFn({ method: "POST" })
       throw new Error("Resposta da IA sem imagem");
     }
 
-    // Decodifica data URL
     const comma = dataUrl.indexOf(",");
-    const meta = dataUrl.slice(5, comma); // ex: image/png;base64
+    const meta = dataUrl.slice(5, comma);
     const b64 = dataUrl.slice(comma + 1);
     const mime = meta.split(";")[0] || "image/png";
     const ext = mime === "image/jpeg" ? "jpg" : mime === "image/webp" ? "webp" : "png";

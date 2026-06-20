@@ -10,30 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IngredientesRouteImport } from './routes/ingredientes'
-import { Route as ImportarRouteImport } from './routes/importar'
-import { Route as GerarImagensRouteImport } from './routes/gerar-imagens'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as CategoriasRouteImport } from './routes/categorias'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
-import { Route as DrinksNovoRouteImport } from './routes/drinks.novo'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
+import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
+import { Route as AuthenticatedGerarImagensRouteImport } from './routes/_authenticated/gerar-imagens'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
-import { Route as DrinksIdEditarRouteImport } from './routes/drinks.$id.editar'
+import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
+import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
 const IngredientesRoute = IngredientesRouteImport.update({
   id: '/ingredientes',
   path: '/ingredientes',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ImportarRoute = ImportarRouteImport.update({
-  id: '/importar',
-  path: '/importar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const GerarImagensRoute = GerarImagensRouteImport.update({
-  id: '/gerar-imagens',
-  path: '/gerar-imagens',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrinksRoute = DrinksRouteImport.update({
@@ -46,6 +39,15 @@ const CategoriasRoute = CategoriasRouteImport.update({
   path: '/categorias',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -56,111 +58,142 @@ const DrinksIndexRoute = DrinksIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DrinksRoute,
 } as any)
-const DrinksNovoRoute = DrinksNovoRouteImport.update({
-  id: '/novo',
-  path: '/novo',
-  getParentRoute: () => DrinksRoute,
-} as any)
 const DrinksIdRoute = DrinksIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => DrinksRoute,
 } as any)
+const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedImportarRoute = AuthenticatedImportarRouteImport.update({
+  id: '/importar',
+  path: '/importar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedGerarImagensRoute =
+  AuthenticatedGerarImagensRouteImport.update({
+    id: '/gerar-imagens',
+    path: '/gerar-imagens',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DrinksIdRoute,
 } as any)
-const DrinksIdEditarRoute = DrinksIdEditarRouteImport.update({
-  id: '/editar',
-  path: '/editar',
-  getParentRoute: () => DrinksIdRoute,
+const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
+  id: '/drinks/novo',
+  path: '/drinks/novo',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDrinksIdEditarRoute =
+  AuthenticatedDrinksIdEditarRouteImport.update({
+    id: '/drinks/$id/editar',
+    path: '/drinks/$id/editar',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
-  '/gerar-imagens': typeof GerarImagensRoute
-  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
+  '/gerar-imagens': typeof AuthenticatedGerarImagensRoute
+  '/importar': typeof AuthenticatedImportarRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
-  '/drinks/novo': typeof DrinksNovoRoute
   '/drinks/': typeof DrinksIndexRoute
-  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
+  '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/categorias': typeof CategoriasRoute
-  '/gerar-imagens': typeof GerarImagensRoute
-  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
-  '/drinks/novo': typeof DrinksNovoRoute
+  '/gerar-imagens': typeof AuthenticatedGerarImagensRoute
+  '/importar': typeof AuthenticatedImportarRoute
+  '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks': typeof DrinksIndexRoute
-  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
+  '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/categorias': typeof CategoriasRoute
   '/drinks': typeof DrinksRouteWithChildren
-  '/gerar-imagens': typeof GerarImagensRoute
-  '/importar': typeof ImportarRoute
   '/ingredientes': typeof IngredientesRoute
+  '/_authenticated/gerar-imagens': typeof AuthenticatedGerarImagensRoute
+  '/_authenticated/importar': typeof AuthenticatedImportarRoute
+  '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
-  '/drinks/novo': typeof DrinksNovoRoute
   '/drinks/': typeof DrinksIndexRoute
-  '/drinks/$id/editar': typeof DrinksIdEditarRoute
+  '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
+  '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/categorias'
     | '/drinks'
+    | '/ingredientes'
     | '/gerar-imagens'
     | '/importar'
-    | '/ingredientes'
+    | '/usuarios'
     | '/drinks/$id'
-    | '/drinks/novo'
     | '/drinks/'
-    | '/drinks/$id/editar'
+    | '/drinks/novo'
     | '/drinks/$id/'
+    | '/drinks/$id/editar'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/categorias'
+    | '/ingredientes'
     | '/gerar-imagens'
     | '/importar'
-    | '/ingredientes'
-    | '/drinks/novo'
+    | '/usuarios'
     | '/drinks'
-    | '/drinks/$id/editar'
+    | '/drinks/novo'
     | '/drinks/$id'
+    | '/drinks/$id/editar'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/categorias'
     | '/drinks'
-    | '/gerar-imagens'
-    | '/importar'
     | '/ingredientes'
+    | '/_authenticated/gerar-imagens'
+    | '/_authenticated/importar'
+    | '/_authenticated/usuarios'
     | '/drinks/$id'
-    | '/drinks/novo'
     | '/drinks/'
-    | '/drinks/$id/editar'
+    | '/_authenticated/drinks/novo'
     | '/drinks/$id/'
+    | '/_authenticated/drinks/$id/editar'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   CategoriasRoute: typeof CategoriasRoute
   DrinksRoute: typeof DrinksRouteWithChildren
-  GerarImagensRoute: typeof GerarImagensRoute
-  ImportarRoute: typeof ImportarRoute
   IngredientesRoute: typeof IngredientesRoute
 }
 
@@ -171,20 +204,6 @@ declare module '@tanstack/react-router' {
       path: '/ingredientes'
       fullPath: '/ingredientes'
       preLoaderRoute: typeof IngredientesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/importar': {
-      id: '/importar'
-      path: '/importar'
-      fullPath: '/importar'
-      preLoaderRoute: typeof ImportarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/gerar-imagens': {
-      id: '/gerar-imagens'
-      path: '/gerar-imagens'
-      fullPath: '/gerar-imagens'
-      preLoaderRoute: typeof GerarImagensRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drinks': {
@@ -201,6 +220,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -215,19 +248,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIndexRouteImport
       parentRoute: typeof DrinksRoute
     }
-    '/drinks/novo': {
-      id: '/drinks/novo'
-      path: '/novo'
-      fullPath: '/drinks/novo'
-      preLoaderRoute: typeof DrinksNovoRouteImport
-      parentRoute: typeof DrinksRoute
-    }
     '/drinks/$id': {
       id: '/drinks/$id'
       path: '/$id'
       fullPath: '/drinks/$id'
       preLoaderRoute: typeof DrinksIdRouteImport
       parentRoute: typeof DrinksRoute
+    }
+    '/_authenticated/usuarios': {
+      id: '/_authenticated/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/importar': {
+      id: '/_authenticated/importar'
+      path: '/importar'
+      fullPath: '/importar'
+      preLoaderRoute: typeof AuthenticatedImportarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/gerar-imagens': {
+      id: '/_authenticated/gerar-imagens'
+      path: '/gerar-imagens'
+      fullPath: '/gerar-imagens'
+      preLoaderRoute: typeof AuthenticatedGerarImagensRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/drinks/$id/': {
       id: '/drinks/$id/'
@@ -236,23 +283,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIdIndexRouteImport
       parentRoute: typeof DrinksIdRoute
     }
-    '/drinks/$id/editar': {
-      id: '/drinks/$id/editar'
-      path: '/editar'
+    '/_authenticated/drinks/novo': {
+      id: '/_authenticated/drinks/novo'
+      path: '/drinks/novo'
+      fullPath: '/drinks/novo'
+      preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/drinks/$id/editar': {
+      id: '/_authenticated/drinks/$id/editar'
+      path: '/drinks/$id/editar'
       fullPath: '/drinks/$id/editar'
-      preLoaderRoute: typeof DrinksIdEditarRouteImport
-      parentRoute: typeof DrinksIdRoute
+      preLoaderRoute: typeof AuthenticatedDrinksIdEditarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedGerarImagensRoute: typeof AuthenticatedGerarImagensRoute
+  AuthenticatedImportarRoute: typeof AuthenticatedImportarRoute
+  AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
+  AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
+  AuthenticatedDrinksIdEditarRoute: typeof AuthenticatedDrinksIdEditarRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedGerarImagensRoute: AuthenticatedGerarImagensRoute,
+  AuthenticatedImportarRoute: AuthenticatedImportarRoute,
+  AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
+  AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
+  AuthenticatedDrinksIdEditarRoute: AuthenticatedDrinksIdEditarRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 interface DrinksIdRouteChildren {
-  DrinksIdEditarRoute: typeof DrinksIdEditarRoute
   DrinksIdIndexRoute: typeof DrinksIdIndexRoute
 }
 
 const DrinksIdRouteChildren: DrinksIdRouteChildren = {
-  DrinksIdEditarRoute: DrinksIdEditarRoute,
   DrinksIdIndexRoute: DrinksIdIndexRoute,
 }
 
@@ -262,13 +333,11 @@ const DrinksIdRouteWithChildren = DrinksIdRoute._addFileChildren(
 
 interface DrinksRouteChildren {
   DrinksIdRoute: typeof DrinksIdRouteWithChildren
-  DrinksNovoRoute: typeof DrinksNovoRoute
   DrinksIndexRoute: typeof DrinksIndexRoute
 }
 
 const DrinksRouteChildren: DrinksRouteChildren = {
   DrinksIdRoute: DrinksIdRouteWithChildren,
-  DrinksNovoRoute: DrinksNovoRoute,
   DrinksIndexRoute: DrinksIndexRoute,
 }
 
@@ -277,10 +346,10 @@ const DrinksRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   CategoriasRoute: CategoriasRoute,
   DrinksRoute: DrinksRouteWithChildren,
-  GerarImagensRoute: GerarImagensRoute,
-  ImportarRoute: ImportarRoute,
   IngredientesRoute: IngredientesRoute,
 }
 export const routeTree = rootRouteImport
