@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { Jimp } from "jimp";
 
 export type GerarImagemResult = {
   drinkId: string;
@@ -27,13 +28,15 @@ export const gerarImagemDrink = createServerFn({ method: "POST" })
 
     const prompt = `Fotografia profissional de coquetelaria do drink "${data.nome}", servido em copo apropriado, iluminação cinematográfica, fundo escuro elegante com bokeh suave, gotas de condensação, estilo editorial premium, alta resolução, foco nítido no copo.`;
 
-    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/images/generations", {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-image-preview",
-        messages: [{ role: "user", content: prompt }],
-        modalities: ["image", "text"],
+        model: "openai/gpt-image-1-mini",
+        prompt,
+        size: "1024x1024",
+        quality: "low",
+        n: 1,
       }),
     });
 
@@ -53,25 +56,24 @@ export const gerarImagemDrink = createServerFn({ method: "POST" })
     }
 
     const json = (await resp.json()) as {
-      choices?: { message?: { images?: { image_url?: { url?: string } }[] } }[];
+      data?: { b64_json?: string }[];
     };
-    const dataUrl = json.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-    if (!dataUrl || !dataUrl.startsWith("data:")) {
+    const b64 = json.data?.[0]?.b64_json;
+    if (!b64) {
       throw new Error("Resposta da IA sem imagem");
     }
 
-    const comma = dataUrl.indexOf(",");
-    const meta = dataUrl.slice(5, comma);
-    const b64 = dataUrl.slice(comma + 1);
-    const mime = meta.split(";")[0] || "image/png";
-    const ext = mime === "image/jpeg" ? "jpg" : mime === "image/webp" ? "webp" : "png";
-    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    // Decodifica base64 para Buffer e redimensiona para 800x800 JPEG
+    const rawBuffer = Buffer.from(b64, "base64");
+    const img = await Jimp.read(rawBuffer);
+    img.resize({ w: 800, h: 800 });
+    const jpegBuffer = await img.getBuffer("image/jpeg", { quality: 90 });
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const path = `${data.drinkId}.${ext}`;
+    const path = `${data.drinkId}.jpg`;
     const { error: upErr } = await supabaseAdmin.storage
       .from("drink-images")
-      .upload(path, bytes, { contentType: mime, upsert: true });
+      .upload(path, jpegBuffer, { contentType: "image/jpeg", upsert: true });
     if (upErr) throw new Error(`upload: ${upErr.message}`);
 
     const { error: updErr } = await supabaseAdmin
