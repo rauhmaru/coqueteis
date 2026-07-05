@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Upload, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { ingredientesQuery, type DrinkComIngredientes } from "@/lib/queries";
@@ -12,11 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { DrinkImage } from "@/components/drink-image";
+import { gerarImagemDrink } from "@/lib/imagens.functions";
 
 export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null }) {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const gerarImagem = useServerFn(gerarImagemDrink);
 
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
@@ -88,6 +91,20 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       toast.success(existing ? "Drink atualizado!" : "Drink cadastrado!");
       qc.invalidateQueries({ queryKey: ["drinks"] });
       qc.invalidateQueries({ queryKey: ["counts"] });
+
+      // Auto-gera thumbnail 800x800 quando novo drink foi cadastrado sem imagem
+      if (!existing && drinkId && !finalPath) {
+        toast.info("Gerando imagem automaticamente…");
+        gerarImagem({ data: { drinkId, nome } })
+          .then(() => {
+            toast.success("Imagem gerada!");
+            qc.invalidateQueries({ queryKey: ["drinks"] });
+          })
+          .catch((e) => {
+            toast.error("Falha ao gerar imagem: " + (e as Error).message);
+          });
+      }
+
       navigate({ to: "/drinks" });
     } catch (err) {
       toast.error("Erro: " + (err as Error).message);
