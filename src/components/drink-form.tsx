@@ -19,6 +19,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const gerarImagem = useServerFn(gerarImagemDrink);
 
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
