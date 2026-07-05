@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Upload, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { ingredientesQuery, type DrinkComIngredientes } from "@/lib/queries";
@@ -12,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { DrinkImage } from "@/components/drink-image";
+import { gerarImagemDrink } from "@/lib/imagens.functions";
 
 export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null }) {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
