@@ -91,6 +91,20 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       toast.success(existing ? "Drink atualizado!" : "Drink cadastrado!");
       qc.invalidateQueries({ queryKey: ["drinks"] });
       qc.invalidateQueries({ queryKey: ["counts"] });
+
+      // Auto-gera thumbnail 800x800 quando novo drink foi cadastrado sem imagem
+      if (!existing && drinkId && !finalPath) {
+        toast.info("Gerando imagem automaticamente…");
+        gerarImagem({ data: { drinkId, nome } })
+          .then(() => {
+            toast.success("Imagem gerada!");
+            qc.invalidateQueries({ queryKey: ["drinks"] });
+          })
+          .catch((e) => {
+            toast.error("Falha ao gerar imagem: " + (e as Error).message);
+          });
+      }
+
       navigate({ to: "/drinks" });
     } catch (err) {
       toast.error("Erro: " + (err as Error).message);
