@@ -100,11 +100,11 @@ function IngredientesPage() {
 
         {canEdit && (
           <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 grid sm:grid-cols-12 gap-3 items-end">
-            <div className="sm:col-span-4 space-y-1.5">
+            <div className="sm:col-span-5 space-y-1.5">
               <Label htmlFor="nome">Nome</Label>
               <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Gin London Dry" />
             </div>
-            <div className="sm:col-span-4 space-y-1.5">
+            <div className="sm:col-span-5 space-y-1.5">
               <Label>Tipo</Label>
               <Select value={categoriaId} onValueChange={setCategoriaId}>
                 <SelectTrigger>
@@ -116,10 +116,6 @@ function IngredientesPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="sm:col-span-2 space-y-1.5">
-              <Label htmlFor="qtd">Quantidade</Label>
-              <Input id="qtd" type="number" step="0.01" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
             </div>
             <div className="sm:col-span-2 flex gap-2">
               <Button type="submit" disabled={saving} className="flex-1">
