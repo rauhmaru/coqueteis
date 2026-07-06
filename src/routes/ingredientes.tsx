@@ -46,18 +46,16 @@ function IngredientesPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [categoriaId, setCategoriaId] = useState<string>("");
-  const [quantidade, setQuantidade] = useState("0");
   const [saving, setSaving] = useState(false);
 
   const reset = () => {
-    setEditing(null); setNome(""); setCategoriaId(""); setQuantidade("0");
+    setEditing(null); setNome(""); setCategoriaId("");
   };
 
   const startEdit = (ing: Ingrediente) => {
     setEditing(ing);
     setNome(ing.nome);
     setCategoriaId(ing.categoria_id ?? "");
-    setQuantidade(String(ing.quantidade));
   };
 
   const onSubmit = async (e: FormEvent) => {
@@ -67,7 +65,6 @@ function IngredientesPage() {
     const payload = {
       nome,
       categoria_id: categoriaId || null,
-      quantidade: Number(quantidade) || 0,
     };
     const { error } = editing
       ? await supabase.from("ingredientes").update(payload).eq("id", editing.id)
@@ -103,11 +100,11 @@ function IngredientesPage() {
 
         {canEdit && (
           <form onSubmit={onSubmit} className="rounded-xl border border-border bg-card p-5 grid sm:grid-cols-12 gap-3 items-end">
-            <div className="sm:col-span-4 space-y-1.5">
+            <div className="sm:col-span-5 space-y-1.5">
               <Label htmlFor="nome">Nome</Label>
               <Input id="nome" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Ex.: Gin London Dry" />
             </div>
-            <div className="sm:col-span-4 space-y-1.5">
+            <div className="sm:col-span-5 space-y-1.5">
               <Label>Tipo</Label>
               <Select value={categoriaId} onValueChange={setCategoriaId}>
                 <SelectTrigger>
@@ -119,10 +116,6 @@ function IngredientesPage() {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            <div className="sm:col-span-2 space-y-1.5">
-              <Label htmlFor="qtd">Quantidade</Label>
-              <Input id="qtd" type="number" step="0.01" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
             </div>
             <div className="sm:col-span-2 flex gap-2">
               <Button type="submit" disabled={saving} className="flex-1">
@@ -143,20 +136,18 @@ function IngredientesPage() {
               <tr>
                 <th className="text-left px-4 py-3">Nome</th>
                 <th className="text-left px-4 py-3">Tipo</th>
-                <th className="text-right px-4 py-3">Quantidade</th>
                 <th className="px-4 py-3 w-32"></th>
               </tr>
             </thead>
             <tbody>
               {ingredientes.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
+                <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
               ) : ingredientes.map((ing) => (
                 <tr key={ing.id} className="border-t border-border hover:bg-secondary/20">
                   <td className="px-4 py-3 font-medium text-foreground">{ing.nome}</td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {ing.categorias?.nome ?? <span className="italic">—</span>}
                   </td>
-                  <td className="px-4 py-3 text-right">{Number(ing.quantidade)}</td>
                   <td className="px-4 py-3 text-right space-x-1">
                     {canEdit ? (
                       <>
