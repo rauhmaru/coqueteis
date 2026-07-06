@@ -46,18 +46,16 @@ function IngredientesPage() {
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [categoriaId, setCategoriaId] = useState<string>("");
-  const [quantidade, setQuantidade] = useState("0");
   const [saving, setSaving] = useState(false);
 
   const reset = () => {
-    setEditing(null); setNome(""); setCategoriaId(""); setQuantidade("0");
+    setEditing(null); setNome(""); setCategoriaId("");
   };
 
   const startEdit = (ing: Ingrediente) => {
     setEditing(ing);
     setNome(ing.nome);
     setCategoriaId(ing.categoria_id ?? "");
-    setQuantidade(String(ing.quantidade));
   };
 
   const onSubmit = async (e: FormEvent) => {
@@ -67,7 +65,6 @@ function IngredientesPage() {
     const payload = {
       nome,
       categoria_id: categoriaId || null,
-      quantidade: Number(quantidade) || 0,
     };
     const { error } = editing
       ? await supabase.from("ingredientes").update(payload).eq("id", editing.id)
