@@ -136,20 +136,18 @@ function IngredientesPage() {
               <tr>
                 <th className="text-left px-4 py-3">Nome</th>
                 <th className="text-left px-4 py-3">Tipo</th>
-                <th className="text-right px-4 py-3">Quantidade</th>
                 <th className="px-4 py-3 w-32"></th>
               </tr>
             </thead>
             <tbody>
               {ingredientes.length === 0 ? (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
+                <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
               ) : ingredientes.map((ing) => (
                 <tr key={ing.id} className="border-t border-border hover:bg-secondary/20">
                   <td className="px-4 py-3 font-medium text-foreground">{ing.nome}</td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {ing.categorias?.nome ?? <span className="italic">—</span>}
                   </td>
-                  <td className="px-4 py-3 text-right">{Number(ing.quantidade)}</td>
                   <td className="px-4 py-3 text-right space-x-1">
                     {canEdit ? (
                       <>
