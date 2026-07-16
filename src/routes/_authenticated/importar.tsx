@@ -122,7 +122,7 @@ function ImportarPage() {
               }
               const { data: novoIng, error: ingErr } = await supabase
                 .from("ingredientes")
-                .insert({ nome: ing.nome.trim(), categoria_id: catId, quantidade: 500 })
+                .insert({ nome: ing.nome.trim(), categoria_id: catId, quantidade: 500, created_by: user?.id ?? null })
                 .select("id")
                 .single();
               if (ingErr || !novoIng) throw new Error(`ingrediente: ${ingErr?.message}`);
