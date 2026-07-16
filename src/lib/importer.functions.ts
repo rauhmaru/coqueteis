@@ -5,6 +5,7 @@ export type ReceitaIA = {
   nome: string;
   preparo: string;
   ingredientes: { nome: string; categoria: string }[];
+  categorias: string[];
 };
 
 const CATEGORIAS_VALIDAS = [
