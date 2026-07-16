@@ -79,14 +79,16 @@ function ImportarPage() {
 
       // Carrega caches locais
       setProgresso("Buscando catálogo atual…");
-      const [{ data: cats }, { data: ings }, { data: drks }] = await Promise.all([
+      const [{ data: cats }, { data: ings }, { data: drks }, { data: dcats }] = await Promise.all([
         supabase.from("categorias").select("id, nome"),
         supabase.from("ingredientes").select("id, nome"),
         supabase.from("drinks").select("id, nome"),
+        supabase.from("drink_categorias").select("id, nome"),
       ]);
       const catMap = new Map<string, string>((cats ?? []).map((c) => [c.nome.toLowerCase(), c.id]));
       const ingMap = new Map<string, string>((ings ?? []).map((i) => [i.nome.toLowerCase(), i.id]));
       const drinkNomes = new Set<string>((drks ?? []).map((d) => d.nome.toLowerCase()));
+      const drinkCatMap = new Map<string, string>((dcats ?? []).map((c) => [c.nome.toLowerCase(), c.id]));
 
       const out: ResultadoItem[] = [];
       let idx = 0;
