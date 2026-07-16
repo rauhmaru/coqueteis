@@ -190,7 +190,8 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
         ) : (
           <ul className="space-y-3">
             {comentariosQ.data!.map((c) => {
-              const autor = c.profiles?.display_name || c.profiles?.email || "Anônimo";
+              const a = autoresQ.data?.[c.user_id];
+              const autor = a?.display_name || a?.email || "Anônimo";
               const mine = user?.id === c.user_id;
               return (
                 <li key={c.id} className="rounded-lg border border-border bg-card p-4">
