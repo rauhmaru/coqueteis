@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { gerarReceitasIA, type ReceitaIA } from "@/lib/importer.functions";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 const CATEGORIAS_DRINKS = [
   { id: "Clássicos", desc: "Negroni, Manhattan, Old Fashioned…" },
@@ -48,6 +49,7 @@ type ResultadoItem = {
 function ImportarPage() {
   const qc = useQueryClient();
   const gerar = useServerFn(gerarReceitasIA);
+  const { user } = useAuth();
   const [selecionadas, setSelecionadas] = useState<string[]>(["Clássicos"]);
   const [quantidade, setQuantidade] = useState(3);
   const [loading, setLoading] = useState(false);

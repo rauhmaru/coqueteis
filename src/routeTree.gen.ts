@@ -12,16 +12,13 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IngredientesRouteImport } from './routes/ingredientes'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
-import { Route as CategoriasRouteImport } from './routes/categorias'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
-import { Route as CategoriasIdRouteImport } from './routes/categorias.$id'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
-import { Route as AuthenticatedGerarImagensRouteImport } from './routes/_authenticated/gerar-imagens'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
@@ -39,11 +36,6 @@ const DrinksRoute = DrinksRouteImport.update({
 const ConfiancaRoute = ConfiancaRouteImport.update({
   id: '/confianca',
   path: '/confianca',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CategoriasRoute = CategoriasRouteImport.update({
-  id: '/categorias',
-  path: '/categorias',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -70,11 +62,6 @@ const DrinksIdRoute = DrinksIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DrinksRoute,
 } as any)
-const CategoriasIdRoute = CategoriasIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => CategoriasRoute,
-} as any)
 const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
@@ -85,12 +72,6 @@ const AuthenticatedImportarRoute = AuthenticatedImportarRouteImport.update({
   path: '/importar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedGerarImagensRoute =
-  AuthenticatedGerarImagensRouteImport.update({
-    id: '/gerar-imagens',
-    path: '/gerar-imagens',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -111,14 +92,11 @@ const AuthenticatedDrinksIdEditarRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/categorias': typeof CategoriasRouteWithChildren
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/ingredientes': typeof IngredientesRoute
-  '/gerar-imagens': typeof AuthenticatedGerarImagensRoute
   '/importar': typeof AuthenticatedImportarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
-  '/categorias/$id': typeof CategoriasIdRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/drinks/': typeof DrinksIndexRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
@@ -128,13 +106,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/categorias': typeof CategoriasRouteWithChildren
   '/confianca': typeof ConfiancaRoute
   '/ingredientes': typeof IngredientesRoute
-  '/gerar-imagens': typeof AuthenticatedGerarImagensRoute
   '/importar': typeof AuthenticatedImportarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
-  '/categorias/$id': typeof CategoriasIdRoute
   '/drinks': typeof DrinksIndexRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
@@ -145,14 +120,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/categorias': typeof CategoriasRouteWithChildren
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/ingredientes': typeof IngredientesRoute
-  '/_authenticated/gerar-imagens': typeof AuthenticatedGerarImagensRoute
   '/_authenticated/importar': typeof AuthenticatedImportarRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
-  '/categorias/$id': typeof CategoriasIdRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/drinks/': typeof DrinksIndexRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
@@ -164,14 +136,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/categorias'
     | '/confianca'
     | '/drinks'
     | '/ingredientes'
-    | '/gerar-imagens'
     | '/importar'
     | '/usuarios'
-    | '/categorias/$id'
     | '/drinks/$id'
     | '/drinks/'
     | '/drinks/novo'
@@ -181,13 +150,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/categorias'
     | '/confianca'
     | '/ingredientes'
-    | '/gerar-imagens'
     | '/importar'
     | '/usuarios'
-    | '/categorias/$id'
     | '/drinks'
     | '/drinks/novo'
     | '/drinks/$id'
@@ -197,14 +163,11 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/categorias'
     | '/confianca'
     | '/drinks'
     | '/ingredientes'
-    | '/_authenticated/gerar-imagens'
     | '/_authenticated/importar'
     | '/_authenticated/usuarios'
-    | '/categorias/$id'
     | '/drinks/$id'
     | '/drinks/'
     | '/_authenticated/drinks/novo'
@@ -216,7 +179,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  CategoriasRoute: typeof CategoriasRouteWithChildren
   ConfiancaRoute: typeof ConfiancaRoute
   DrinksRoute: typeof DrinksRouteWithChildren
   IngredientesRoute: typeof IngredientesRoute
@@ -243,13 +205,6 @@ declare module '@tanstack/react-router' {
       path: '/confianca'
       fullPath: '/confianca'
       preLoaderRoute: typeof ConfiancaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/categorias': {
-      id: '/categorias'
-      path: '/categorias'
-      fullPath: '/categorias'
-      preLoaderRoute: typeof CategoriasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -287,13 +242,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIdRouteImport
       parentRoute: typeof DrinksRoute
     }
-    '/categorias/$id': {
-      id: '/categorias/$id'
-      path: '/$id'
-      fullPath: '/categorias/$id'
-      preLoaderRoute: typeof CategoriasIdRouteImport
-      parentRoute: typeof CategoriasRoute
-    }
     '/_authenticated/usuarios': {
       id: '/_authenticated/usuarios'
       path: '/usuarios'
@@ -306,13 +254,6 @@ declare module '@tanstack/react-router' {
       path: '/importar'
       fullPath: '/importar'
       preLoaderRoute: typeof AuthenticatedImportarRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/gerar-imagens': {
-      id: '/_authenticated/gerar-imagens'
-      path: '/gerar-imagens'
-      fullPath: '/gerar-imagens'
-      preLoaderRoute: typeof AuthenticatedGerarImagensRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/drinks/$id/': {
@@ -340,7 +281,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedGerarImagensRoute: typeof AuthenticatedGerarImagensRoute
   AuthenticatedImportarRoute: typeof AuthenticatedImportarRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
@@ -348,7 +288,6 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedGerarImagensRoute: AuthenticatedGerarImagensRoute,
   AuthenticatedImportarRoute: AuthenticatedImportarRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
@@ -357,18 +296,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
-
-interface CategoriasRouteChildren {
-  CategoriasIdRoute: typeof CategoriasIdRoute
-}
-
-const CategoriasRouteChildren: CategoriasRouteChildren = {
-  CategoriasIdRoute: CategoriasIdRoute,
-}
-
-const CategoriasRouteWithChildren = CategoriasRoute._addFileChildren(
-  CategoriasRouteChildren,
-)
 
 interface DrinksIdRouteChildren {
   DrinksIdIndexRoute: typeof DrinksIdIndexRoute
@@ -399,7 +326,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  CategoriasRoute: CategoriasRouteWithChildren,
   ConfiancaRoute: ConfiancaRoute,
   DrinksRoute: DrinksRouteWithChildren,
   IngredientesRoute: IngredientesRoute,
@@ -407,13 +333,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

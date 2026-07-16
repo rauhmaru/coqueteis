@@ -33,7 +33,8 @@ export const Route = createFileRoute("/drinks/$id/")({
 function DrinkDetail() {
   const { id } = Route.useParams();
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
-  const { canEdit } = useAuth();
+  const { canEdit, user, isAdmin } = useAuth();
+  const canManage = canEdit && (isAdmin || (user && drink?.created_by === user.id));
   if (!drink) return null;
 
   return (
@@ -53,6 +54,13 @@ function DrinkDetail() {
           <div className="space-y-6">
             <div>
               <h1 className="font-serif text-5xl text-foreground">{drink.nome}</h1>
+              {drink.drink_drink_categorias.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-3">
+                  {drink.drink_drink_categorias.map((c) => (
+                    <Badge key={c.categoria_id}>{c.drink_categorias?.nome ?? "?"}</Badge>
+                  ))}
+                </div>
+              )}
             </div>
             <div>
               <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Ingredientes</h2>
@@ -70,7 +78,7 @@ function DrinkDetail() {
                 {drink.preparo || <span className="text-muted-foreground italic">Sem instruções de preparo.</span>}
               </p>
             </div>
-            {canEdit && (
+            {canManage && (
               <Button asChild>
                 <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
                   <Pencil className="h-4 w-4 mr-2" /> Editar

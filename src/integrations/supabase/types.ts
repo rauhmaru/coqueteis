@@ -58,6 +58,24 @@ export type Database = {
           },
         ]
       }
+      drink_categorias: {
+        Row: {
+          created_at: string
+          id: string
+          nome: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          nome: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          nome?: string
+        }
+        Relationships: []
+      }
       drink_comentarios: {
         Row: {
           created_at: string
@@ -86,6 +104,39 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "drink_comentarios_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drink_drink_categorias: {
+        Row: {
+          categoria_id: string
+          created_at: string
+          drink_id: string
+        }
+        Insert: {
+          categoria_id: string
+          created_at?: string
+          drink_id: string
+        }
+        Update: {
+          categoria_id?: string
+          created_at?: string
+          drink_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_drink_categorias_categoria_id_fkey"
+            columns: ["categoria_id"]
+            isOneToOne: false
+            referencedRelation: "drink_categorias"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_drink_categorias_drink_id_fkey"
             columns: ["drink_id"]
             isOneToOne: false
             referencedRelation: "drinks"
@@ -152,6 +203,7 @@ export type Database = {
       drinks: {
         Row: {
           created_at: string
+          created_by: string | null
           id: string
           imagem_url: string | null
           nome: string
@@ -159,6 +211,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          created_by?: string | null
           id?: string
           imagem_url?: string | null
           nome: string
@@ -166,6 +219,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          created_by?: string | null
           id?: string
           imagem_url?: string | null
           nome?: string
@@ -177,6 +231,7 @@ export type Database = {
         Row: {
           categoria_id: string | null
           created_at: string
+          created_by: string | null
           id: string
           nome: string
           quantidade: number
@@ -184,6 +239,7 @@ export type Database = {
         Insert: {
           categoria_id?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           nome: string
           quantidade?: number
@@ -191,6 +247,7 @@ export type Database = {
         Update: {
           categoria_id?: string | null
           created_at?: string
+          created_by?: string | null
           id?: string
           nome?: string
           quantidade?: number

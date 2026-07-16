@@ -15,12 +15,10 @@ const publicNav = [
   { to: "/", label: "Início" },
   { to: "/drinks", label: "Drinks" },
   { to: "/ingredientes", label: "Ingredientes" },
-  { to: "/categorias", label: "Categorias" },
 ] as const;
 
 const editorNav = [
   { to: "/importar", label: "Importar" },
-  { to: "/gerar-imagens", label: "Imagens" },
 ] as const;
 
 export function SiteHeader() {

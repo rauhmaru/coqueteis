@@ -1,39 +1,91 @@
-# Comentários: curtidas, ordenação e edição
+## Objetivo
 
-## O que muda para o usuário
+1. Remover rota `/categorias` (categorias de ingredientes) e rota `/gerar-imagens`.
+2. Classificar drinks por categorias temáticas (Clássicos, Sour, Brasileiros, Tropicais, Tiki, Cremosos, Espumantes, Refrescantes, Quentes, Shots) — permitindo múltiplas categorias por drink.
+3. Restringir edição/remoção de drinks e ingredientes ao próprio criador. Registros existentes são atribuídos ao admin atual (rauhmaru@gmail.com).
 
-Na página de cada drink, na seção de comentários:
+---
 
-- Cada comentário passa a ter um botão de curtir com contador. Só usuários autenticados podem curtir; qualquer visitante vê o total.
-- Um seletor no topo permite alternar entre **Mais relevantes** (mais curtidos primeiro, desempate por mais recente) e **Mais recentes** (padrão atual).
-- No próprio comentário do usuário aparecem os botões **Editar** e **Excluir**. Editar abre o texto em uma caixa inline com Salvar/Cancelar. Excluir pede confirmação.
+## Banco de dados (uma migration única)
 
-## Banco de dados
+Novas tabelas:
+- `drink_categorias` (id, nome único, created_at) — categorias de drink.
+- `drink_drink_categorias` (drink_id, categoria_id) — join N:N.
 
-Nova tabela `comentario_likes` (uma curtida por usuário por comentário), espelhando a estrutura de `drink_likes`:
+Novas colunas:
+- `drinks.created_by uuid` (FK `auth.users`, NOT NULL após backfill).
+- `ingredientes.created_by uuid` (FK `auth.users`, NOT NULL após backfill).
 
-- Chave: `comentario_id + user_id`
-- Todos podem ver as curtidas
-- Apenas usuários autenticados curtem/descurtem, e só a própria curtida
+Backfill: atribuir todos os `drinks` e `ingredientes` existentes ao usuário `f036ce84-37f3-445f-ae1c-ba84c9588825`.
 
-A tabela `drink_comentarios` já suporta atualização e remoção pelo próprio autor via RLS existente — nada a mudar lá.
+Seed das 10 categorias de drinks (mesma lista já usada em `/importar`).
+
+Classificação automática dos drinks existentes via regras SQL sobre nomes de ingredientes vinculados e nome do drink:
+- Sour → tem ingrediente "clara de ovo".
+- Brasileiros → tem "cachaça" OU nome contém "caipirinha"/"caipiroska"/"batida".
+- Clássicos → nome em (Manhattan, Negroni, Old Fashioned, Martini, Daiquiri, Whiskey Sour, Margarita, Sazerac, Boulevardier, Aviation, Vesper).
+- Espumantes → tem espumante/prosecco/champagne.
+- Cremosos → tem creme/leite/sorvete.
+- Quentes → tem café/chocolate quente OU nome contém "quente"/"toddy".
+- Tiki/Tropicais → tem rum + suco de frutas tropicais (abacaxi, maracujá, coco).
+- Refrescantes → tem água tônica/soda/gengibre/club soda.
+- Shots → nome contém "shot" ou preparo bem curto.
+
+RLS:
+- `drink_categorias`: SELECT público; INSERT/UPDATE/DELETE só para `can_edit`.
+- `drink_drink_categorias`: SELECT público; INSERT/DELETE apenas se o usuário é dono do drink (`drinks.created_by = auth.uid()`) OU admin.
+- `drinks`: substituir política atual de UPDATE/DELETE por: `auth.uid() = created_by OR has_role(auth.uid(),'admin')`. INSERT exige `created_by = auth.uid()`. SELECT permanece público.
+- `ingredientes`: mesma lógica (`created_by = auth.uid() OR admin`). SELECT permanece público. INSERT exige `created_by = auth.uid()`.
+- Tabela `categorias` (de ingredientes) e políticas: mantidas — continuam sendo usadas por `/ingredientes` e `/importar`.
+
+GRANTs padrão para todas as novas tabelas.
+
+---
 
 ## Frontend
 
-Todo o trabalho fica em `src/components/drink-social.tsx`:
+Arquivos removidos:
+- `src/routes/categorias.tsx`
+- `src/routes/categorias.$id.tsx`
+- `src/routes/_authenticated/gerar-imagens.tsx`
 
-- Nova query que conta curtidas por comentário do drink atual (`comentario_likes` filtrado pelos ids da lista de comentários) e marca quais o usuário logado curtiu.
-- Estado local `ordem: "relevantes" | "recentes"` com dois botões-toggle acima da lista. Ordenação feita client-side sobre a lista já carregada (drinks têm poucos comentários; simples e evita refetch).
-- Cada item da lista ganha:
-  - Botão de coração com contador, desabilitado para deslogados.
-  - Se `user.id === c.user_id`: botões Editar e Excluir. Editar troca o parágrafo por um `Textarea` + Salvar/Cancelar, chama `update` em `drink_comentarios` com `texto` novo. Excluir mantém o comportamento atual, agora com `AlertDialog` de confirmação.
-- Invalidação de queries após curtir/editar/remover mantém a lista sincronizada.
+Header (`src/components/site-header.tsx`): remover links "Categorias" e "Gerar imagens".
+
+`src/lib/queries.ts`:
+- Adicionar `drinkCategoriasQuery` (lista de categorias de drink).
+- Estender `drinksQuery` e `drinkQuery` para trazer `drink_drink_categorias(categoria_id, drink_categorias(nome))` e `created_by`.
+- Estender `ingredientesQuery` para trazer `created_by`.
+
+`src/routes/drinks.index.tsx`:
+- Adicionar filtro por categorias de drink (chips), combinável com o filtro de ingredientes.
+- Exibir badges das categorias em cada card.
+- Botões "Editar"/"Remover" só aparecem quando `user.id === drink.created_by` OU `isAdmin`.
+
+`src/routes/drinks.$id.index.tsx`:
+- Mostrar badges de categorias.
+- Botão "Editar" só quando dono ou admin.
+
+`src/components/drink-form.tsx`:
+- Novo campo "Categorias" (multi-select via chips) usando `drinkCategoriasQuery`.
+- Ao criar: enviar `created_by = user.id`; ao salvar: gravar vínculos em `drink_drink_categorias` (delete + insert).
+- Bloquear edição quando não é dono/admin (redirecionar com toast).
+
+`src/routes/ingredientes.tsx`:
+- Ao criar: `created_by = user.id`.
+- Botões "Editar"/"Remover" só quando `user.id === ing.created_by` OU `isAdmin`.
+
+`src/routes/_authenticated/importar.tsx`:
+- Ao criar drinks e ingredientes, gravar `created_by = user.id`.
+- Após criar cada drink, vincular à(s) `drink_categorias` correspondente(s) às categorias selecionadas no formulário.
+
+`src/hooks/use-auth.tsx`: expor `isAdmin` (se ainda não expõe) e `userId` para as checagens acima.
+
+---
 
 ## Detalhes técnicos
 
-- Migration cria `public.comentario_likes` seguindo o padrão de `drink_likes`: GRANTs para `anon` (SELECT), `authenticated` (SELECT/INSERT/DELETE), `service_role` (ALL); RLS ligado; políticas SELECT pública, INSERT/DELETE só `auth.uid() = user_id`; índice em `comentario_id`.
-- Query de curtidas usa `.in("comentario_id", ids)` e é reprocessada em memória para produzir `{ [comentarioId]: { total, likedByMe } }`.
-- Ordenação: `relevantes` → `sort` por total desc, depois `created_at` desc; `recentes` → mantém `created_at` desc já vindo do servidor.
-- Edição usa `supabase.from("drink_comentarios").update({ texto }).eq("id", id)` — RLS já limita ao dono; validação client-side reaproveita o limite de 1–1000 caracteres.
-- `AlertDialog` de shadcn (já usado em outras telas) para confirmar exclusão.
-- Sem novas dependências.
+- Trigger `set_created_by` (BEFORE INSERT) em `drinks` e `ingredientes` para preencher `created_by = auth.uid()` quando NULL — evita depender do cliente.
+- Índices em `drink_drink_categorias(drink_id)` e `(categoria_id)`.
+- `useAuth` já tem `user` via Supabase; adiciono seletor `isAdmin` chamando `has_role` uma vez (ou reaproveitando `user_roles`).
+- Sem mudança em servidores/edge functions.
+- Não removo a tabela `categorias` (ingredientes) do banco; apenas a UI da rota.
