@@ -135,16 +135,26 @@ function ImportarPage() {
           // Cria drink
           const { data: novoDrink, error: drkErr } = await supabase
             .from("drinks")
-            .insert({ nome: r.nome.trim(), preparo: r.preparo ?? "" })
+            .insert({ nome: r.nome.trim(), preparo: r.preparo ?? "", created_by: user?.id ?? null })
             .select("id")
             .single();
           if (drkErr || !novoDrink) throw new Error(`drink: ${drkErr?.message}`);
 
-          // Vincula
+          // Vincula ingredientes
           if (ingredienteIds.length) {
             const links = ingredienteIds.map((iid) => ({ drink_id: novoDrink.id, ingrediente_id: iid }));
             const { error: linkErr } = await supabase.from("drink_ingredientes").insert(links);
             if (linkErr) throw new Error(`vínculos: ${linkErr.message}`);
+          }
+
+          // Vincula categorias
+          const catIds = (r.categorias ?? selecionadas)
+            .map((c) => drinkCatMap.get(c.toLowerCase()))
+            .filter((v): v is string => !!v);
+          if (catIds.length) {
+            const catLinks = catIds.map((cid) => ({ drink_id: novoDrink.id, categoria_id: cid }));
+            const { error: catLinkErr } = await supabase.from("drink_drink_categorias").insert(catLinks);
+            if (catLinkErr) throw new Error(`categorias: ${catLinkErr.message}`);
           }
           drinkNomes.add(r.nome.toLowerCase());
           out.push({ nome: r.nome, status: "criado" });
