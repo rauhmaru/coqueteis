@@ -13,8 +13,10 @@ type Comentario = {
   user_id: string;
   texto: string;
   created_at: string;
-  profiles: { display_name: string | null; email: string | null } | null;
 };
+
+type Autor = { display_name: string | null; email: string | null };
+
 
 const likesKey = (drinkId: string) => ["drink-likes", drinkId] as const;
 const commentsKey = (drinkId: string) => ["drink-comentarios", drinkId] as const;
