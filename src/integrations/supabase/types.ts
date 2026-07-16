@@ -32,6 +32,41 @@ export type Database = {
         }
         Relationships: []
       }
+      drink_comentarios: {
+        Row: {
+          created_at: string
+          drink_id: string
+          id: string
+          texto: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          drink_id: string
+          id?: string
+          texto: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          drink_id?: string
+          id?: string
+          texto?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_comentarios_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       drink_ingredientes: {
         Row: {
           drink_id: string
@@ -58,6 +93,32 @@ export type Database = {
             columns: ["ingrediente_id"]
             isOneToOne: false
             referencedRelation: "ingredientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drink_likes: {
+        Row: {
+          created_at: string
+          drink_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          drink_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          drink_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_likes_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
             referencedColumns: ["id"]
           },
         ]
