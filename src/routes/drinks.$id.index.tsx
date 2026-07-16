@@ -6,6 +6,7 @@ import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
+import { DrinkSocial } from "@/components/drink-social";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/drinks/$id/")({
@@ -78,6 +79,8 @@ function DrinkDetail() {
             )}
           </div>
         </div>
+
+        <DrinkSocial drinkId={drink.id} />
       </main>
     </div>
   );
