@@ -69,13 +69,30 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
     queryFn: async (): Promise<Comentario[]> => {
       const { data, error } = await supabase
         .from("drink_comentarios")
-        .select("id, user_id, texto, created_at, profiles(display_name, email)")
+        .select("id, user_id, texto, created_at")
         .eq("drink_id", drinkId)
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return (data ?? []) as unknown as Comentario[];
+      return (data ?? []) as Comentario[];
     },
   });
+
+  const userIds = Array.from(new Set((comentariosQ.data ?? []).map((c) => c.user_id)));
+  const autoresQ = useQuery({
+    queryKey: ["comentario-autores", userIds.sort().join(",")],
+    enabled: userIds.length > 0,
+    queryFn: async (): Promise<Record<string, Autor>> => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, display_name, email")
+        .in("id", userIds);
+      if (error) throw error;
+      const map: Record<string, Autor> = {};
+      for (const p of data ?? []) map[p.id] = { display_name: p.display_name, email: p.email };
+      return map;
+    },
+  });
+
 
   const criarComentario = useMutation({
     mutationFn: async (t: string) => {
