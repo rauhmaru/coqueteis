@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
@@ -98,7 +98,13 @@ function CategoriasPage() {
             <li className="px-4 py-8 text-center text-muted-foreground text-sm">Nenhuma categoria cadastrada.</li>
           ) : categorias.map((cat) => (
             <li key={cat.id} className="px-4 py-3 flex items-center justify-between hover:bg-secondary/20">
-              <span className="text-foreground">{cat.nome}</span>
+              <Link
+                to="/categorias/$id"
+                params={{ id: cat.id }}
+                className="flex-1 text-foreground hover:text-primary transition-colors"
+              >
+                {cat.nome}
+              </Link>
               {canEdit && (
                 <div className="space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(cat); setNome(cat.nome); }}>
