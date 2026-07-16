@@ -7,16 +7,20 @@ export type Ingrediente = {
   nome: string;
   categoria_id: string | null;
   quantidade: number;
+  created_by: string | null;
   categorias?: { nome: string } | null;
 };
+export type DrinkCategoria = { id: string; nome: string };
 export type Drink = {
   id: string;
   nome: string;
   preparo: string;
   imagem_url: string | null;
+  created_by: string | null;
 };
 export type DrinkComIngredientes = Drink & {
   drink_ingredientes: { ingrediente_id: string; ingredientes: Ingrediente | null }[];
+  drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
 };
 
 export const categoriasQuery = queryOptions({
@@ -43,15 +47,18 @@ export const ingredientesQuery = queryOptions({
   },
 });
 
+const DRINK_SELECT =
+  "*, drink_ingredientes(ingrediente_id, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+
 export const drinksQuery = queryOptions({
   queryKey: ["drinks"],
   queryFn: async (): Promise<DrinkComIngredientes[]> => {
     const { data, error } = await supabase
       .from("drinks")
-      .select("*, drink_ingredientes(ingrediente_id, ingredientes(*, categorias(nome)))")
+      .select(DRINK_SELECT)
       .order("nome");
     if (error) throw error;
-    return (data ?? []) as DrinkComIngredientes[];
+    return (data ?? []) as unknown as DrinkComIngredientes[];
   },
 });
 
@@ -61,13 +68,25 @@ export const drinkQuery = (id: string) =>
     queryFn: async (): Promise<DrinkComIngredientes | null> => {
       const { data, error } = await supabase
         .from("drinks")
-        .select("*, drink_ingredientes(ingrediente_id, ingredientes(*, categorias(nome)))")
+        .select(DRINK_SELECT)
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data as DrinkComIngredientes | null;
+      return data as unknown as DrinkComIngredientes | null;
     },
   });
+
+export const drinkCategoriasQuery = queryOptions({
+  queryKey: ["drink_categorias"],
+  queryFn: async (): Promise<DrinkCategoria[]> => {
+    const { data, error } = await supabase
+      .from("drink_categorias")
+      .select("id, nome")
+      .order("nome");
+    if (error) throw error;
+    return data ?? [];
+  },
+});
 
 export const countsQuery = queryOptions({
   queryKey: ["counts"],

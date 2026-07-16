@@ -41,12 +41,14 @@ function IngredientesPage() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(categoriasQuery);
   const qc = useQueryClient();
-  const { canEdit } = useAuth();
+  const { canEdit, user, isAdmin } = useAuth();
   const [editing, setEditing] = useState<Ingrediente | null>(null);
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [nome, setNome] = useState("");
   const [categoriaId, setCategoriaId] = useState<string>("");
   const [saving, setSaving] = useState(false);
+  const canManage = (ing: Ingrediente) =>
+    canEdit && (isAdmin || (user && ing.created_by === user.id));
 
   const reset = () => {
     setEditing(null); setNome(""); setCategoriaId("");
@@ -68,7 +70,7 @@ function IngredientesPage() {
     };
     const { error } = editing
       ? await supabase.from("ingredientes").update(payload).eq("id", editing.id)
-      : await supabase.from("ingredientes").insert(payload);
+      : await supabase.from("ingredientes").insert({ ...payload, created_by: user?.id ?? null });
     setSaving(false);
     if (error) { toast.error("Erro: " + error.message); return; }
     toast.success(editing ? "Ingrediente atualizado!" : "Ingrediente cadastrado!");
@@ -149,7 +151,7 @@ function IngredientesPage() {
                     {ing.categorias?.nome ?? <span className="italic">—</span>}
                   </td>
                   <td className="px-4 py-3 text-right space-x-1">
-                    {canEdit ? (
+                    {canManage(ing) ? (
                       <>
                         <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
                           <Pencil className="h-3.5 w-3.5" />

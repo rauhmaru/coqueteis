@@ -1,10 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ingredientesQuery } from "@/lib/queries";
+import { ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { DrinkForm } from "@/components/drink-form";
 
 export const Route = createFileRoute("/_authenticated/drinks/novo")({
   head: () => ({ meta: [{ title: "Novo drink — Destilados & Coquetéis" }] }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(ingredientesQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(ingredientesQuery),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
+    ]),
   component: () => <DrinkForm />,
   errorComponent: ({ error }) => (
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>

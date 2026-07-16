@@ -4,7 +4,7 @@ import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Upload, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { ingredientesQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { ingredientesQuery, drinkCategoriasQuery, type DrinkComIngredientes } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,17 +14,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { DrinkImage } from "@/components/drink-image";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
+import { useAuth } from "@/hooks/use-auth";
 
 export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null }) {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const navigate = useNavigate();
   const qc = useQueryClient();
   const gerarImagem = useServerFn(gerarImagemDrink);
+  const { user } = useAuth();
 
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
   const [selected, setSelected] = useState<Set<string>>(
     new Set(existing?.drink_ingredientes.map((d) => d.ingrediente_id) ?? []),
+  );
+  const [selectedCats, setSelectedCats] = useState<Set<string>>(
+    new Set(existing?.drink_drink_categorias.map((c) => c.categoria_id) ?? []),
   );
   const [imagemPath, setImagemPath] = useState<string | null>(existing?.imagem_url ?? null);
   const [novaImagem, setNovaImagem] = useState<File | null>(null);
@@ -33,6 +39,13 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
 
   const toggle = (id: string) => {
     setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+  const toggleCat = (id: string) => {
+    setSelectedCats((prev) => {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id); else next.add(id);
       return next;
@@ -59,7 +72,6 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
           .from("drink-images")
           .upload(path, novaImagem, { contentType: novaImagem.type });
         if (upErr) throw upErr;
-        // remove imagem antiga
         if (imagemPath) await supabase.storage.from("drink-images").remove([imagemPath]);
         finalPath = path;
       }
@@ -72,10 +84,11 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
           .eq("id", existing.id);
         if (error) throw error;
         await supabase.from("drink_ingredientes").delete().eq("drink_id", existing.id);
+        await supabase.from("drink_drink_categorias").delete().eq("drink_id", existing.id);
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, imagem_url: finalPath })
+          .insert({ nome, preparo, imagem_url: finalPath, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
@@ -88,9 +101,17 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
         const { error } = await supabase.from("drink_ingredientes").insert(rows);
         if (error) throw error;
       }
+      if (drinkId && selectedCats.size > 0) {
+        const catRows = Array.from(selectedCats).map((categoria_id) => ({
+          drink_id: drinkId!, categoria_id,
+        }));
+        const { error } = await supabase.from("drink_drink_categorias").insert(catRows);
+        if (error) throw error;
+      }
       toast.success(existing ? "Drink atualizado!" : "Drink cadastrado!");
       qc.invalidateQueries({ queryKey: ["drinks"] });
       qc.invalidateQueries({ queryKey: ["counts"] });
+
 
       // Auto-gera thumbnail 800x800 quando novo drink foi cadastrado sem imagem
       if (!existing && drinkId && !finalPath) {
@@ -167,6 +188,30 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
               <p className="text-xs text-muted-foreground">{selected.size} selecionado(s)</p>
             )}
           </div>
+
+          <div className="space-y-2">
+            <Label>Categorias</Label>
+            <div className="flex flex-wrap gap-2">
+              {categorias.map((c) => {
+                const on = selectedCats.has(c.id);
+                return (
+                  <button
+                    type="button"
+                    key={c.id}
+                    onClick={() => toggleCat(c.id)}
+                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                      on
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
+                    }`}
+                  >
+                    {c.nome}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
 
           <div className="space-y-2">
             <Label htmlFor="preparo">Preparo</Label>

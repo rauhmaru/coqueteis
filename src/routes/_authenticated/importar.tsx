@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { gerarReceitasIA, type ReceitaIA } from "@/lib/importer.functions";
 import { toast } from "sonner";
+import { useAuth } from "@/hooks/use-auth";
 
 const CATEGORIAS_DRINKS = [
   { id: "Clássicos", desc: "Negroni, Manhattan, Old Fashioned…" },
@@ -48,6 +49,7 @@ type ResultadoItem = {
 function ImportarPage() {
   const qc = useQueryClient();
   const gerar = useServerFn(gerarReceitasIA);
+  const { user } = useAuth();
   const [selecionadas, setSelecionadas] = useState<string[]>(["Clássicos"]);
   const [quantidade, setQuantidade] = useState(3);
   const [loading, setLoading] = useState(false);
@@ -77,14 +79,16 @@ function ImportarPage() {
 
       // Carrega caches locais
       setProgresso("Buscando catálogo atual…");
-      const [{ data: cats }, { data: ings }, { data: drks }] = await Promise.all([
+      const [{ data: cats }, { data: ings }, { data: drks }, { data: dcats }] = await Promise.all([
         supabase.from("categorias").select("id, nome"),
         supabase.from("ingredientes").select("id, nome"),
         supabase.from("drinks").select("id, nome"),
+        supabase.from("drink_categorias").select("id, nome"),
       ]);
       const catMap = new Map<string, string>((cats ?? []).map((c) => [c.nome.toLowerCase(), c.id]));
       const ingMap = new Map<string, string>((ings ?? []).map((i) => [i.nome.toLowerCase(), i.id]));
       const drinkNomes = new Set<string>((drks ?? []).map((d) => d.nome.toLowerCase()));
+      const drinkCatMap = new Map<string, string>((dcats ?? []).map((c) => [c.nome.toLowerCase(), c.id]));
 
       const out: ResultadoItem[] = [];
       let idx = 0;
@@ -118,7 +122,7 @@ function ImportarPage() {
               }
               const { data: novoIng, error: ingErr } = await supabase
                 .from("ingredientes")
-                .insert({ nome: ing.nome.trim(), categoria_id: catId, quantidade: 500 })
+                .insert({ nome: ing.nome.trim(), categoria_id: catId, quantidade: 500, created_by: user?.id ?? null })
                 .select("id")
                 .single();
               if (ingErr || !novoIng) throw new Error(`ingrediente: ${ingErr?.message}`);
@@ -131,16 +135,26 @@ function ImportarPage() {
           // Cria drink
           const { data: novoDrink, error: drkErr } = await supabase
             .from("drinks")
-            .insert({ nome: r.nome.trim(), preparo: r.preparo ?? "" })
+            .insert({ nome: r.nome.trim(), preparo: r.preparo ?? "", created_by: user?.id ?? null })
             .select("id")
             .single();
           if (drkErr || !novoDrink) throw new Error(`drink: ${drkErr?.message}`);
 
-          // Vincula
+          // Vincula ingredientes
           if (ingredienteIds.length) {
             const links = ingredienteIds.map((iid) => ({ drink_id: novoDrink.id, ingrediente_id: iid }));
             const { error: linkErr } = await supabase.from("drink_ingredientes").insert(links);
             if (linkErr) throw new Error(`vínculos: ${linkErr.message}`);
+          }
+
+          // Vincula categorias
+          const catIds = (r.categorias ?? selecionadas)
+            .map((c) => drinkCatMap.get(c.toLowerCase()))
+            .filter((v): v is string => !!v);
+          if (catIds.length) {
+            const catLinks = catIds.map((cid) => ({ drink_id: novoDrink.id, categoria_id: cid }));
+            const { error: catLinkErr } = await supabase.from("drink_drink_categorias").insert(catLinks);
+            if (catLinkErr) throw new Error(`categorias: ${catLinkErr.message}`);
           }
           drinkNomes.add(r.nome.toLowerCase());
           out.push({ nome: r.nome, status: "criado" });
