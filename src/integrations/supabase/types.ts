@@ -32,6 +32,32 @@ export type Database = {
         }
         Relationships: []
       }
+      comentario_likes: {
+        Row: {
+          comentario_id: string
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          comentario_id: string
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          comentario_id?: string
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comentario_likes_comentario_id_fkey"
+            columns: ["comentario_id"]
+            isOneToOne: false
+            referencedRelation: "drink_comentarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       drink_comentarios: {
         Row: {
           created_at: string
