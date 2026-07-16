@@ -58,6 +58,7 @@ Retorne JSON com este formato exato:
     {
       "nome": "Nome do drink",
       "preparo": "Modo de preparo detalhado em 1-3 frases",
+      "categorias": ["Clássicos"],
       "ingredientes": [
         { "nome": "Vodka", "categoria": "Destilados" },
         { "nome": "Suco de limão", "categoria": "Cítricos" }
@@ -68,6 +69,7 @@ Retorne JSON com este formato exato:
 
 Regras:
 - Total esperado: ${totalDrinks} drinks
+- O campo "categorias" de cada drink DEVE conter uma ou mais destas categorias exatas: ${data.categorias.join(", ")}. Um drink pode pertencer a várias (ex.: um Whiskey Sour é ["Clássicos","Sour"]).
 - Use categorias de ingredientes entre: Destilados, Licores, Vermutes & Aperitivos, Cítricos, Ervas & Frutas, Adoçantes, Bitters, Espumantes & Refrigerantes, Outros
 - Nomes de ingredientes devem ser concisos e padronizados (ex: "Rum branco", "Suco de limão", "Açúcar")
 - Inclua entre 2 e 7 ingredientes por drink
