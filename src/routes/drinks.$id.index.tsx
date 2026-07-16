@@ -79,6 +79,8 @@ function DrinkDetail() {
             )}
           </div>
         </div>
+
+        <DrinkSocial drinkId={drink.id} />
       </main>
     </div>
   );
