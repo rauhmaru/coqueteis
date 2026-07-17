@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
 import { useAuth } from "@/hooks/use-auth";
+import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
@@ -77,7 +78,7 @@ function DrinksList() {
   };
 
   const canManage = (d: (typeof drinks)[number]) =>
-    canEdit && (isAdmin || (user && d.created_by === user.id));
+    canManageItem({ user, isAdmin, canEdit }, d);
 
   const remover = async (id: string) => {
     const drink = drinks.find((d) => d.id === id);
