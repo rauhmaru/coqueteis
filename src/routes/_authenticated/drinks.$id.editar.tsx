@@ -1,10 +1,10 @@
-import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { ArrowLeft } from "lucide-react";
 import { drinkQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { DrinkForm } from "@/components/drink-form";
+import { SiteHeader } from "@/components/site-header";
 import { useAuth } from "@/hooks/use-auth";
-import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
   head: () => ({ meta: [{ title: "Editar drink — Destilados & Coquetéis" }] }),
@@ -28,13 +28,28 @@ function EditDrink() {
   const { id } = Route.useParams();
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
   const { user, isAdmin } = useAuth();
-  const navigate = useNavigate();
-  const canManage = isAdmin || (user && drink?.created_by === user.id);
-  useEffect(() => {
-    if (drink && user && !canManage) {
-      toast.error("Você só pode editar drinks que você cadastrou.");
-      navigate({ to: "/drinks/$id", params: { id } });
-    }
-  }, [drink, user, canManage, navigate, id]);
+  const canManage = !!(drink && user && (isAdmin || drink.created_by === user.id));
+
+  if (!canManage) {
+    return (
+      <div className="min-h-screen">
+        <SiteHeader />
+        <main className="mx-auto max-w-2xl px-4 py-16 text-center space-y-4">
+          <h1 className="font-serif text-3xl text-foreground">Sem permissão</h1>
+          <p className="text-muted-foreground">
+            Você só pode editar receitas que você cadastrou.
+          </p>
+          <Link
+            to="/drinks/$id"
+            params={{ id }}
+            className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
+          >
+            <ArrowLeft className="h-4 w-4" /> Ver o drink
+          </Link>
+        </main>
+      </div>
+    );
+  }
+
   return <DrinkForm existing={drink} />;
 }
