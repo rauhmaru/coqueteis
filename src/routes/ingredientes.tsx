@@ -17,6 +17,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useAuth } from "@/hooks/use-auth";
+import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/ingredientes")({
   head: () => ({
@@ -48,7 +49,7 @@ function IngredientesPage() {
   const [categoriaId, setCategoriaId] = useState<string>("");
   const [saving, setSaving] = useState(false);
   const canManage = (ing: Ingrediente) =>
-    canEdit && (isAdmin || (user && ing.created_by === user.id));
+    canManageItem({ user, isAdmin, canEdit }, ing);
 
   const reset = () => {
     setEditing(null); setNome(""); setCategoriaId("");

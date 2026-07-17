@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { drinkQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { DrinkForm } from "@/components/drink-form";
 import { useAuth } from "@/hooks/use-auth";
+import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
   head: () => ({ meta: [{ title: "Editar drink — Destilados & Coquetéis" }] }),
@@ -30,7 +31,7 @@ function EditDrink() {
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
   const { user, isAdmin, loading } = useAuth();
   const navigate = useNavigate();
-  const canManage = !!(drink && user && (isAdmin || drink.created_by === user.id));
+  const canManage = canManageItem({ user, isAdmin }, drink);
 
   useEffect(() => {
     if (loading || canManage) return;

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
 import { DrinkSocial } from "@/components/drink-social";
 import { useAuth } from "@/hooks/use-auth";
+import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/drinks/$id/")({
   head: () => ({
@@ -34,7 +35,7 @@ function DrinkDetail() {
   const { id } = Route.useParams();
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
   const { canEdit, user, isAdmin } = useAuth();
-  const canManage = canEdit && (isAdmin || (user && drink?.created_by === user.id));
+  const canManage = canManageItem({ user, isAdmin, canEdit }, drink);
   if (!drink) return null;
 
   return (
