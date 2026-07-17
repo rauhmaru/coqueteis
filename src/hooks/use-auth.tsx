@@ -76,7 +76,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const isAdmin = roles.includes("admin");
-  const canEdit = isAdmin || roles.includes("editor");
+  // Qualquer usuário autenticado pode criar seus próprios itens.
+  // Posse fina (editar/remover item específico) é verificada nos componentes.
+  const canEdit = !!user;
 
   return (
     <AuthContext.Provider value={{ loading, user, session, roles, isAdmin, canEdit, signOut, refreshRoles }}>
