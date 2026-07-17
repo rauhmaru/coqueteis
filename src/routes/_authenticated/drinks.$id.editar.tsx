@@ -1,9 +1,10 @@
-import { createFileRoute, notFound, Link } from "@tanstack/react-router";
+import { createFileRoute, notFound, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft } from "lucide-react";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { drinkQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { DrinkForm } from "@/components/drink-form";
-import { SiteHeader } from "@/components/site-header";
 import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
@@ -27,26 +28,20 @@ export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
 function EditDrink() {
   const { id } = Route.useParams();
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
   const canManage = !!(drink && user && (isAdmin || drink.created_by === user.id));
+
+  useEffect(() => {
+    if (loading || canManage) return;
+    toast.error("Você só pode editar receitas que você mesmo cadastrou.");
+    navigate({ to: "/drinks/$id", params: { id }, replace: true });
+  }, [canManage, loading, id, navigate]);
 
   if (!canManage) {
     return (
-      <div className="min-h-screen">
-        <SiteHeader />
-        <main className="mx-auto max-w-2xl px-4 py-16 text-center space-y-4">
-          <h1 className="font-serif text-3xl text-foreground">Sem permissão</h1>
-          <p className="text-muted-foreground">
-            Você só pode editar receitas que você cadastrou.
-          </p>
-          <Link
-            to="/drinks/$id"
-            params={{ id }}
-            className="inline-flex items-center gap-1 text-sm text-primary hover:underline"
-          >
-            <ArrowLeft className="h-4 w-4" /> Ver o drink
-          </Link>
-        </main>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
