@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Share2, Link as LinkIcon, Check } from "lucide-react";
+import { Share2, Link as LinkIcon, Check, Image as ImageIcon, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,11 +9,13 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
+import { getSignedImageUrl } from "@/lib/queries";
 
-type Props = { nome: string; drinkId: string };
+type Props = { nome: string; drinkId: string; imagemPath?: string | null };
 
-export function ShareDrink({ nome, drinkId }: Props) {
+export function ShareDrink({ nome, drinkId, imagemPath }: Props) {
   const [copied, setCopied] = useState(false);
+  const [sharingImage, setSharingImage] = useState(false);
 
   const url =
     typeof window !== "undefined"
@@ -40,17 +42,41 @@ export function ShareDrink({ nome, drinkId }: Props) {
     }
   };
 
-  const nativeShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: nome, text, url });
-        return true;
-      } catch {
-        // usuário cancelou — silencioso
-        return true;
+  const shareWithImage = async () => {
+    if (!imagemPath) return;
+    setSharingImage(true);
+    try {
+      const signed = await getSignedImageUrl(imagemPath);
+      if (!signed) throw new Error("Imagem indisponível.");
+      const res = await fetch(signed);
+      const blob = await res.blob();
+      const ext = (blob.type.split("/")[1] || "jpg").split("+")[0];
+      const file = new File([blob], `${nome.replace(/[^\w-]+/g, "_")}.${ext}`, {
+        type: blob.type || "image/jpeg",
+      });
+
+      const payload: ShareData = { title: nome, text: `${text}\n${url}`, url, files: [file] };
+      if (navigator.canShare?.({ files: [file] }) && navigator.share) {
+        await navigator.share(payload);
+      } else {
+        // Fallback: baixa a imagem e copia o link para o usuário anexar manualmente
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(a.href);
+        try { await navigator.clipboard.writeText(`${text} ${url}`); } catch { /* noop */ }
+        toast.success("Imagem baixada e link copiado. Anexe manualmente onde quiser compartilhar.");
       }
+    } catch (e) {
+      if ((e as Error).name !== "AbortError") {
+        toast.error((e as Error).message || "Falha ao compartilhar imagem.");
+      }
+    } finally {
+      setSharingImage(false);
     }
-    return false;
   };
 
   const open = (href: string) => window.open(href, "_blank", "noopener,noreferrer");
@@ -58,21 +84,26 @@ export function ShareDrink({ nome, drinkId }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="outline"
-          onClick={async (e) => {
-            // Em mobile, tenta compartilhamento nativo antes do dropdown
-            if (typeof navigator !== "undefined" && "share" in navigator) {
-              e.preventDefault();
-              const ok = await nativeShare();
-              if (ok) return;
-            }
-          }}
-        >
+        <Button variant="outline">
           <Share2 className="h-4 w-4 mr-2" /> Compartilhar
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-52">
+      <DropdownMenuContent align="end" className="w-56">
+        {imagemPath && (
+          <>
+            <DropdownMenuItem
+              onSelect={(e) => { e.preventDefault(); shareWithImage(); }}
+              disabled={sharingImage}
+            >
+              {sharingImage ? (
+                <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Preparando…</>
+              ) : (
+                <><ImageIcon className="h-4 w-4 mr-2" /> Compartilhar com imagem</>
+              )}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+          </>
+        )}
         <DropdownMenuItem onClick={() => open(links.whatsapp)}>WhatsApp</DropdownMenuItem>
         <DropdownMenuItem onClick={() => open(links.telegram)}>Telegram</DropdownMenuItem>
         <DropdownMenuItem onClick={() => open(links.twitter)}>X (Twitter)</DropdownMenuItem>
@@ -80,13 +111,9 @@ export function ShareDrink({ nome, drinkId }: Props) {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={copyLink}>
           {copied ? (
-            <>
-              <Check className="h-4 w-4 mr-2" /> Copiado
-            </>
+            <><Check className="h-4 w-4 mr-2" /> Copiado</>
           ) : (
-            <>
-              <LinkIcon className="h-4 w-4 mr-2" /> Copiar link
-            </>
+            <><LinkIcon className="h-4 w-4 mr-2" /> Copiar link</>
           )}
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -88,7 +88,7 @@ function DrinkDetail() {
                   </Link>
                 </Button>
               )}
-              <ShareDrink nome={drink.nome} drinkId={drink.id} />
+              <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
             </div>
           </div>
         </div>
