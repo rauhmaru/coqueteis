@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
 import { DrinkSocial } from "@/components/drink-social";
+import { ShareDrink } from "@/components/share-drink";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
@@ -79,13 +80,16 @@ function DrinkDetail() {
                 {drink.preparo || <span className="text-muted-foreground italic">Sem instruções de preparo.</span>}
               </p>
             </div>
-            {canManage && (
-              <Button asChild>
-                <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
-                  <Pencil className="h-4 w-4 mr-2" /> Editar
-                </Link>
-              </Button>
-            )}
+            <div className="flex flex-wrap gap-2">
+              {canManage && (
+                <Button asChild>
+                  <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
+                    <Pencil className="h-4 w-4 mr-2" /> Editar
+                  </Link>
+                </Button>
+              )}
+              <ShareDrink nome={drink.nome} drinkId={drink.id} />
+            </div>
           </div>
         </div>
 
