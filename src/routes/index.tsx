@@ -45,6 +45,12 @@ function HomePage() {
     return drinks.filter((d) => d.nome.toLowerCase().includes(q)).slice(0, 8);
   }, [query, drinks]);
 
+  const sugestao = useMemo(
+    () => (drinks.length ? drinks[Math.floor(Math.random() * drinks.length)] : null),
+    [drinks],
+  );
+
+
   return (
     <div className="min-h-screen">
       <SiteHeader />
