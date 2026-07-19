@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Martini, Search, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { DrinkImage } from "@/components/drink-image";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
   Command,
