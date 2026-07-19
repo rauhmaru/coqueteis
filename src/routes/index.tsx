@@ -3,6 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Martini, Search, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
+import { DrinkImage } from "@/components/drink-image";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
   Command,
@@ -43,6 +44,12 @@ function HomePage() {
     const q = query.toLowerCase();
     return drinks.filter((d) => d.nome.toLowerCase().includes(q)).slice(0, 8);
   }, [query, drinks]);
+
+  const sugestao = useMemo(
+    () => (drinks.length ? drinks[Math.floor(Math.random() * drinks.length)] : null),
+    [drinks],
+  );
+
 
   return (
     <div className="min-h-screen">
@@ -101,6 +108,30 @@ function HomePage() {
             to="/drinks"
           />
         </section>
+
+        {sugestao && (
+          <section className="max-w-2xl mx-auto space-y-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-primary text-center">
+              Sugestão do bartender
+            </p>
+            <Link
+              to="/drinks/$id"
+              params={{ id: sugestao.id }}
+              className="group block rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors"
+            >
+              <DrinkImage
+                path={sugestao.imagem_url}
+                alt={sugestao.nome}
+                className="aspect-square w-full object-cover"
+              />
+              <div className="p-4 text-center">
+                <h3 className="font-serif text-2xl text-foreground group-hover:text-primary transition-colors">
+                  {sugestao.nome}
+                </h3>
+              </div>
+            </Link>
+          </section>
+        )}
       </main>
     </div>
   );
