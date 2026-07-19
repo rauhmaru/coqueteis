@@ -9,13 +9,22 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as IngredientesRouteImport } from './routes/ingredientes'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
+import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
+import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
+import { Route as MixologiaOrigemRouteImport } from './routes/mixologia.origem'
+import { Route as MixologiaMateriaisRouteImport } from './routes/mixologia.materiais'
+import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
+import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
+import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
@@ -23,6 +32,11 @@ import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
+const MixologiaRoute = MixologiaRouteImport.update({
+  id: '/mixologia',
+  path: '/mixologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IngredientesRoute = IngredientesRouteImport.update({
   id: '/ingredientes',
   path: '/ingredientes',
@@ -52,10 +66,50 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MixologiaIndexRoute = MixologiaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MixologiaRoute,
+} as any)
 const DrinksIndexRoute = DrinksIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DrinksRoute,
+} as any)
+const MixologiaXaropesRoute = MixologiaXaropesRouteImport.update({
+  id: '/xaropes',
+  path: '/xaropes',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaTiposRoute = MixologiaTiposRouteImport.update({
+  id: '/tipos',
+  path: '/tipos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaOrigemRoute = MixologiaOrigemRouteImport.update({
+  id: '/origem',
+  path: '/origem',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaMateriaisRoute = MixologiaMateriaisRouteImport.update({
+  id: '/materiais',
+  path: '/materiais',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaGeloRoute = MixologiaGeloRouteImport.update({
+  id: '/gelo',
+  path: '/gelo',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaCoposRoute = MixologiaCoposRouteImport.update({
+  id: '/copos',
+  path: '/copos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaBebidasRoute = MixologiaBebidasRouteImport.update({
+  id: '/bebidas',
+  path: '/bebidas',
+  getParentRoute: () => MixologiaRoute,
 } as any)
 const DrinksIdRoute = DrinksIdRouteImport.update({
   id: '/$id',
@@ -95,10 +149,19 @@ export interface FileRoutesByFullPath {
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/ingredientes': typeof IngredientesRoute
+  '/mixologia': typeof MixologiaRouteWithChildren
   '/importar': typeof AuthenticatedImportarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/mixologia/bebidas': typeof MixologiaBebidasRoute
+  '/mixologia/copos': typeof MixologiaCoposRoute
+  '/mixologia/gelo': typeof MixologiaGeloRoute
+  '/mixologia/materiais': typeof MixologiaMateriaisRoute
+  '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
+  '/mixologia/': typeof MixologiaIndexRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -110,7 +173,15 @@ export interface FileRoutesByTo {
   '/ingredientes': typeof IngredientesRoute
   '/importar': typeof AuthenticatedImportarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/mixologia/bebidas': typeof MixologiaBebidasRoute
+  '/mixologia/copos': typeof MixologiaCoposRoute
+  '/mixologia/gelo': typeof MixologiaGeloRoute
+  '/mixologia/materiais': typeof MixologiaMateriaisRoute
+  '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks': typeof DrinksIndexRoute
+  '/mixologia': typeof MixologiaIndexRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -123,10 +194,19 @@ export interface FileRoutesById {
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/ingredientes': typeof IngredientesRoute
+  '/mixologia': typeof MixologiaRouteWithChildren
   '/_authenticated/importar': typeof AuthenticatedImportarRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/mixologia/bebidas': typeof MixologiaBebidasRoute
+  '/mixologia/copos': typeof MixologiaCoposRoute
+  '/mixologia/gelo': typeof MixologiaGeloRoute
+  '/mixologia/materiais': typeof MixologiaMateriaisRoute
+  '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
+  '/mixologia/': typeof MixologiaIndexRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -139,10 +219,19 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/drinks'
     | '/ingredientes'
+    | '/mixologia'
     | '/importar'
     | '/usuarios'
     | '/drinks/$id'
+    | '/mixologia/bebidas'
+    | '/mixologia/copos'
+    | '/mixologia/gelo'
+    | '/mixologia/materiais'
+    | '/mixologia/origem'
+    | '/mixologia/tipos'
+    | '/mixologia/xaropes'
     | '/drinks/'
+    | '/mixologia/'
     | '/drinks/novo'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
@@ -154,7 +243,15 @@ export interface FileRouteTypes {
     | '/ingredientes'
     | '/importar'
     | '/usuarios'
+    | '/mixologia/bebidas'
+    | '/mixologia/copos'
+    | '/mixologia/gelo'
+    | '/mixologia/materiais'
+    | '/mixologia/origem'
+    | '/mixologia/tipos'
+    | '/mixologia/xaropes'
     | '/drinks'
+    | '/mixologia'
     | '/drinks/novo'
     | '/drinks/$id'
     | '/drinks/$id/editar'
@@ -166,10 +263,19 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/drinks'
     | '/ingredientes'
+    | '/mixologia'
     | '/_authenticated/importar'
     | '/_authenticated/usuarios'
     | '/drinks/$id'
+    | '/mixologia/bebidas'
+    | '/mixologia/copos'
+    | '/mixologia/gelo'
+    | '/mixologia/materiais'
+    | '/mixologia/origem'
+    | '/mixologia/tipos'
+    | '/mixologia/xaropes'
     | '/drinks/'
+    | '/mixologia/'
     | '/_authenticated/drinks/novo'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
@@ -182,10 +288,18 @@ export interface RootRouteChildren {
   ConfiancaRoute: typeof ConfiancaRoute
   DrinksRoute: typeof DrinksRouteWithChildren
   IngredientesRoute: typeof IngredientesRoute
+  MixologiaRoute: typeof MixologiaRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/mixologia': {
+      id: '/mixologia'
+      path: '/mixologia'
+      fullPath: '/mixologia'
+      preLoaderRoute: typeof MixologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ingredientes': {
       id: '/ingredientes'
       path: '/ingredientes'
@@ -228,12 +342,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mixologia/': {
+      id: '/mixologia/'
+      path: '/'
+      fullPath: '/mixologia/'
+      preLoaderRoute: typeof MixologiaIndexRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
     '/drinks/': {
       id: '/drinks/'
       path: '/'
       fullPath: '/drinks/'
       preLoaderRoute: typeof DrinksIndexRouteImport
       parentRoute: typeof DrinksRoute
+    }
+    '/mixologia/xaropes': {
+      id: '/mixologia/xaropes'
+      path: '/xaropes'
+      fullPath: '/mixologia/xaropes'
+      preLoaderRoute: typeof MixologiaXaropesRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/tipos': {
+      id: '/mixologia/tipos'
+      path: '/tipos'
+      fullPath: '/mixologia/tipos'
+      preLoaderRoute: typeof MixologiaTiposRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/origem': {
+      id: '/mixologia/origem'
+      path: '/origem'
+      fullPath: '/mixologia/origem'
+      preLoaderRoute: typeof MixologiaOrigemRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/materiais': {
+      id: '/mixologia/materiais'
+      path: '/materiais'
+      fullPath: '/mixologia/materiais'
+      preLoaderRoute: typeof MixologiaMateriaisRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/gelo': {
+      id: '/mixologia/gelo'
+      path: '/gelo'
+      fullPath: '/mixologia/gelo'
+      preLoaderRoute: typeof MixologiaGeloRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/copos': {
+      id: '/mixologia/copos'
+      path: '/copos'
+      fullPath: '/mixologia/copos'
+      preLoaderRoute: typeof MixologiaCoposRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/bebidas': {
+      id: '/mixologia/bebidas'
+      path: '/bebidas'
+      fullPath: '/mixologia/bebidas'
+      preLoaderRoute: typeof MixologiaBebidasRouteImport
+      parentRoute: typeof MixologiaRoute
     }
     '/drinks/$id': {
       id: '/drinks/$id'
@@ -322,6 +492,32 @@ const DrinksRouteChildren: DrinksRouteChildren = {
 const DrinksRouteWithChildren =
   DrinksRoute._addFileChildren(DrinksRouteChildren)
 
+interface MixologiaRouteChildren {
+  MixologiaBebidasRoute: typeof MixologiaBebidasRoute
+  MixologiaCoposRoute: typeof MixologiaCoposRoute
+  MixologiaGeloRoute: typeof MixologiaGeloRoute
+  MixologiaMateriaisRoute: typeof MixologiaMateriaisRoute
+  MixologiaOrigemRoute: typeof MixologiaOrigemRoute
+  MixologiaTiposRoute: typeof MixologiaTiposRoute
+  MixologiaXaropesRoute: typeof MixologiaXaropesRoute
+  MixologiaIndexRoute: typeof MixologiaIndexRoute
+}
+
+const MixologiaRouteChildren: MixologiaRouteChildren = {
+  MixologiaBebidasRoute: MixologiaBebidasRoute,
+  MixologiaCoposRoute: MixologiaCoposRoute,
+  MixologiaGeloRoute: MixologiaGeloRoute,
+  MixologiaMateriaisRoute: MixologiaMateriaisRoute,
+  MixologiaOrigemRoute: MixologiaOrigemRoute,
+  MixologiaTiposRoute: MixologiaTiposRoute,
+  MixologiaXaropesRoute: MixologiaXaropesRoute,
+  MixologiaIndexRoute: MixologiaIndexRoute,
+}
+
+const MixologiaRouteWithChildren = MixologiaRoute._addFileChildren(
+  MixologiaRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
@@ -329,6 +525,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiancaRoute: ConfiancaRoute,
   DrinksRoute: DrinksRouteWithChildren,
   IngredientesRoute: IngredientesRoute,
+  MixologiaRoute: MixologiaRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
