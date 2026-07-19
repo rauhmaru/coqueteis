@@ -108,6 +108,30 @@ function HomePage() {
             to="/drinks"
           />
         </section>
+
+        {sugestao && (
+          <section className="max-w-2xl mx-auto space-y-4">
+            <p className="text-xs uppercase tracking-[0.3em] text-primary text-center">
+              Sugestão do bartender
+            </p>
+            <Link
+              to="/drinks/$id"
+              params={{ id: sugestao.id }}
+              className="group block rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors"
+            >
+              <DrinkImage
+                path={sugestao.imagem_url}
+                alt={sugestao.nome}
+                className="aspect-square w-full object-cover"
+              />
+              <div className="p-4 text-center">
+                <h3 className="font-serif text-2xl text-foreground group-hover:text-primary transition-colors">
+                  {sugestao.nome}
+                </h3>
+              </div>
+            </Link>
+          </section>
+        )}
       </main>
     </div>
   );
