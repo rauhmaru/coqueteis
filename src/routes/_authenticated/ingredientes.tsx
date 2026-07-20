@@ -19,7 +19,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
-export const Route = createFileRoute("/ingredientes")({
+export const Route = createFileRoute("/_authenticated/ingredientes")({
   head: () => ({
     meta: [
       { title: "Ingredientes — Destilados & Coquetéis" },

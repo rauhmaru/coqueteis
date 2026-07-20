@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MixologiaRouteImport } from './routes/mixologia'
-import { Route as IngredientesRouteImport } from './routes/ingredientes'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -27,6 +26,7 @@ import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
 import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
 import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
@@ -35,11 +35,6 @@ import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authe
 const MixologiaRoute = MixologiaRouteImport.update({
   id: '/mixologia',
   path: '/mixologia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IngredientesRoute = IngredientesRouteImport.update({
-  id: '/ingredientes',
-  path: '/ingredientes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrinksRoute = DrinksRouteImport.update({
@@ -121,6 +116,12 @@ const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedIngredientesRoute =
+  AuthenticatedIngredientesRouteImport.update({
+    id: '/ingredientes',
+    path: '/ingredientes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedImportarRoute = AuthenticatedImportarRouteImport.update({
   id: '/importar',
   path: '/importar',
@@ -148,9 +149,9 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
-  '/ingredientes': typeof IngredientesRoute
   '/mixologia': typeof MixologiaRouteWithChildren
   '/importar': typeof AuthenticatedImportarRoute
+  '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -170,8 +171,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
-  '/ingredientes': typeof IngredientesRoute
   '/importar': typeof AuthenticatedImportarRoute
+  '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
@@ -193,9 +194,9 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
-  '/ingredientes': typeof IngredientesRoute
   '/mixologia': typeof MixologiaRouteWithChildren
   '/_authenticated/importar': typeof AuthenticatedImportarRoute
+  '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -218,9 +219,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confianca'
     | '/drinks'
-    | '/ingredientes'
     | '/mixologia'
     | '/importar'
+    | '/ingredientes'
     | '/usuarios'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -240,8 +241,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confianca'
-    | '/ingredientes'
     | '/importar'
+    | '/ingredientes'
     | '/usuarios'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
@@ -262,9 +263,9 @@ export interface FileRouteTypes {
     | '/auth'
     | '/confianca'
     | '/drinks'
-    | '/ingredientes'
     | '/mixologia'
     | '/_authenticated/importar'
+    | '/_authenticated/ingredientes'
     | '/_authenticated/usuarios'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -287,7 +288,6 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConfiancaRoute: typeof ConfiancaRoute
   DrinksRoute: typeof DrinksRouteWithChildren
-  IngredientesRoute: typeof IngredientesRoute
   MixologiaRoute: typeof MixologiaRouteWithChildren
 }
 
@@ -298,13 +298,6 @@ declare module '@tanstack/react-router' {
       path: '/mixologia'
       fullPath: '/mixologia'
       preLoaderRoute: typeof MixologiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ingredientes': {
-      id: '/ingredientes'
-      path: '/ingredientes'
-      fullPath: '/ingredientes'
-      preLoaderRoute: typeof IngredientesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drinks': {
@@ -419,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/ingredientes': {
+      id: '/_authenticated/ingredientes'
+      path: '/ingredientes'
+      fullPath: '/ingredientes'
+      preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/importar': {
       id: '/_authenticated/importar'
       path: '/importar'
@@ -452,6 +452,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedImportarRoute: typeof AuthenticatedImportarRoute
+  AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
   AuthenticatedDrinksIdEditarRoute: typeof AuthenticatedDrinksIdEditarRoute
@@ -459,6 +460,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedImportarRoute: AuthenticatedImportarRoute,
+  AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
   AuthenticatedDrinksIdEditarRoute: AuthenticatedDrinksIdEditarRoute,
@@ -524,19 +526,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConfiancaRoute: ConfiancaRoute,
   DrinksRoute: DrinksRouteWithChildren,
-  IngredientesRoute: IngredientesRoute,
   MixologiaRoute: MixologiaRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
