@@ -14,11 +14,11 @@ import {
 const publicNav = [
   { to: "/", label: "Início" },
   { to: "/drinks", label: "Drinks" },
-  { to: "/ingredientes", label: "Ingredientes" },
   { to: "/mixologia", label: "Mixologia" },
 ] as const;
 
 const editorNav = [
+  { to: "/ingredientes", label: "Ingredientes" },
   { to: "/importar", label: "Importar" },
 ] as const;
 
