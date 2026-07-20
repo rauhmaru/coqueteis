@@ -27,7 +27,6 @@ import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
-import { Route as AuthenticatedImportarRouteImport } from './routes/_authenticated/importar'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
@@ -122,11 +121,6 @@ const AuthenticatedIngredientesRoute =
     path: '/ingredientes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedImportarRoute = AuthenticatedImportarRouteImport.update({
-  id: '/importar',
-  path: '/importar',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -150,7 +144,6 @@ export interface FileRoutesByFullPath {
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mixologia': typeof MixologiaRouteWithChildren
-  '/importar': typeof AuthenticatedImportarRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -171,7 +164,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
-  '/importar': typeof AuthenticatedImportarRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -195,7 +187,6 @@ export interface FileRoutesById {
   '/confianca': typeof ConfiancaRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mixologia': typeof MixologiaRouteWithChildren
-  '/_authenticated/importar': typeof AuthenticatedImportarRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -220,7 +211,6 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/drinks'
     | '/mixologia'
-    | '/importar'
     | '/ingredientes'
     | '/usuarios'
     | '/drinks/$id'
@@ -241,7 +231,6 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confianca'
-    | '/importar'
     | '/ingredientes'
     | '/usuarios'
     | '/mixologia/bebidas'
@@ -264,7 +253,6 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/drinks'
     | '/mixologia'
-    | '/_authenticated/importar'
     | '/_authenticated/ingredientes'
     | '/_authenticated/usuarios'
     | '/drinks/$id'
@@ -419,13 +407,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/importar': {
-      id: '/_authenticated/importar'
-      path: '/importar'
-      fullPath: '/importar'
-      preLoaderRoute: typeof AuthenticatedImportarRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/drinks/$id/': {
       id: '/drinks/$id/'
       path: '/'
@@ -451,7 +432,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedImportarRoute: typeof AuthenticatedImportarRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
@@ -459,7 +439,6 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedImportarRoute: AuthenticatedImportarRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,

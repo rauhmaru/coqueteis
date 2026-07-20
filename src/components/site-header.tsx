@@ -19,7 +19,6 @@ const publicNav = [
 
 const editorNav = [
   { to: "/ingredientes", label: "Ingredientes" },
-  { to: "/importar", label: "Importar" },
 ] as const;
 
 export function SiteHeader() {
