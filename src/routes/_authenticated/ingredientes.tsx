@@ -19,7 +19,7 @@ import {
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
-export const Route = createFileRoute("/ingredientes")({
+export const Route = createFileRoute("/_authenticated/ingredientes")({
   head: () => ({
     meta: [
       { title: "Ingredientes — Destilados & Coquetéis" },
@@ -139,31 +139,30 @@ function IngredientesPage() {
               <tr>
                 <th className="text-left px-4 py-3">Nome</th>
                 <th className="text-left px-4 py-3">Tipo</th>
-                <th className="px-4 py-3 w-32"></th>
               </tr>
             </thead>
             <tbody>
               {ingredientes.length === 0 ? (
-                <tr><td colSpan={3} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
+                <tr><td colSpan={2} className="px-4 py-8 text-center text-muted-foreground">Nenhum ingrediente cadastrado.</td></tr>
               ) : ingredientes.map((ing) => (
                 <tr key={ing.id} className="border-t border-border hover:bg-secondary/20">
-                  <td className="px-4 py-3 font-medium text-foreground">{ing.nome}</td>
+                  <td className="px-4 py-3 font-medium text-foreground">
+                    <div className="flex items-center justify-between gap-2">
+                      <span>{ing.nome}</span>
+                      {canManage(ing) && (
+                        <span className="space-x-1">
+                          <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button size="sm" variant="ghost" onClick={() => setConfirmId(ing.id)}>
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </span>
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {ing.categorias?.nome ?? <span className="italic">—</span>}
-                  </td>
-                  <td className="px-4 py-3 text-right space-x-1">
-                    {canManage(ing) ? (
-                      <>
-                        <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => setConfirmId(ing.id)}>
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </>
-                    ) : (
-                      <span className="text-xs text-muted-foreground">—</span>
-                    )}
                   </td>
                 </tr>
               ))}
