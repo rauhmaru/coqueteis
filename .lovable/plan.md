@@ -1,41 +1,32 @@
-## Nova seção Mixologia
+## Imagens por tópico em Materiais e Copos
 
-Criar uma nova área de conteúdo educacional baseada no PDF anexado, com uma página índice em `/mixologia` e 7 subpáginas de conteúdo. Puramente estático (sem backend, sem RLS): tudo vive em arquivos de rota, seguindo o padrão visual atual (SiteHeader, dark lounge, fonte serif Playfair, cards com borda âmbar).
+Hoje as rotas `/mixologia/materiais` e `/mixologia/copos` mostram todas as imagens juntas em uma linha (`MixImgRow`) no topo. O pedido é ter **uma imagem 300×300 abaixo de cada tópico**.
 
-### Rotas a criar
+### Mudanças
 
-Arquivos flat sob `src/routes/` (o `routeTree.gen.ts` é regenerado automaticamente):
+**`src/routes/mixologia.materiais.tsx`**
+- Remover o `MixImgRow` do topo.
+- Dentro de cada `MixSection`, inserir uma `MixImg` 300×300 logo abaixo do título, antes do parágrafo:
+  - Coqueteleira → `shaker.jpg` (existe)
+  - Coador Hawthorne → `strainer.jpg` (existe)
+  - Colher bailarina → `colher.jpg` (existe)
+  - Jigger, pá de gelo e pegador → `jigger.jpg` (existe)
+  - Descascador zester, biqueiras e utensílios auxiliares → **gerar** `zester.jpg` (300×300, `imagegen--generate_image`, model `fast`, tema: descascador zester + biqueira free pour sobre bancada de bar escura)
 
-- `mixologia.tsx` — layout com `<Outlet />`
-- `mixologia.index.tsx` → `/mixologia` — grid de 7 cards para os tópicos
-- `mixologia.origem.tsx` → Origem e história
-- `mixologia.tipos.tsx` → Tipos de coquetéis (método, volume, finalidade)
-- `mixologia.materiais.tsx` → Materiais e utensílios
-- `mixologia.copos.tsx` → Copos e taças
-- `mixologia.bebidas.tsx` → Bebidas etílicas (fermentadas/destiladas/infusionadas)
-- `mixologia.xaropes.tsx` → Xaropes e bitters
-- `mixologia.gelo.tsx` → Gelo: de coadjuvante à estrela
+**`src/routes/mixologia.copos.tsx`**
+- Remover o `MixImgRow` do topo.
+- Uma `MixImg` 300×300 abaixo do título de cada `MixSection`:
+  - Highball → `highball.jpg` (existe)
+  - Taça martini → `martini.jpg` (existe)
+  - Old fashioned → `old-fashioned.jpg` (existe)
+  - Canecas → `copper-mug.jpg` (existe)
+  - Outros copos importantes → **gerar** `outros-copos.jpg` (300×300, tema: taça flûte, taça de vinho, tulipa, hurricane e shot lado a lado sobre bancada escura)
 
-Cada subpágina tem `head()` com título/description próprios e o mesmo layout base: `SiteHeader`, container `max-w-4xl`, breadcrumb "← Mixologia", título em Playfair, corpo com parágrafos, subtítulos e listas — reaproveitando os textos da apostila (com pequenos ajustes de forma).
+### Layout
 
-### Navegação
+Ajustar `MixSection` (ou usar wrapper local nas duas páginas) para que a imagem fique alinhada à esquerda abaixo do título, com o texto fluindo abaixo — mantendo o padrão visual atual (borda, cantos arredondados, 300×300 fixo).
 
-Adicionar `{ to: "/mixologia", label: "Mixologia" }` em `publicNav` no `src/components/site-header.tsx`.
+### Fora do escopo
 
-### Imagens 300×300
-
-Gerar 1 imagem por tópico (7 no total) via `imagegen--generate_image` em `src/assets/mixologia/*.jpg` (300×300, model `fast`) — cada uma temática (ex.: coqueteleira/utensílios de bar, coleção de copos, garrafas de destilados, xaropes coloridos, cubo de gelo esférico etc.). Cada subpágina exibe 2–4 imagens 300×300 (a principal do tópico + variações relevantes ao conteúdo, ex.: página de copos mostra 4 tipos de copo; página de materiais mostra shaker, strainer, colher, jigger). Total ~15–20 imagens 300×300 geradas.
-
-Imagens importadas como ES6 (`import img from "@/assets/mixologia/copos.jpg"`) e usadas em `<img src={img} alt="…" className="w-[300px] h-[300px] rounded-lg object-cover" />`. A página índice usa a imagem principal de cada tópico como capa do card.
-
-### Metadados
-
-- Rota pai `/mixologia`: título "Mixologia — Destilados & Coquetéis" + description sobre aprendizado de coquetelaria.
-- Cada subpágina: título e description próprios (ex.: "Copos e taças — Mixologia").
-- `og:image` só nas subpáginas (não em `mixologia.tsx` layout nem `__root.tsx`), apontando para a imagem principal do tópico (URL absoluta do preview publicado, gerada após upload dos assets — ou omitir se ficar frágil; o hosting adiciona preview automático).
-
-### Não muda
-
-- Sem alterações em backend, tabelas, RLS, autenticação, ou funcionalidades existentes.
-- Sem edição de `routeTree.gen.ts` (regenerado pelo plugin).
-- Sem novos pacotes.
+- Demais subpáginas de `/mixologia` permanecem inalteradas.
+- Sem alterações em backend, navegação ou componentes fora dessas duas rotas (e possivelmente `mixologia-layout.tsx` para o wrapper, se necessário).
