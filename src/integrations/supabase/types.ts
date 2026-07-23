@@ -144,6 +144,35 @@ export type Database = {
           },
         ]
       }
+      drink_favoritos: {
+        Row: {
+          created_at: string
+          drink_id: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          drink_id: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          drink_id?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_favoritos_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       drink_ingredientes: {
         Row: {
           drink_id: string
