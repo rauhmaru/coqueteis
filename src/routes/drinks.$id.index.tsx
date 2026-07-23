@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Pencil } from "lucide-react";
+import { ArrowLeft, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
@@ -88,6 +88,18 @@ function DrinkDetail() {
                   </Link>
                 </Button>
               )}
+              <Button
+                variant="outline"
+                onClick={() =>
+                  window.open(
+                    `https://www.youtube.com/results?search_query=${encodeURIComponent(`receita ${drink.nome}`)}`,
+                    "_blank",
+                    "noopener,noreferrer",
+                  )
+                }
+              >
+                <Youtube className="h-4 w-4 mr-2" /> Ver no YouTube
+              </Button>
               <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
             </div>
           </div>
