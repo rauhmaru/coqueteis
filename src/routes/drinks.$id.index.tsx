@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
 import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
+import { FavoriteButton } from "@/components/favorite-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
@@ -100,6 +101,7 @@ function DrinkDetail() {
               >
                 <Youtube className="h-4 w-4 mr-2" /> Ver no YouTube
               </Button>
+              <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
             </div>
           </div>

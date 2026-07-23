@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { LogIn, LogOut, Martini, Shield } from "lucide-react";
+import { Heart, LogIn, LogOut, Martini, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,6 +61,15 @@ export function SiteHeader() {
               {item.label}
             </Link>
           ))}
+          {user && (
+            <Link
+              to="/favoritos"
+              className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors inline-flex items-center gap-1"
+              activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80 inline-flex items-center gap-1" }}
+            >
+              <Heart className="h-3.5 w-3.5" /> Favoritos
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
