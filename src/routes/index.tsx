@@ -41,8 +41,33 @@ function HomePage() {
 
   const filtered = useMemo(() => {
     if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return drinks.filter((d) => d.nome.toLowerCase().includes(q)).slice(0, 8);
+    const q = query
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    const norm = (s: string) =>
+      s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const scored = drinks
+      .map((d) => {
+        const nome = norm(d.nome);
+        const cats = d.drink_drink_categorias
+          .map((c) => norm(c.drink_categorias?.nome ?? ""))
+          .join(" ");
+        const ings = d.drink_ingredientes
+          .map((i) => norm(i.ingredientes?.nome ?? ""))
+          .join(" ");
+        let score = 0;
+        if (nome.startsWith(q)) score = 4;
+        else if (nome.includes(q)) score = 3;
+        else if (cats.includes(q)) score = 2;
+        else if (ings.includes(q)) score = 1;
+        return { d, score };
+      })
+      .filter((x) => x.score > 0)
+      .sort((a, b) => b.score - a.score || a.d.nome.localeCompare(b.d.nome))
+      .slice(0, 8)
+      .map((x) => x.d);
+    return scored;
   }, [query, drinks]);
 
   const sugestao = useMemo(
