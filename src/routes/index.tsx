@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import { Martini, Search, ArrowRight } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
+import { FavoriteIconButton } from "@/components/favorite-icon-button";
+import { useAuth } from "@/hooks/use-auth";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
   Command,
@@ -36,6 +38,7 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { data: counts } = useSuspenseQuery(countsQuery);
   const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
@@ -119,6 +122,11 @@ function HomePage() {
                         {d.drink_drink_categorias[0]?.drink_categorias?.nome && (
                           <span className="ml-2 text-xs text-muted-foreground truncate">
                             {d.drink_drink_categorias[0].drink_categorias.nome}
+                          </span>
+                        )}
+                        {user && (
+                          <span className="ml-2 shrink-0">
+                            <FavoriteIconButton drinkId={d.id} />
                           </span>
                         )}
                       </CommandItem>
