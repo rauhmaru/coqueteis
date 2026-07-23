@@ -114,8 +114,13 @@ function HomePage() {
                         onSelect={() => navigate({ to: "/drinks/$id", params: { id: d.id } })}
                         className="cursor-pointer"
                       >
-                        <Martini className="h-4 w-4 mr-2 text-primary" />
-                        {d.nome}
+                        <Martini className="h-4 w-4 mr-2 text-primary shrink-0" />
+                        <span className="flex-1 truncate">{d.nome}</span>
+                        {d.drink_drink_categorias[0]?.drink_categorias?.nome && (
+                          <span className="ml-2 text-xs text-muted-foreground truncate">
+                            {d.drink_drink_categorias[0].drink_categorias.nome}
+                          </span>
+                        )}
                       </CommandItem>
                     ))}
                   </CommandGroup>
