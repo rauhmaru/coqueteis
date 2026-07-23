@@ -13,6 +13,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
+import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
@@ -209,7 +210,12 @@ function DrinksList() {
         ) : (
           <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filtered.map((d) => (
-              <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors">
+              <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
+                {user && (
+                  <div className="absolute top-2 right-2 z-10">
+                    <FavoriteIconButton drinkId={d.id} />
+                  </div>
+                )}
                 <Link to="/drinks/$id" params={{ id: d.id }} className="block">
                   <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                   <div className="p-4">
