@@ -105,22 +105,6 @@ function DrinkDetail() {
           </div>
         </div>
 
-        <section className="space-y-3">
-          <h2 className="text-xs uppercase tracking-[0.2em] text-primary">Vídeo relacionado</h2>
-          <div className="rounded-xl overflow-hidden border border-border bg-secondary/40 aspect-video">
-            <iframe
-              key={drink.id}
-              src={`https://www.youtube.com/embed?listType=search&list=${encodeURIComponent(`receita ${drink.nome}`)}`}
-              title={`Vídeo de receita: ${drink.nome}`}
-              className="w-full h-full"
-              loading="lazy"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              referrerPolicy="strict-origin-when-cross-origin"
-            />
-          </div>
-        </section>
-
         <DrinkSocial drinkId={drink.id} />
       </main>
     </div>
