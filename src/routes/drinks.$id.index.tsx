@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
 import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
+import { FavoriteButton } from "@/components/favorite-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
