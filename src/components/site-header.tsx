@@ -24,6 +24,8 @@ const editorNav = [
 
 export function SiteHeader() {
   const { user, canEdit, isAdmin, signOut } = useAuth();
+  const favoritos = useFavoritos();
+  const favCount = favoritos.size;
   const initial = (user?.user_metadata?.display_name as string | undefined)?.[0] ?? user?.email?.[0] ?? "?";
   const nome = (user?.user_metadata?.display_name as string | undefined) ?? user?.email ?? "";
 
