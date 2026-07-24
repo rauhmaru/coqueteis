@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Heart, LogIn, LogOut, Martini, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,6 +24,8 @@ const editorNav = [
 
 export function SiteHeader() {
   const { user, canEdit, isAdmin, signOut } = useAuth();
+  const favoritos = useFavoritos();
+  const favCount = favoritos.size;
   const initial = (user?.user_metadata?.display_name as string | undefined)?.[0] ?? user?.email?.[0] ?? "?";
   const nome = (user?.user_metadata?.display_name as string | undefined) ?? user?.email ?? "";
 
@@ -68,6 +71,11 @@ export function SiteHeader() {
               activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80 inline-flex items-center gap-1" }}
             >
               <Heart className="h-3.5 w-3.5" /> Favoritos
+              {favCount > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-semibold min-w-[18px] h-[18px] px-1">
+                  {favCount}
+                </span>
+              )}
             </Link>
           )}
         </nav>
