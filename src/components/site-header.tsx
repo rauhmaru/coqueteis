@@ -71,6 +71,11 @@ export function SiteHeader() {
               activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80 inline-flex items-center gap-1" }}
             >
               <Heart className="h-3.5 w-3.5" /> Favoritos
+              {favCount > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-semibold min-w-[18px] h-[18px] px-1">
+                  {favCount}
+                </span>
+              )}
             </Link>
           )}
         </nav>
