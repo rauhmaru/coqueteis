@@ -57,6 +57,7 @@ export function FavoriteIconButton({
       qc.invalidateQueries({ queryKey: allFavKey(user?.id) });
       qc.invalidateQueries({ queryKey: ["favoritos", user?.id] });
       qc.invalidateQueries({ queryKey: ["drink-favorito", user?.id, drinkId] });
+      toast.success(favorito ? "Removido dos favoritos." : "Adicionado aos favoritos!");
     },
     onError: (e: Error) => toast.error(e.message),
   });
