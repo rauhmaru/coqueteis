@@ -16,6 +16,8 @@ import { DrinkImage } from "@/components/drink-image";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { ViewModeToggle } from "@/components/view-mode-toggle";
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
@@ -43,6 +45,7 @@ function DrinksList() {
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
+  const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -108,11 +111,14 @@ function DrinksList() {
               {drinks.length} {drinks.length === 1 ? "receita cadastrada" : "receitas cadastradas"}
             </p>
           </div>
-          {canEdit && (
-            <Button asChild>
-              <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
-            </Button>
-          )}
+          <div className="flex items-center gap-2">
+            <ViewModeToggle value={viewMode} onChange={setViewMode} />
+            {canEdit && (
+              <Button asChild>
+                <Link to="/drinks/novo"><Plus className="h-4 w-4 mr-2" /> Novo drink</Link>
+              </Button>
+            )}
+          </div>
         </div>
 
 
@@ -208,57 +214,111 @@ function DrinksList() {
             </p>
           </div>
         ) : (
-          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <ul className={viewMode === "grid" ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
             {filtered.map((d) => (
-              <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
-                {user && (
-                  <div className="absolute top-2 right-2 z-10">
-                    <FavoriteIconButton drinkId={d.id} />
-                  </div>
-                )}
-                <Link to="/drinks/$id" params={{ id: d.id }} className="block">
-                  <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
-                  <div className="p-4">
-                    <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
-                    {d.drink_drink_categorias.length > 0 && (
+              viewMode === "grid" ? (
+                <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
+                  {user && (
+                    <div className="absolute top-2 right-2 z-10">
+                      <FavoriteIconButton drinkId={d.id} />
+                    </div>
+                  )}
+                  <Link to="/drinks/$id" params={{ id: d.id }} className="block">
+                    <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
+                    <div className="p-4">
+                      <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
+                      {d.drink_drink_categorias.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {d.drink_drink_categorias.map((c) => (
+                            <Badge key={c.categoria_id} className="text-[10px]">
+                              {c.drink_categorias?.nome ?? "?"}
+                            </Badge>
+                          ))}
+                        </div>
+                      )}
                       <div className="flex flex-wrap gap-1 mt-2">
-                        {d.drink_drink_categorias.map((c) => (
-                          <Badge key={c.categoria_id} className="text-[10px]">
-                            {c.drink_categorias?.nome ?? "?"}
+                        {d.drink_ingredientes.slice(0, 4).map((di) => (
+                          <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                            {di.ingredientes?.nome ?? "?"}
                           </Badge>
                         ))}
+                        {d.drink_ingredientes.length > 4 && (
+                          <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                        )}
                       </div>
-                    )}
-                    <div className="flex flex-wrap gap-1 mt-2">
-                      {d.drink_ingredientes.slice(0, 4).map((di) => (
-                        <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
-                          {di.ingredientes?.nome ?? "?"}
-                        </Badge>
-                      ))}
-                      {d.drink_ingredientes.length > 4 && (
-                        <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                    </div>
+                  </Link>
+                  {canManage(d) && (
+                    <div className="flex border-t border-border">
+                      <Link
+                        to="/drinks/$id/editar"
+                        params={{ id: d.id }}
+                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                      >
+                        <Pencil className="h-3 w-3" /> Editar
+                      </Link>
+                      <button
+                        onClick={() => setConfirmId(d.id)}
+                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                      >
+                        <Trash2 className="h-3 w-3" /> Remover
+                      </button>
+                    </div>
+                  )}
+                </li>
+              ) : (
+                <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
+                  <div className="flex items-stretch">
+                    <Link to="/drinks/$id" params={{ id: d.id }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
+                      <DrinkImage path={d.imagem_url} alt={d.nome} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
+                      <div className="min-w-0 flex-1">
+                        <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
+                        {d.drink_drink_categorias.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {d.drink_drink_categorias.slice(0, 3).map((c) => (
+                              <Badge key={c.categoria_id} className="text-[10px]">
+                                {c.drink_categorias?.nome ?? "?"}
+                              </Badge>
+                            ))}
+                          </div>
+                        )}
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {d.drink_ingredientes.slice(0, 4).map((di) => (
+                            <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                              {di.ingredientes?.nome ?? "?"}
+                            </Badge>
+                          ))}
+                          {d.drink_ingredientes.length > 4 && (
+                            <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="flex flex-col items-end justify-between p-2 gap-1 border-l border-border">
+                      {user && <FavoriteIconButton drinkId={d.id} />}
+                      {canManage(d) && (
+                        <div className="flex gap-1">
+                          <Link
+                            to="/drinks/$id/editar"
+                            params={{ id: d.id }}
+                            className="p-1.5 text-muted-foreground hover:text-primary"
+                            aria-label="Editar"
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Link>
+                          <button
+                            onClick={() => setConfirmId(d.id)}
+                            className="p-1.5 text-muted-foreground hover:text-destructive"
+                            aria-label="Remover"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>
-                </Link>
-                {canManage(d) && (
-                  <div className="flex border-t border-border">
-                    <Link
-                      to="/drinks/$id/editar"
-                      params={{ id: d.id }}
-                      className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
-                    >
-                      <Pencil className="h-3 w-3" /> Editar
-                    </Link>
-                    <button
-                      onClick={() => setConfirmId(d.id)}
-                      className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
-                    >
-                      <Trash2 className="h-3 w-3" /> Remover
-                    </button>
-                  </div>
-                )}
-              </li>
+                </li>
+              )
             ))}
           </ul>
         )}
