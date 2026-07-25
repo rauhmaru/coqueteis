@@ -1,39 +1,41 @@
 ## Objetivo
-Permitir alternar entre visualização em **grade** (atual) e **lista** (linear, imagem menor à esquerda + info à direita) nas rotas `/drinks` e `/favoritos`, com preferência lembrada entre sessões.
+Permitir alternar entre tema **escuro** (atual, padrão) e um novo tema **claro** compatível, preservando a identidade âmbar/copper do bar lounge. Preferência persistida entre sessões.
 
 ## Mudanças
 
-### 1. Hook compartilhado `useViewMode`
-Novo arquivo: `src/hooks/use-view-mode.ts`
+### 1. Tema claro em `src/styles.css`
+- Manter `:root` como está (padrão dark lounge) — o tema padrão continua o escuro.
+- Adicionar um bloco `.light { ... }` com paleta clara compatível:
+  - `--background`: creme quente muito claro (ex.: `oklch(0.98 0.01 80)`)
+  - `--foreground`: espresso profundo (ex.: `oklch(0.20 0.02 60)`)
+  - `--card` / `--popover`: branco levemente amarelado
+  - `--primary`: âmbar/copper mais saturado para contraste em fundo claro (ex.: `oklch(0.62 0.16 55)`)
+  - `--primary-foreground`: creme quase branco
+  - `--secondary` / `--muted`: bege quente
+  - `--accent`: copper avermelhado
+  - `--border` / `--input`: bege médio
+  - `--sidebar*`: seguem a mesma lógica
+- Não alterar fontes, radius nem `@theme inline` — a troca é 100% via variáveis CSS, então todas as telas continuam funcionando sem tocar em componentes.
 
-- Estado `"grid" | "list"` persistido em `localStorage` por chave (ex.: `viewmode:drinks`, `viewmode:favoritos`), lido em `useEffect` para evitar mismatch de hidratação SSR.
-- Retorna `[mode, setMode]`.
+### 2. Hook `useTheme`
+Novo arquivo: `src/hooks/use-theme.tsx`
+- Contexto React com estado `"light" | "dark"` (padrão `"dark"`).
+- Lê preferência de `localStorage` (`theme`) em `useEffect` para evitar mismatch de hidratação SSR.
+- Aplica classe no `<html>`: adiciona `light` para claro, remove para escuro (o `.dark` variant existente continua funcionando pois usamos ausência de `.light` = dark padrão).
+- Expõe `theme` e `toggleTheme()`.
+- Envolver `AuthProvider` com `ThemeProvider` em `src/routes/__root.tsx`.
 
-### 2. Componente `ViewModeToggle`
-Novo arquivo: `src/components/view-mode-toggle.tsx`
+### 3. Botão de toggle
+Novo arquivo: `src/components/theme-toggle.tsx`
+- Botão ícone (Sun/Moon do `lucide-react`) que chama `toggleTheme()`.
+- Aria-label dinâmico ("Ativar tema claro" / "Ativar tema escuro").
+- Estilo consistente com os botões do header (ghost/outline size sm).
 
-- Dois botões segmentados com ícones `LayoutGrid` e `List` (lucide-react), estilo consistente com os filtros já existentes (pill/border).
-- Aria-labels "Visualização em grade" / "Visualização em lista".
-
-### 3. Integração em `/drinks`
-Arquivo: `src/routes/drinks.index.tsx`
-
-- Adicionar toggle no cabeçalho (ao lado do botão "Novo drink" no desktop; abaixo no mobile).
-- Renderização condicional:
-  - **Grid**: mantém `<ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">` atual.
-  - **List**: `<ul className="flex flex-col gap-3">` com cada item em layout horizontal — imagem `h-24 w-24` à esquerda, nome + badges de categorias/ingredientes à direita, botão de favoritar no topo direito, ações editar/remover em linha inferior (quando `canManage`).
-- Manter todos os filtros e permissões inalterados.
-
-### 4. Integração em `/favoritos`
-Arquivo: `src/routes/_authenticated/favoritos.tsx`
-
-- Adicionar toggle na barra de controles existente (junto de busca/categoria/ordenação). Ajustar grid da barra para acomodar (`sm:grid-cols-[1fr_auto_auto_auto]`).
-- Renderização condicional dos cards:
-  - **Grid**: layout atual (`grid sm:grid-cols-2 lg:grid-cols-3`).
-  - **List**: linha horizontal — imagem quadrada pequena à esquerda, nome + badges à direita.
-- Estado vazio e mensagens permanecem iguais.
+### 4. Integração no header
+Arquivo: `src/components/site-header.tsx`
+- Adicionar `<ThemeToggle />` na área direita (antes do botão Entrar / avatar), visível para todos (autenticado ou não).
 
 ## Fora de escopo
-- Sem mudança de banco, RLS ou queries.
-- Sem alterar demais rotas (`/ingredientes`, mixologia, etc.).
-- Sem persistência server-side da preferência.
+- Não altera cores hardcoded em componentes (não há — tudo usa tokens semânticos).
+- Não persiste preferência no backend.
+- Sem mudança em rotas, queries, RLS ou lógica de negócio.
