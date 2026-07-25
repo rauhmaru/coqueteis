@@ -16,6 +16,8 @@ import { DrinkImage } from "@/components/drink-image";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { ViewModeToggle } from "@/components/view-mode-toggle";
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
