@@ -9,6 +9,8 @@ import { DrinkImage } from "@/components/drink-image";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useViewMode } from "@/hooks/use-view-mode";
+import { ViewModeToggle } from "@/components/view-mode-toggle";
 import {
   Select,
   SelectContent,
@@ -52,6 +54,7 @@ function FavoritosPage() {
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState<string>("all");
   const [sort, setSort] = useState<SortKey>("recent");
+  const [viewMode, setViewMode] = useViewMode("favoritos", "grid");
 
   const { data, isLoading } = useQuery({
     queryKey: ["favoritos", user?.id],
@@ -141,7 +144,7 @@ function FavoritosPage() {
         </header>
 
         {total > 0 && (
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] items-center">
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto] items-center">
             <div className="relative">
               <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
               <Input
@@ -175,6 +178,7 @@ function FavoritosPage() {
                 <SelectItem value="name-desc">Nome Z-A</SelectItem>
               </SelectContent>
             </Select>
+            <ViewModeToggle value={viewMode} onChange={setViewMode} />
           </div>
         )}
 
@@ -194,10 +198,10 @@ function FavoritosPage() {
             </Button>
           </div>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className={viewMode === "grid" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-3"}>
             {filtrados.map((f) => {
               const d = f.drinks!;
-              return (
+              return viewMode === "grid" ? (
                 <Link
                   key={d.id}
                   to="/drinks/$id"
@@ -214,6 +218,33 @@ function FavoritosPage() {
                       {d.nome}
                     </h2>
                     <div className="flex flex-wrap gap-1.5">
+                      {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
+                        c.drink_categorias ? (
+                          <Badge key={i} variant="secondary" className="text-[10px]">
+                            {c.drink_categorias.nome}
+                          </Badge>
+                        ) : null
+                      ))}
+                    </div>
+                  </div>
+                </Link>
+              ) : (
+                <Link
+                  key={d.id}
+                  to="/drinks/$id"
+                  params={{ id: d.id }}
+                  className="group flex items-center gap-4 p-3 rounded-xl border border-border bg-card hover:border-primary/60 transition-colors"
+                >
+                  <DrinkImage
+                    path={d.imagem_url}
+                    alt={d.nome}
+                    className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <h2 className="font-serif text-lg sm:text-xl text-foreground group-hover:text-primary transition-colors truncate">
+                      {d.nome}
+                    </h2>
+                    <div className="flex flex-wrap gap-1.5 mt-1">
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
                           <Badge key={i} variant="secondary" className="text-[10px]">
