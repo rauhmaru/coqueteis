@@ -3,6 +3,7 @@ import { Heart, LogIn, LogOut, Martini, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -81,6 +82,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           {!user ? (
             <Button asChild size="sm" variant="outline">
               <Link to="/auth"><LogIn className="h-4 w-4 mr-1.5" /> Entrar</Link>
