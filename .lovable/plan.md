@@ -1,41 +1,33 @@
 ## Objetivo
-Permitir alternar entre tema **escuro** (atual, padrão) e um novo tema **claro** compatível, preservando a identidade âmbar/copper do bar lounge. Preferência persistida entre sessões.
+No primeiro acesso ao site, exibir um portal/banner perguntando se o visitante tem 18 anos ou mais (padrão dos sites de bebidas como o da Brahma). "Sim" libera o site e memoriza a escolha; "Não" leva para uma página de consumo responsável.
 
-## Mudanças
+## 1. Novo componente `src/components/age-gate.tsx`
+- Overlay em tela cheia (`fixed inset-0 z-50`, fundo escuro com blur) sobre o conteúdo, bloqueando a navegação até a resposta.
+- Conteúdo centralizado usando tokens semânticos do tema (funciona em claro e escuro):
+  - Ícone/marca do bar (Martini) + título serif "Você tem 18 anos ou mais?"
+  - Texto curto: "Este site apresenta conteúdo sobre bebidas alcoólicas. O acesso é permitido apenas para maiores de 18 anos."
+  - Dois botões: **Sim, tenho 18+** (primary) e **Não** (outline).
+  - Rodapé pequeno: "Beba com moderação. Não dirija após consumir álcool."
+- Comportamento:
+  - Estado lido de `localStorage` (`age-verified`) dentro de `useEffect` para evitar mismatch de hidratação — nada é renderizado no SSR/primeiro paint até saber.
+  - "Sim" → grava `localStorage` e fecha o overlay (não volta a aparecer nas próximas visitas do mesmo navegador).
+  - "Não" → navega para `/consumo-responsavel` (sem gravar aprovação).
+  - Enquanto o overlay estiver aberto, trava o scroll do `body`.
+  - O overlay não aparece na própria rota `/consumo-responsavel`.
+- Acessibilidade: `role="dialog"`, `aria-modal`, foco inicial no botão "Sim".
 
-### 1. Tema claro em `src/styles.css`
-- Manter `:root` como está (padrão dark lounge) — o tema padrão continua o escuro.
-- Adicionar um bloco `.light { ... }` com paleta clara compatível:
-  - `--background`: creme quente muito claro (ex.: `oklch(0.98 0.01 80)`)
-  - `--foreground`: espresso profundo (ex.: `oklch(0.20 0.02 60)`)
-  - `--card` / `--popover`: branco levemente amarelado
-  - `--primary`: âmbar/copper mais saturado para contraste em fundo claro (ex.: `oklch(0.62 0.16 55)`)
-  - `--primary-foreground`: creme quase branco
-  - `--secondary` / `--muted`: bege quente
-  - `--accent`: copper avermelhado
-  - `--border` / `--input`: bege médio
-  - `--sidebar*`: seguem a mesma lógica
-- Não alterar fontes, radius nem `@theme inline` — a troca é 100% via variáveis CSS, então todas as telas continuam funcionando sem tocar em componentes.
+## 2. Nova rota `src/routes/consumo-responsavel.tsx`
+Página pública, no padrão visual das outras páginas (SiteHeader + `main` com `max-w-3xl`), com `head()` próprio (title/description/og).
+Conteúdo:
+- Título "Consumo responsável" e aviso de que o acesso ao catálogo é restrito a maiores de 18 anos.
+- Blocos com ícones (lucide): venda proibida para menores de 18 anos; não dirija após beber; alterne com água e alimente-se; gravidez e álcool não combinam; medicamentos e álcool; sinais de dependência e onde buscar ajuda (CVV 188, CAPS/AA — apenas menções genéricas, sem inventar links).
+- Botão "Voltar ao início" para quem quiser refazer a verificação (a verificação reaparece porque nada foi gravado).
 
-### 2. Hook `useTheme`
-Novo arquivo: `src/hooks/use-theme.tsx`
-- Contexto React com estado `"light" | "dark"` (padrão `"dark"`).
-- Lê preferência de `localStorage` (`theme`) em `useEffect` para evitar mismatch de hidratação SSR.
-- Aplica classe no `<html>`: adiciona `light` para claro, remove para escuro (o `.dark` variant existente continua funcionando pois usamos ausência de `.light` = dark padrão).
-- Expõe `theme` e `toggleTheme()`.
-- Envolver `AuthProvider` com `ThemeProvider` em `src/routes/__root.tsx`.
-
-### 3. Botão de toggle
-Novo arquivo: `src/components/theme-toggle.tsx`
-- Botão ícone (Sun/Moon do `lucide-react`) que chama `toggleTheme()`.
-- Aria-label dinâmico ("Ativar tema claro" / "Ativar tema escuro").
-- Estilo consistente com os botões do header (ghost/outline size sm).
-
-### 4. Integração no header
-Arquivo: `src/components/site-header.tsx`
-- Adicionar `<ThemeToggle />` na área direita (antes do botão Entrar / avatar), visível para todos (autenticado ou não).
+## 3. Integração
+- `src/routes/__root.tsx`: renderizar `<AgeGate />` dentro de `ThemeProvider`/`AuthProvider`, ao lado do `<Outlet />`, para valer em todas as rotas.
+- `src/components/site-header.tsx`: adicionar link discreto "Consumo responsável" (ou no rodapé do menu mobile) para acesso permanente à página.
 
 ## Fora de escopo
-- Não altera cores hardcoded em componentes (não há — tudo usa tokens semânticos).
-- Não persiste preferência no backend.
-- Sem mudança em rotas, queries, RLS ou lógica de negócio.
+- Não pede data de nascimento completa (apenas sim/não, como no exemplo).
+- Sem persistência no backend, sem cookies de servidor, sem bloqueio server-side — a verificação é apenas no navegador (mesmo modelo do site de referência).
+- Nenhuma mudança em banco, RLS ou lógica de drinks/favoritos.
