@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as DrinksRouteImport } from './routes/drinks'
+import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -40,6 +41,11 @@ const MixologiaRoute = MixologiaRouteImport.update({
 const DrinksRoute = DrinksRouteImport.update({
   id: '/drinks',
   path: '/drinks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConsumoResponsavelRoute = ConsumoResponsavelRouteImport.update({
+  id: '/consumo-responsavel',
+  path: '/consumo-responsavel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConfiancaRoute = ConfiancaRouteImport.update({
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
+  '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mixologia': typeof MixologiaRouteWithChildren
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -171,6 +178,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
+  '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -193,6 +201,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/confianca': typeof ConfiancaRoute
+  '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mixologia': typeof MixologiaRouteWithChildren
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confianca'
+    | '/consumo-responsavel'
     | '/drinks'
     | '/mixologia'
     | '/favoritos'
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/confianca'
+    | '/consumo-responsavel'
     | '/favoritos'
     | '/ingredientes'
     | '/usuarios'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/confianca'
+    | '/consumo-responsavel'
     | '/drinks'
     | '/mixologia'
     | '/_authenticated/favoritos'
@@ -287,6 +299,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   ConfiancaRoute: typeof ConfiancaRoute
+  ConsumoResponsavelRoute: typeof ConsumoResponsavelRoute
   DrinksRoute: typeof DrinksRouteWithChildren
   MixologiaRoute: typeof MixologiaRouteWithChildren
 }
@@ -305,6 +318,13 @@ declare module '@tanstack/react-router' {
       path: '/drinks'
       fullPath: '/drinks'
       preLoaderRoute: typeof DrinksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/consumo-responsavel': {
+      id: '/consumo-responsavel'
+      path: '/consumo-responsavel'
+      fullPath: '/consumo-responsavel'
+      preLoaderRoute: typeof ConsumoResponsavelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/confianca': {
@@ -525,19 +545,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   ConfiancaRoute: ConfiancaRoute,
+  ConsumoResponsavelRoute: ConsumoResponsavelRoute,
   DrinksRoute: DrinksRouteWithChildren,
   MixologiaRoute: MixologiaRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
