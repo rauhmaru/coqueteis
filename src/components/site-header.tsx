@@ -17,6 +17,7 @@ const publicNav = [
   { to: "/", label: "Início" },
   { to: "/drinks", label: "Drinks" },
   { to: "/mixologia", label: "Mixologia" },
+  { to: "/consumo-responsavel", label: "Consumo responsável" },
 ] as const;
 
 const editorNav = [
