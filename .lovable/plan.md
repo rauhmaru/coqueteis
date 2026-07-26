@@ -1,33 +1,34 @@
 ## Objetivo
-No primeiro acesso ao site, exibir um portal/banner perguntando se o visitante tem 18 anos ou mais (padrão dos sites de bebidas como o da Brahma). "Sim" libera o site e memoriza a escolha; "Não" leva para uma página de consumo responsável.
+Adicionar 15 novas receitas de drinks à base de cerveja ao catálogo, com ingredientes cadastrados, categorização correta e imagem 400×400 para cada uma.
 
-## 1. Novo componente `src/components/age-gate.tsx`
-- Overlay em tela cheia (`fixed inset-0 z-50`, fundo escuro com blur) sobre o conteúdo, bloqueando a navegação até a resposta.
-- Conteúdo centralizado usando tokens semânticos do tema (funciona em claro e escuro):
-  - Ícone/marca do bar (Martini) + título serif "Você tem 18 anos ou mais?"
-  - Texto curto: "Este site apresenta conteúdo sobre bebidas alcoólicas. O acesso é permitido apenas para maiores de 18 anos."
-  - Dois botões: **Sim, tenho 18+** (primary) e **Não** (outline).
-  - Rodapé pequeno: "Beba com moderação. Não dirija após consumir álcool."
-- Comportamento:
-  - Estado lido de `localStorage` (`age-verified`) dentro de `useEffect` para evitar mismatch de hidratação — nada é renderizado no SSR/primeiro paint até saber.
-  - "Sim" → grava `localStorage` e fecha o overlay (não volta a aparecer nas próximas visitas do mesmo navegador).
-  - "Não" → navega para `/consumo-responsavel` (sem gravar aprovação).
-  - Enquanto o overlay estiver aberto, trava o scroll do `body`.
-  - O overlay não aparece na própria rota `/consumo-responsavel`.
-- Acessibilidade: `role="dialog"`, `aria-modal`, foco inicial no botão "Sim".
+## Nova categoria de drinks
+Criar a categoria **Cervejas** (hoje existem 12: Brasileiros, Clássicos, Cremosos, Espumantes, Não alcoólicos, Quentes, Refrescantes, Shots, Sour, Tiki, Tropicais, Xaropes). Cada receita recebe "Cervejas" + categorias adicionais quando fizer sentido (ex.: Refrescantes, Brasileiros, Clássicos, Shots, Tropicais).
 
-## 2. Nova rota `src/routes/consumo-responsavel.tsx`
-Página pública, no padrão visual das outras páginas (SiteHeader + `main` com `max-w-3xl`), com `head()` próprio (title/description/og).
-Conteúdo:
-- Título "Consumo responsável" e aviso de que o acesso ao catálogo é restrito a maiores de 18 anos.
-- Blocos com ícones (lucide): venda proibida para menores de 18 anos; não dirija após beber; alterne com água e alimente-se; gravidez e álcool não combinam; medicamentos e álcool; sinais de dependência e onde buscar ajuda (CVV 188, CAPS/AA — apenas menções genéricas, sem inventar links).
-- Botão "Voltar ao início" para quem quiser refazer a verificação (a verificação reaparece porque nada foi gravado).
+## Receitas previstas (clássicos internacionais e brasileiros)
+1. Michelada — cerveja, limão, molho inglês, tabasco, sal
+2. Chelada — cerveja, limão, sal
+3. Shandy (Radler) — cerveja, limonada
+4. Beer Margarita (Beergarita) — tequila, cerveja, limão, triple sec
+5. Black Velvet — stout + espumante
+6. Snakebite — lager + cidra
+7. Boilermaker — whisky + cerveja (Shots)
+8. Sake Bomb — saquê + cerveja (Shots)
+9. Summer Beer — cerveja, limonada, vodka
+10. Bloody Beer — cerveja, suco de tomate, limão, temperos
+11. Lager & Lime — cerveja + xarope/suco de limão
+12. Red Eye — cerveja, suco de tomate
+13. Cerveja com Cachaça (Brasileiros) — cerveja, cachaça, limão
+14. Skip and Go Naked — cerveja, vodka, limonada
+15. Stout Float — stout + sorvete de baunilha (Cremosos)
 
-## 3. Integração
-- `src/routes/__root.tsx`: renderizar `<AgeGate />` dentro de `ThemeProvider`/`AuthProvider`, ao lado do `<Outlet />`, para valer em todas as rotas.
-- `src/components/site-header.tsx`: adicionar link discreto "Consumo responsável" (ou no rodapé do menu mobile) para acesso permanente à página.
+## Ingredientes
+Reaproveitar os existentes (Cerveja, Limão, Suco de limão, Tequila, Vodka, Ginger beer etc.) e cadastrar os que faltarem, cada um no tipo correto: Cerveja lager, Cerveja stout, Cerveja IPA, Cidra, Saquê, Molho inglês, Tabasco, Suco de tomate, Limonada, Sorvete de baunilha, Sal, Pimenta, Whisky bourbon (se ausente).
 
-## Fora de escopo
-- Não pede data de nascimento completa (apenas sim/não, como no exemplo).
-- Sem persistência no backend, sem cookies de servidor, sem bloqueio server-side — a verificação é apenas no navegador (mesmo modelo do site de referência).
-- Nenhuma mudança em banco, RLS ou lógica de drinks/favoritos.
+## Imagens
+Gerar 15 imagens em **400×400** (padrão do projeto), enviar ao bucket privado `drink-images` e vincular em `drinks.imagem_url`, seguindo o mesmo fluxo já usado nas importações anteriores.
+
+## Detalhes técnicos
+- Migração: inserir a categoria `Cervejas` em `drink_categorias`; os ingredientes e drinks entram como dados (INSERT), com `created_by` = usuário administrador, conforme padrão do projeto.
+- Vínculos em `drink_ingredientes` e `drink_drink_categorias`.
+- Cada drink com campo `preparo` descritivo passo a passo, em pt-BR.
+- Nenhuma alteração de UI é necessária: `/drinks` já lista e filtra por categorias e ingredientes automaticamente.
