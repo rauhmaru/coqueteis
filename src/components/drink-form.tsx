@@ -226,6 +226,19 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="historia">História</Label>
+            <Textarea
+              id="historia"
+              value={historia}
+              onChange={(e) => setHistoria(e.target.value)}
+              rows={4}
+              placeholder="Origem e curiosidades do drink (opcional)…"
+            />
+          </div>
+
+
+
+          <div className="space-y-2">
             <Label>Imagem</Label>
             <div className="flex items-start gap-4">
               <div className="w-32 h-32 rounded-lg overflow-hidden bg-secondary/40 border border-border flex items-center justify-center">
