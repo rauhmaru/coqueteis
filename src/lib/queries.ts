@@ -15,6 +15,7 @@ export type Drink = {
   id: string;
   nome: string;
   preparo: string;
+  historia: string | null;
   imagem_url: string | null;
   created_by: string | null;
 };
