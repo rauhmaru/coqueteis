@@ -1,0 +1,1 @@
+ALTER TABLE public.drinks ADD COLUMN IF NOT EXISTS historia text;
