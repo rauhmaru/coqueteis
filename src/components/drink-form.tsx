@@ -81,7 +81,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       if (existing) {
         const { error } = await supabase
           .from("drinks")
-          .update({ nome, preparo, imagem_url: finalPath })
+          .update({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath })
           .eq("id", existing.id);
         if (error) throw error;
         await supabase.from("drink_ingredientes").delete().eq("drink_id", existing.id);
@@ -89,7 +89,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, imagem_url: finalPath, created_by: user?.id ?? null })
+          .insert({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
