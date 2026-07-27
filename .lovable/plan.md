@@ -1,34 +1,22 @@
 ## Objetivo
-Adicionar 15 novas receitas de drinks à base de cerveja ao catálogo, com ingredientes cadastrados, categorização correta e imagem 400×400 para cada uma.
 
-## Nova categoria de drinks
-Criar a categoria **Cervejas** (hoje existem 12: Brasileiros, Clássicos, Cremosos, Espumantes, Não alcoólicos, Quentes, Refrescantes, Shots, Sour, Tiki, Tropicais, Xaropes). Cada receita recebe "Cervejas" + categorias adicionais quando fizer sentido (ex.: Refrescantes, Brasileiros, Clássicos, Shots, Tropicais).
+Cada drink passa a ter uma seção "História", exibida na página de detalhes logo **abaixo das categorias** e **acima dos ingredientes**.
 
-## Receitas previstas (clássicos internacionais e brasileiros)
-1. Michelada — cerveja, limão, molho inglês, tabasco, sal
-2. Chelada — cerveja, limão, sal
-3. Shandy (Radler) — cerveja, limonada
-4. Beer Margarita (Beergarita) — tequila, cerveja, limão, triple sec
-5. Black Velvet — stout + espumante
-6. Snakebite — lager + cidra
-7. Boilermaker — whisky + cerveja (Shots)
-8. Sake Bomb — saquê + cerveja (Shots)
-9. Summer Beer — cerveja, limonada, vodka
-10. Bloody Beer — cerveja, suco de tomate, limão, temperos
-11. Lager & Lime — cerveja + xarope/suco de limão
-12. Red Eye — cerveja, suco de tomate
-13. Cerveja com Cachaça (Brasileiros) — cerveja, cachaça, limão
-14. Skip and Go Naked — cerveja, vodka, limonada
-15. Stout Float — stout + sorvete de baunilha (Cremosos)
+## O que verifiquei
 
-## Ingredientes
-Reaproveitar os existentes (Cerveja, Limão, Suco de limão, Tequila, Vodka, Ginger beer etc.) e cadastrar os que faltarem, cada um no tipo correto: Cerveja lager, Cerveja stout, Cerveja IPA, Cidra, Saquê, Molho inglês, Tabasco, Suco de tomate, Limonada, Sorvete de baunilha, Sal, Pimenta, Whisky bourbon (se ausente).
+- O arquivo enviado tem **95 histórias** (títulos `##`).
+- O catálogo tem **184 drinks**.
+- **58 histórias casam exatamente** com drinks cadastrados; **37 não casam** por nome — a maioria são drinks ainda não cadastrados (ex.: Bamboo, Basil Smash, Hanky Panky, Martinez) e alguns são variações de grafia (ex.: "Whiskey Sour" x "Whisky Sour" já cadastrado).
 
-## Imagens
-Gerar 15 imagens em **400×400** (padrão do projeto), enviar ao bucket privado `drink-images` e vincular em `drinks.imagem_url`, seguindo o mesmo fluxo já usado nas importações anteriores.
+## Passos
+
+1. **Banco de dados** (migração): adicionar a coluna `historia` (texto, opcional) na tabela `drinks`.
+2. **Importação**: preencher as histórias casando os nomes de forma tolerante (ignorando acentos, maiúsculas e variações como Whiskey/Whisky, "No. 2"/"nº 2"). Os títulos que continuarem sem drink correspondente serão apenas relatados a você — nenhum drink novo será criado nesta etapa.
+3. **Formulário de drink**: novo campo "História" (área de texto opcional), para você editar/complementar depois.
+4. **Página do drink** (`/drinks/:id`): nova seção "História" entre as categorias e os ingredientes, com o mesmo estilo dos títulos existentes (rótulo em maiúsculas/âmbar + texto). Se o drink não tiver história, a seção simplesmente não aparece.
 
 ## Detalhes técnicos
-- Migração: inserir a categoria `Cervejas` em `drink_categorias`; os ingredientes e drinks entram como dados (INSERT), com `created_by` = usuário administrador, conforme padrão do projeto.
-- Vínculos em `drink_ingredientes` e `drink_drink_categorias`.
-- Cada drink com campo `preparo` descritivo passo a passo, em pt-BR.
-- Nenhuma alteração de UI é necessária: `/drinks` já lista e filtra por categorias e ingredientes automaticamente.
+
+- Coluna `historia text` em `public.drinks`; políticas RLS atuais já cobrem leitura pública e edição pelo dono/admin.
+- Atualização de dados via ferramenta de dados (UPDATE por id), não por migração.
+- Ajustes de tipos: `Drink` em `src/lib/queries.ts`, `DrinkForm` em `src/components/drink-form.tsx`, exibição em `src/routes/drinks.$id.index.tsx`.

@@ -26,6 +26,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
 
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
+  const [historia, setHistoria] = useState(existing?.historia ?? "");
   const [selected, setSelected] = useState<Set<string>>(
     new Set(existing?.drink_ingredientes.map((d) => d.ingrediente_id) ?? []),
   );
@@ -80,7 +81,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       if (existing) {
         const { error } = await supabase
           .from("drinks")
-          .update({ nome, preparo, imagem_url: finalPath })
+          .update({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath })
           .eq("id", existing.id);
         if (error) throw error;
         await supabase.from("drink_ingredientes").delete().eq("drink_id", existing.id);
@@ -88,7 +89,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, imagem_url: finalPath, created_by: user?.id ?? null })
+          .insert({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
@@ -223,6 +224,19 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
               placeholder="Descreva o modo de preparo passo a passo…"
             />
           </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="historia">História</Label>
+            <Textarea
+              id="historia"
+              value={historia}
+              onChange={(e) => setHistoria(e.target.value)}
+              rows={4}
+              placeholder="Origem e curiosidades do drink (opcional)…"
+            />
+          </div>
+
+
 
           <div className="space-y-2">
             <Label>Imagem</Label>
