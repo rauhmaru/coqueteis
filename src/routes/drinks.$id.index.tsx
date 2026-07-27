@@ -65,6 +65,12 @@ function DrinkDetail() {
                 </div>
               )}
             </div>
+            {drink.historia && (
+              <div>
+                <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">História</h2>
+                <p className="text-muted-foreground leading-relaxed">{drink.historia}</p>
+              </div>
+            )}
             <div>
               <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Ingredientes</h2>
               <div className="flex flex-wrap gap-2">
