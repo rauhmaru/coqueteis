@@ -63,7 +63,7 @@ function FavoritosPage() {
     queryFn: async (): Promise<FavRow[]> => {
       const { data, error } = await supabase
         .from("drink_favoritos")
-        .select("drink_id, created_at, drinks(id, nome, imagem_url, drink_drink_categorias(drink_categorias(nome)))")
+        .select("drink_id, created_at, drinks(id, nome, imagem_url, dificuldade, drink_drink_categorias(drink_categorias(nome)))")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
