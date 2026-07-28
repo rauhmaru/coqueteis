@@ -6,6 +6,7 @@ import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
+import { DifficultyBadge } from "@/components/difficulty-badge";
 import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
 import { FavoriteButton } from "@/components/favorite-button";
