@@ -57,13 +57,12 @@ function DrinkDetail() {
           <div className="space-y-6">
             <div>
               <h1 className="font-serif text-5xl text-foreground">{drink.nome}</h1>
-              {drink.drink_drink_categorias.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {drink.drink_drink_categorias.map((c) => (
-                    <Badge key={c.categoria_id}>{c.drink_categorias?.nome ?? "?"}</Badge>
-                  ))}
-                </div>
-              )}
+              <div className="flex flex-wrap items-center gap-1.5 mt-3">
+                <DifficultyBadge value={drink.dificuldade} />
+                {drink.drink_drink_categorias.map((c) => (
+                  <Badge key={c.categoria_id}>{c.drink_categorias?.nome ?? "?"}</Badge>
+                ))}
+              </div>
             </div>
             {drink.historia && (
               <div>
