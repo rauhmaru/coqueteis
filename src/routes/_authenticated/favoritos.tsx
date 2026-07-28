@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { DrinkImage } from "@/components/drink-image";
 import { Badge } from "@/components/ui/badge";
+import { DifficultyBadge } from "@/components/difficulty-badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
