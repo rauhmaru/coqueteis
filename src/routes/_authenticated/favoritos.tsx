@@ -40,6 +40,7 @@ type FavRow = {
     id: string;
     nome: string;
     imagem_url: string | null;
+    dificuldade: string;
     drink_drink_categorias: { drink_categorias: { nome: string } | null }[];
   } | null;
 };
