@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { DrinkImage } from "@/components/drink-image";
+import { DIFICULDADES, type Dificuldade } from "@/components/difficulty-badge";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -27,6 +28,9 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
   const [historia, setHistoria] = useState(existing?.historia ?? "");
+  const [dificuldade, setDificuldade] = useState<Dificuldade>(
+    (existing?.dificuldade as Dificuldade) ?? "Fácil",
+  );
   const [selected, setSelected] = useState<Set<string>>(
     new Set(existing?.drink_ingredientes.map((d) => d.ingrediente_id) ?? []),
   );
@@ -81,7 +85,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       if (existing) {
         const { error } = await supabase
           .from("drinks")
-          .update({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath })
+          .update({ nome, preparo, historia: historia.trim() || null, dificuldade, imagem_url: finalPath })
           .eq("id", existing.id);
         if (error) throw error;
         await supabase.from("drink_ingredientes").delete().eq("drink_id", existing.id);
@@ -89,7 +93,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath, created_by: user?.id ?? null })
+          .insert({ nome, preparo, historia: historia.trim() || null, dificuldade, imagem_url: finalPath, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
@@ -213,6 +217,26 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
             </div>
           </div>
 
+
+          <div className="space-y-2">
+            <Label>Dificuldade de preparo</Label>
+            <div className="flex flex-wrap gap-2">
+              {DIFICULDADES.map((d) => (
+                <button
+                  type="button"
+                  key={d}
+                  onClick={() => setDificuldade(d)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    dificuldade === d
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="space-y-2">
             <Label htmlFor="preparo">Preparo</Label>

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { DrinkImage } from "@/components/drink-image";
 import { Badge } from "@/components/ui/badge";
+import { DifficultyBadge } from "@/components/difficulty-badge";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
@@ -40,6 +41,7 @@ type FavRow = {
     id: string;
     nome: string;
     imagem_url: string | null;
+    dificuldade: string;
     drink_drink_categorias: { drink_categorias: { nome: string } | null }[];
   } | null;
 };
@@ -62,7 +64,7 @@ function FavoritosPage() {
     queryFn: async (): Promise<FavRow[]> => {
       const { data, error } = await supabase
         .from("drink_favoritos")
-        .select("drink_id, created_at, drinks(id, nome, imagem_url, drink_drink_categorias(drink_categorias(nome)))")
+        .select("drink_id, created_at, drinks(id, nome, imagem_url, dificuldade, drink_drink_categorias(drink_categorias(nome)))")
         .eq("user_id", user!.id)
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -217,7 +219,8 @@ function FavoritosPage() {
                     <h2 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
                       {d.nome}
                     </h2>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
                           <Badge key={i} variant="secondary" className="text-[10px]">
@@ -244,7 +247,8 @@ function FavoritosPage() {
                     <h2 className="font-serif text-lg sm:text-xl text-foreground group-hover:text-primary transition-colors truncate">
                       {d.nome}
                     </h2>
-                    <div className="flex flex-wrap gap-1.5 mt-1">
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1">
+                      <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
                           <Badge key={i} variant="secondary" className="text-[10px]">

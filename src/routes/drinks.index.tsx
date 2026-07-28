@@ -13,6 +13,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
+import { DifficultyBadge, DIFICULDADES } from "@/components/difficulty-badge";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
@@ -48,6 +49,7 @@ function DrinksList() {
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
+  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -60,9 +62,11 @@ function DrinksList() {
         const cats = new Set(d.drink_drink_categorias.map((c) => c.categoria_id));
         for (const sel of selectedCats) if (!cats.has(sel)) return false;
       }
+      if (selectedDifs.size > 0 && !selectedDifs.has(d.dificuldade)) return false;
       return true;
     });
-  }, [drinks, selected, selectedCats]);
+  }, [drinks, selected, selectedCats, selectedDifs]);
+
 
   const toggle = (id: string) => {
     setSelected((prev) => {
@@ -77,6 +81,14 @@ function DrinksList() {
       const next = new Set(prev);
       if (next.has(id)) next.delete(id);
       else next.add(id);
+      return next;
+    });
+  };
+  const toggleDif = (d: string) => {
+    setSelectedDifs((prev) => {
+      const next = new Set(prev);
+      if (next.has(d)) next.delete(d);
+      else next.add(d);
       return next;
     });
   };
@@ -121,6 +133,40 @@ function DrinksList() {
           </div>
         </div>
 
+
+        {/* Filtro por dificuldade */}
+        <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Filter className="h-4 w-4 text-primary" />
+            Filtrar por dificuldade de preparo
+            {selectedDifs.size > 0 && (
+              <button
+                onClick={() => setSelectedDifs(new Set())}
+                className="ml-auto text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+              >
+                <X className="h-3 w-3" /> Limpar
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {DIFICULDADES.map((d) => {
+              const on = selectedDifs.has(d);
+              return (
+                <button
+                  key={d}
+                  onClick={() => toggleDif(d)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    on
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
+                  }`}
+                >
+                  {d}
+                </button>
+              );
+            })}
+          </div>
+        </section>
 
         {/* Filtro por categorias */}
         {categorias.length > 0 && (
@@ -227,15 +273,14 @@ function DrinksList() {
                     <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
-                      {d.drink_drink_categorias.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {d.drink_drink_categorias.map((c) => (
-                            <Badge key={c.categoria_id} className="text-[10px]">
-                              {c.drink_categorias?.nome ?? "?"}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      <div className="flex flex-wrap items-center gap-1 mt-2">
+                        <DifficultyBadge value={d.dificuldade} />
+                        {d.drink_drink_categorias.map((c) => (
+                          <Badge key={c.categoria_id} className="text-[10px]">
+                            {c.drink_categorias?.nome ?? "?"}
+                          </Badge>
+                        ))}
+                      </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {d.drink_ingredientes.slice(0, 4).map((di) => (
                           <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
@@ -273,15 +318,14 @@ function DrinksList() {
                       <DrinkImage path={d.imagem_url} alt={d.nome} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
-                        {d.drink_drink_categorias.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {d.drink_drink_categorias.slice(0, 3).map((c) => (
-                              <Badge key={c.categoria_id} className="text-[10px]">
-                                {c.drink_categorias?.nome ?? "?"}
-                              </Badge>
-                            ))}
-                          </div>
-                        )}
+                        <div className="flex flex-wrap items-center gap-1 mt-1">
+                          <DifficultyBadge value={d.dificuldade} />
+                          {d.drink_drink_categorias.slice(0, 3).map((c) => (
+                            <Badge key={c.categoria_id} className="text-[10px]">
+                              {c.drink_categorias?.nome ?? "?"}
+                            </Badge>
+                          ))}
+                        </div>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {d.drink_ingredientes.slice(0, 4).map((di) => (
                             <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">

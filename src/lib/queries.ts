@@ -17,6 +17,7 @@ export type Drink = {
   preparo: string;
   historia: string | null;
   imagem_url: string | null;
+  dificuldade: string;
   created_by: string | null;
 };
 export type DrinkComIngredientes = Drink & {
