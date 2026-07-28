@@ -218,7 +218,8 @@ function FavoritosPage() {
                     <h2 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
                       {d.nome}
                     </h2>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
                           <Badge key={i} variant="secondary" className="text-[10px]">
