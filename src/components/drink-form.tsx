@@ -93,7 +93,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, historia: historia.trim() || null, imagem_url: finalPath, created_by: user?.id ?? null })
+          .insert({ nome, preparo, historia: historia.trim() || null, dificuldade, imagem_url: finalPath, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
