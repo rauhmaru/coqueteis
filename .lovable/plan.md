@@ -1,22 +1,25 @@
 ## Objetivo
 
-Cada drink passa a ter uma seção "História", exibida na página de detalhes logo **abaixo das categorias** e **acima dos ingredientes**.
+Cada drink passa a ter uma dificuldade de preparo: **Fácil**, **Médio** ou **Difícil**, visível no catálogo e na página da receita, com filtro na lista.
 
-## O que verifiquei
+## Dados
 
-- O arquivo enviado tem **95 histórias** (títulos `##`).
-- O catálogo tem **184 drinks**.
-- **58 histórias casam exatamente** com drinks cadastrados; **37 não casam** por nome — a maioria são drinks ainda não cadastrados (ex.: Bamboo, Basil Smash, Hanky Panky, Martinez) e alguns são variações de grafia (ex.: "Whiskey Sour" x "Whisky Sour" já cadastrado).
+1. Nova coluna `dificuldade` na tabela `drinks` (texto, valores permitidos: Fácil, Médio, Difícil; padrão "Fácil").
+2. Importar as 95 classificações do arquivo enviado, com correspondência tolerante a acentos e variações de grafia (ex.: "Bee's Knees" → "Bees Knees", "Piña Colada"/"Pina Colada", "Corpse Reviver No. 2" → "Corpse Reviver Nº 2", "B-52"/"B52 Shot").
+3. Classificar os demais drinks do catálogo (185 no total) usando o mesmo critério do arquivo:
+   - **Fácil**: build no copo, até ~4 ingredientes, sem técnicas especiais (ex.: highballs, spritz, batidas simples, caipirinhas, shots diretos).
+   - **Médio**: coquetelagem/shake, sour com clara de ovo, xaropes caseiros, muddling, flambar/aquecer, 5+ ingredientes.
+   - **Difícil**: camadas, dry shake prolongado, muitos destilados e etapas (ex.: Zombie, Ramos Gin Fizz, Singapore Sling).
 
-## Passos
+## Interface
 
-1. **Banco de dados** (migração): adicionar a coluna `historia` (texto, opcional) na tabela `drinks`.
-2. **Importação**: preencher as histórias casando os nomes de forma tolerante (ignorando acentos, maiúsculas e variações como Whiskey/Whisky, "No. 2"/"nº 2"). Os títulos que continuarem sem drink correspondente serão apenas relatados a você — nenhum drink novo será criado nesta etapa.
-3. **Formulário de drink**: novo campo "História" (área de texto opcional), para você editar/complementar depois.
-4. **Página do drink** (`/drinks/:id`): nova seção "História" entre as categorias e os ingredientes, com o mesmo estilo dos títulos existentes (rótulo em maiúsculas/âmbar + texto). Se o drink não tiver história, a seção simplesmente não aparece.
+- Página do drink (`/drinks/$id`): badge de dificuldade junto às categorias, com cor distinta por nível (verde/âmbar/vermelho via tokens do tema).
+- Cards em `/drinks` e `/favoritos`: badge discreto de dificuldade (grade e lista).
+- `/drinks`: novo bloco de filtro "Dificuldade" com os três botões, combinando com os filtros de categoria e ingredientes já existentes.
+- Formulário de cadastro/edição (`drink-form.tsx`): seletor de dificuldade, padrão "Fácil".
 
 ## Detalhes técnicos
 
-- Coluna `historia text` em `public.drinks`; políticas RLS atuais já cobrem leitura pública e edição pelo dono/admin.
-- Atualização de dados via ferramenta de dados (UPDATE por id), não por migração.
-- Ajustes de tipos: `Drink` em `src/lib/queries.ts`, `DrinkForm` em `src/components/drink-form.tsx`, exibição em `src/routes/drinks.$id.index.tsx`.
+- Migração adiciona a coluna com CHECK de valores; atualizações de dados via script de UPDATE por nome normalizado.
+- Tipos atualizados em `src/lib/queries.ts` (e `types.ts` regenerado após a migração).
+- Filtro de dificuldade em estado local, mesma lógica de composição dos filtros atuais.
