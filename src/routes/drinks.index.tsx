@@ -273,15 +273,14 @@ function DrinksList() {
                     <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
-                      {d.drink_drink_categorias.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-2">
-                          {d.drink_drink_categorias.map((c) => (
-                            <Badge key={c.categoria_id} className="text-[10px]">
-                              {c.drink_categorias?.nome ?? "?"}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
+                      <div className="flex flex-wrap items-center gap-1 mt-2">
+                        <DifficultyBadge value={d.dificuldade} />
+                        {d.drink_drink_categorias.map((c) => (
+                          <Badge key={c.categoria_id} className="text-[10px]">
+                            {c.drink_categorias?.nome ?? "?"}
+                          </Badge>
+                        ))}
+                      </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {d.drink_ingredientes.slice(0, 4).map((di) => (
                           <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
