@@ -215,6 +215,26 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
 
 
           <div className="space-y-2">
+            <Label>Dificuldade de preparo</Label>
+            <div className="flex flex-wrap gap-2">
+              {DIFICULDADES.map((d) => (
+                <button
+                  type="button"
+                  key={d}
+                  onClick={() => setDificuldade(d)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    dificuldade === d
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
+                  }`}
+                >
+                  {d}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="preparo">Preparo</Label>
             <Textarea
               id="preparo"
