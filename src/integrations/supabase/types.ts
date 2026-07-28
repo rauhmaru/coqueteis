@@ -233,6 +233,7 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
+          dificuldade: string
           historia: string | null
           id: string
           imagem_url: string | null
@@ -242,6 +243,7 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
+          dificuldade?: string
           historia?: string | null
           id?: string
           imagem_url?: string | null
@@ -251,6 +253,7 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
+          dificuldade?: string
           historia?: string | null
           id?: string
           imagem_url?: string | null

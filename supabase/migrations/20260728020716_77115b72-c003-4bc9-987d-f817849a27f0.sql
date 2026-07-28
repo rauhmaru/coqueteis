@@ -1,0 +1,2 @@
+ALTER TABLE public.drinks ADD COLUMN IF NOT EXISTS dificuldade text NOT NULL DEFAULT 'Fácil';
+ALTER TABLE public.drinks ADD CONSTRAINT drinks_dificuldade_check CHECK (dificuldade IN ('Fácil','Médio','Difícil'));
