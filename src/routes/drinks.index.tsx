@@ -134,6 +134,40 @@ function DrinksList() {
         </div>
 
 
+        {/* Filtro por dificuldade */}
+        <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-medium">
+            <Filter className="h-4 w-4 text-primary" />
+            Filtrar por dificuldade de preparo
+            {selectedDifs.size > 0 && (
+              <button
+                onClick={() => setSelectedDifs(new Set())}
+                className="ml-auto text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+              >
+                <X className="h-3 w-3" /> Limpar
+              </button>
+            )}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {DIFICULDADES.map((d) => {
+              const on = selectedDifs.has(d);
+              return (
+                <button
+                  key={d}
+                  onClick={() => toggleDif(d)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    on
+                      ? "bg-primary text-primary-foreground border-primary"
+                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
+                  }`}
+                >
+                  {d}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
         {/* Filtro por categorias */}
         {categorias.length > 0 && (
           <section className="rounded-xl border border-border bg-card p-5 space-y-3">
