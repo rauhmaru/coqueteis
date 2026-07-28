@@ -28,6 +28,9 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   const [nome, setNome] = useState(existing?.nome ?? "");
   const [preparo, setPreparo] = useState(existing?.preparo ?? "");
   const [historia, setHistoria] = useState(existing?.historia ?? "");
+  const [dificuldade, setDificuldade] = useState<Dificuldade>(
+    (existing?.dificuldade as Dificuldade) ?? "Fácil",
+  );
   const [selected, setSelected] = useState<Set<string>>(
     new Set(existing?.drink_ingredientes.map((d) => d.ingrediente_id) ?? []),
   );
