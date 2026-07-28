@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { DrinkImage } from "@/components/drink-image";
+import { DIFICULDADES, type Dificuldade } from "@/components/difficulty-badge";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
 import { useAuth } from "@/hooks/use-auth";
 
