@@ -49,6 +49,7 @@ function DrinksList() {
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
+  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -61,9 +62,11 @@ function DrinksList() {
         const cats = new Set(d.drink_drink_categorias.map((c) => c.categoria_id));
         for (const sel of selectedCats) if (!cats.has(sel)) return false;
       }
+      if (selectedDifs.size > 0 && !selectedDifs.has(d.dificuldade)) return false;
       return true;
     });
-  }, [drinks, selected, selectedCats]);
+  }, [drinks, selected, selectedCats, selectedDifs]);
+
 
   const toggle = (id: string) => {
     setSelected((prev) => {
