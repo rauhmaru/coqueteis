@@ -107,6 +107,9 @@ function DrinksList() {
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
   const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [openDif, setOpenDif] = useState(false);
+  const [openCat, setOpenCat] = useState(false);
+  const [openIng, setOpenIng] = useState(false);
 
   const filtered = useMemo(() => {
     return drinks.filter((d) => {
@@ -191,19 +194,14 @@ function DrinksList() {
 
 
         {/* Filtro por dificuldade */}
-        <section className="rounded-xl border border-border bg-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <Filter className="h-4 w-4 text-primary" />
-            Filtrar por dificuldade de preparo
-            {selectedDifs.size > 0 && (
-              <button
-                onClick={() => setSelectedDifs(new Set())}
-                className="ml-auto text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-              >
-                <X className="h-3 w-3" /> Limpar
-              </button>
-            )}
-          </div>
+        <FiltroSection
+          id="filtro-dificuldade"
+          titulo="Filtrar por dificuldade de preparo"
+          ativos={selectedDifs.size}
+          open={openDif}
+          onToggle={() => setOpenDif((v) => !v)}
+          onClear={() => setSelectedDifs(new Set())}
+        >
           <div className="flex flex-wrap gap-2">
             {DIFICULDADES.map((d) => {
               const on = selectedDifs.has(d);
@@ -222,23 +220,18 @@ function DrinksList() {
               );
             })}
           </div>
-        </section>
+        </FiltroSection>
 
         {/* Filtro por categorias */}
         {categorias.length > 0 && (
-          <section className="rounded-xl border border-border bg-card p-5 space-y-3">
-            <div className="flex items-center gap-2 text-sm font-medium">
-              <Filter className="h-4 w-4 text-primary" />
-              Filtrar por categorias
-              {selectedCats.size > 0 && (
-                <button
-                  onClick={() => setSelectedCats(new Set())}
-                  className="ml-auto text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-                >
-                  <X className="h-3 w-3" /> Limpar
-                </button>
-              )}
-            </div>
+          <FiltroSection
+            id="filtro-categorias"
+            titulo="Filtrar por categorias"
+            ativos={selectedCats.size}
+            open={openCat}
+            onToggle={() => setOpenCat((v) => !v)}
+            onClear={() => setSelectedCats(new Set())}
+          >
             <div className="flex flex-wrap gap-2">
               {categorias.map((c) => {
                 const on = selectedCats.has(c.id);
@@ -257,23 +250,18 @@ function DrinksList() {
                 );
               })}
             </div>
-          </section>
+          </FiltroSection>
         )}
 
         {/* Filtro por ingredientes */}
-        <section className="rounded-xl border border-border bg-card p-5 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-medium">
-            <Filter className="h-4 w-4 text-primary" />
-            Filtrar por ingredientes disponíveis
-            {selected.size > 0 && (
-              <button
-                onClick={() => setSelected(new Set())}
-                className="ml-auto text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
-              >
-                <X className="h-3 w-3" /> Limpar
-              </button>
-            )}
-          </div>
+        <FiltroSection
+          id="filtro-ingredientes"
+          titulo="Filtrar por ingredientes disponíveis"
+          ativos={selected.size}
+          open={openIng}
+          onToggle={() => setOpenIng((v) => !v)}
+          onClear={() => setSelected(new Set())}
+        >
           {ingredientes.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Cadastre ingredientes em <Link to="/ingredientes" className="text-primary underline">Ingredientes</Link>.
@@ -303,7 +291,8 @@ function DrinksList() {
               Mostrando drinks que contêm <strong>todos</strong> os {selected.size} ingredientes selecionados.
             </p>
           )}
-        </section>
+        </FiltroSection>
+
 
         {/* Resultados */}
         {filtered.length === 0 ? (
