@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Martini, Filter, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Martini, Filter, X, ChevronDown } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
@@ -39,6 +39,62 @@ export const Route = createFileRoute("/drinks/")({
   ),
   notFoundComponent: () => <div className="p-8 text-center">Não encontrado.</div>,
 });
+
+function FiltroSection({
+  id,
+  titulo,
+  ativos,
+  open,
+  onToggle,
+  onClear,
+  children,
+}: {
+  id: string;
+  titulo: string;
+  ativos: number;
+  open: boolean;
+  onToggle: () => void;
+  onClear?: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+      <div className="flex items-center gap-2 text-sm font-medium">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls={id}
+          className="flex flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
+        >
+          <Filter className="h-4 w-4 text-primary" />
+          <span>{titulo}</span>
+          {ativos > 0 && (
+            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[10px]">
+              {ativos}
+            </span>
+          )}
+          <ChevronDown
+            className={`h-4 w-4 ml-auto text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+        {ativos > 0 && onClear && (
+          <button
+            onClick={onClear}
+            className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+          >
+            <X className="h-3 w-3" /> Limpar
+          </button>
+        )}
+      </div>
+      {open && (
+        <div id={id} className="space-y-3">
+          {children}
+        </div>
+      )}
+    </section>
+  );
+}
 
 function DrinksList() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
