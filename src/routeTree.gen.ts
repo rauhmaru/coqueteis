@@ -13,6 +13,7 @@ import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
+import { Route as CalculadoraAbvRouteImport } from './routes/calculadora-abv'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -51,6 +52,11 @@ const ConsumoResponsavelRoute = ConsumoResponsavelRouteImport.update({
 const ConfiancaRoute = ConfiancaRouteImport.update({
   id: '/confianca',
   path: '/confianca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalculadoraAbvRoute = CalculadoraAbvRouteImport.update({
+  id: '/calculadora-abv',
+  path: '/calculadora-abv',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -153,6 +159,7 @@ const AuthenticatedDrinksIdEditarRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calculadora-abv': typeof CalculadoraAbvRoute
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
@@ -177,6 +184,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/calculadora-abv': typeof CalculadoraAbvRoute
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -200,6 +208,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/calculadora-abv': typeof CalculadoraAbvRoute
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
@@ -226,6 +235,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/calculadora-abv'
     | '/confianca'
     | '/consumo-responsavel'
     | '/drinks'
@@ -250,6 +260,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/calculadora-abv'
     | '/confianca'
     | '/consumo-responsavel'
     | '/favoritos'
@@ -272,6 +283,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/calculadora-abv'
     | '/confianca'
     | '/consumo-responsavel'
     | '/drinks'
@@ -298,6 +310,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CalculadoraAbvRoute: typeof CalculadoraAbvRoute
   ConfiancaRoute: typeof ConfiancaRoute
   ConsumoResponsavelRoute: typeof ConsumoResponsavelRoute
   DrinksRoute: typeof DrinksRouteWithChildren
@@ -332,6 +345,13 @@ declare module '@tanstack/react-router' {
       path: '/confianca'
       fullPath: '/confianca'
       preLoaderRoute: typeof ConfiancaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calculadora-abv': {
+      id: '/calculadora-abv'
+      path: '/calculadora-abv'
+      fullPath: '/calculadora-abv'
+      preLoaderRoute: typeof CalculadoraAbvRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -544,6 +564,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  CalculadoraAbvRoute: CalculadoraAbvRoute,
   ConfiancaRoute: ConfiancaRoute,
   ConsumoResponsavelRoute: ConsumoResponsavelRoute,
   DrinksRoute: DrinksRouteWithChildren,
