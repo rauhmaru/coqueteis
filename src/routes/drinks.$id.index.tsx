@@ -107,6 +107,12 @@ function DrinkDetail() {
               >
                 <Youtube className="h-4 w-4 mr-2" /> Ver no YouTube
               </Button>
+              <Button asChild variant="outline">
+                <Link to="/calculadora-abv" search={{ drink: drink.id }}>
+                  <Calculator className="h-4 w-4 mr-2" /> Calcular teor alcoólico
+                </Link>
+              </Button>
+
               <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
             </div>
