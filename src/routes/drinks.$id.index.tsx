@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Pencil, Youtube } from "lucide-react";
+import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
