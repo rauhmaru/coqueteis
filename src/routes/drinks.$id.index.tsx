@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Pencil, Youtube } from "lucide-react";
+import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
@@ -107,6 +107,12 @@ function DrinkDetail() {
               >
                 <Youtube className="h-4 w-4 mr-2" /> Ver no YouTube
               </Button>
+              <Button asChild variant="outline">
+                <Link to="/calculadora-abv" search={{ drink: drink.id }}>
+                  <Calculator className="h-4 w-4 mr-2" /> Calcular teor alcoólico
+                </Link>
+              </Button>
+
               <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
             </div>
