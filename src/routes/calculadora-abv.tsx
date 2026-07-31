@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Calculator, Info, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
+import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -148,13 +150,13 @@ function CalculadoraAbvPage() {
               <div key={c.id} className="grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_100px_100px_40px] gap-3 items-end">
                 <div className="col-span-2 sm:col-span-1">
                   <Label className="sm:hidden text-xs text-muted-foreground">Ingrediente</Label>
-                  <Input
+                  <IngredienteAutocomplete
                     value={c.nome}
-                    maxLength={80}
                     placeholder="Ex.: Cachaça, suco de limão..."
-                    onChange={(e) => nomeChange(c.id, e.target.value)}
+                    onChange={(nome) => nomeChange(c.id, nome)}
                   />
                 </div>
+
                 <div>
                   <Label className="sm:hidden text-xs text-muted-foreground">ml</Label>
                   <Input
