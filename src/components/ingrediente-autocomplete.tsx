@@ -7,6 +7,8 @@ import { normalizar } from "@/lib/abv";
 type Props = {
   value: string;
   onChange: (nome: string) => void;
+  /** chamado quando o usuário escolhe uma sugestão da lista */
+  onSelect?: (nome: string) => void;
   placeholder?: string;
   maxLength?: number;
   id?: string;
