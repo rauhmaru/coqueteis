@@ -74,6 +74,8 @@ function CalculadoraAbvPage() {
   const [manual, setManual] = useState<Componente[] | null>(null);
   const [comGelo, setComGelo] = useState(true);
   const [diluicao, setDiluicao] = useState(20);
+  const [rascunhos, setRascunhos] = useState<Record<string, string>>({});
+  const [erros, setErros] = useState<Record<string, string>>({});
 
   const componentes = manual ?? daReceita ?? padrao();
   const resultado = calcularAbv(componentes, comGelo ? diluicao / 100 : 0);
@@ -82,22 +84,70 @@ function CalculadoraAbvPage() {
   const atualizar = (id: string, patch: Partial<Componente>) =>
     setManual(componentes.map((c) => (c.id === id ? { ...c, ...patch } : c)));
 
-  const remover = (id: string) => setManual(componentes.filter((c) => c.id !== id));
+  const limparCampo = (chave: string) => {
+    setRascunhos((r) => {
+      const { [chave]: _, ...resto } = r;
+      return resto;
+    });
+    setErros((e) => {
+      const { [chave]: _, ...resto } = e;
+      return resto;
+    });
+  };
+
+  /** Valida o campo numérico e só aplica ao cálculo quando o valor é válido. */
+  const campoNumerico = (
+    chave: string,
+    bruto: string,
+    opcoes: { min: number; max: number; rotulo: string; unidade?: string },
+    aplicar: (valor: number) => void,
+  ) => {
+    setRascunhos((r) => ({ ...r, [chave]: bruto }));
+    const { valor, erro } = validarNumero(bruto, opcoes);
+    setErros((e) => {
+      if (!erro) {
+        const { [chave]: _, ...resto } = e;
+        return resto;
+      }
+      return { ...e, [chave]: erro };
+    });
+    if (valor !== null) aplicar(valor);
+  };
+
+  const remover = (id: string) => {
+    limparCampo(`${id}-ml`);
+    limparCampo(`${id}-abv`);
+    setManual(componentes.filter((c) => c.id !== id));
+  };
   const adicionar = () => setManual([...componentes, linhaVazia()]);
-  const reiniciar = () => setManual(daReceita ? daReceita.map((c) => ({ ...c })) : padrao());
+  const reiniciar = () => {
+    setRascunhos({});
+    setErros({});
+    setDiluicao(20);
+    setManual(daReceita ? daReceita.map((c) => ({ ...c })) : padrao());
+  };
 
   const nomeChange = (id: string, nome: string) => {
     const s = sugerirIngrediente(nome);
     const atual = componentes.find((c) => c.id === id);
     const vazio = !atual || (atual.abv === 0 && atual.ml === 0);
     atualizar(id, vazio ? { nome, abv: s.abv, ml: s.ml } : { nome });
+    if (vazio) {
+      limparCampo(`${id}-ml`);
+      limparCampo(`${id}-abv`);
+    }
   };
 
   /** Ao escolher uma sugestão do catálogo, sempre preenche teor e volume sugeridos (editáveis). */
   const nomeSelecionado = (id: string, nome: string) => {
     const s = sugerirIngrediente(nome);
     atualizar(id, { nome, abv: s.abv, ml: s.ml });
+    limparCampo(`${id}-ml`);
+    limparCampo(`${id}-abv`);
   };
+
+  const listaErros = Object.values(erros);
+
 
   return (
     <div className="min-h-screen">
