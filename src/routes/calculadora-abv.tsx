@@ -18,6 +18,8 @@ import {
   calcularAbv,
   classificarAbv,
   sugerirIngrediente,
+  validarNumero,
+
   type Componente,
 } from "@/lib/abv";
 
