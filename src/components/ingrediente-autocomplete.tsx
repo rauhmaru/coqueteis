@@ -19,6 +19,7 @@ const MAX_SUGESTOES = 8;
 export function IngredienteAutocomplete({
   value,
   onChange,
+  onSelect,
   placeholder,
   maxLength = 80,
   id,
@@ -40,10 +41,12 @@ export function IngredienteAutocomplete({
   const mostrar = aberto && sugestoes.length > 0;
 
   const selecionar = (nome: string) => {
-    onChange(nome);
+    if (onSelect) onSelect(nome);
+    else onChange(nome);
     setAberto(false);
     setDestaque(-1);
   };
+
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!mostrar) {
