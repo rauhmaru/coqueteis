@@ -302,21 +302,54 @@ function CalculadoraAbvPage() {
             </div>
             {comGelo && (
               <div className="space-y-2">
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Água derretida</span>
-                  <span className="text-foreground">{diluicao}%</span>
+                <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                  <Label htmlFor="diluicao" className="text-xs text-muted-foreground">
+                    Água derretida (%)
+                  </Label>
+                  <Input
+                    id="diluicao"
+                    type="text"
+                    inputMode="decimal"
+                    aria-invalid={!!erros.diluicao}
+                    aria-describedby={erros.diluicao ? "diluicao-erro" : undefined}
+                    className={`h-8 w-20 text-right ${erros.diluicao ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    value={rascunhos.diluicao ?? String(diluicao)}
+                    onChange={(e) =>
+                      campoNumerico(
+                        "diluicao",
+                        e.target.value,
+                        { min: 0, max: 60, rotulo: "Diluição", unidade: "%" },
+                        (valor) => setDiluicao(valor),
+                      )
+                    }
+                    onBlur={() => !erros.diluicao && limparCampo("diluicao")}
+                  />
                 </div>
+                {erros.diluicao && (
+                  <p id="diluicao-erro" className="text-xs text-destructive">
+                    {erros.diluicao}
+                  </p>
+                )}
                 <Slider
                   value={[diluicao]}
                   min={0}
                   max={60}
                   step={5}
-                  onValueChange={(v) => setDiluicao(v[0] ?? 0)}
+                  onValueChange={(v) => {
+                    limparCampo("diluicao");
+                    setDiluicao(v[0] ?? 0);
+                  }}
                   aria-label="Percentual de diluição pelo gelo"
                 />
               </div>
             )}
+            {listaErros.length > 0 && (
+              <p role="alert" className="text-xs text-destructive">
+                Corrija os campos destacados — o resultado abaixo usa os últimos valores válidos.
+              </p>
+            )}
           </div>
+
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2">
