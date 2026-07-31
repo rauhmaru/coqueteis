@@ -160,7 +160,9 @@ function CalculadoraAbvPage() {
                     value={c.nome}
                     placeholder="Ex.: Cachaça, suco de limão..."
                     onChange={(nome) => nomeChange(c.id, nome)}
+                    onSelect={(nome) => nomeSelecionado(c.id, nome)}
                   />
+
                 </div>
 
                 <div>
