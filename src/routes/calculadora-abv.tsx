@@ -93,6 +93,12 @@ function CalculadoraAbvPage() {
     atualizar(id, vazio ? { nome, abv: s.abv, ml: s.ml } : { nome });
   };
 
+  /** Ao escolher uma sugestão do catálogo, sempre preenche teor e volume sugeridos (editáveis). */
+  const nomeSelecionado = (id: string, nome: string) => {
+    const s = sugerirIngrediente(nome);
+    atualizar(id, { nome, abv: s.abv, ml: s.ml });
+  };
+
   return (
     <div className="min-h-screen">
       <SiteHeader />
