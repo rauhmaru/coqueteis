@@ -216,37 +216,62 @@ function CalculadoraAbvPage() {
                 </div>
 
                 <div>
-                  <Label className="sm:hidden text-xs text-muted-foreground">ml</Label>
+                  <Label className="sm:hidden text-xs text-muted-foreground" htmlFor={`${c.id}-ml`}>
+                    ml
+                  </Label>
                   <Input
-                    type="number"
-                    min={0}
-                    max={MAX_ML}
-                    step={5}
-                    inputMode="numeric"
-                    value={c.ml}
+                    id={`${c.id}-ml`}
+                    type="text"
+                    inputMode="decimal"
+                    aria-invalid={!!erros[`${c.id}-ml`]}
+                    aria-describedby={erros[`${c.id}-ml`] ? `${c.id}-ml-erro` : undefined}
+                    className={erros[`${c.id}-ml`] ? "border-destructive focus-visible:ring-destructive" : ""}
+                    value={rascunhos[`${c.id}-ml`] ?? String(c.ml)}
                     onChange={(e) =>
-                      atualizar(c.id, {
-                        ml: Math.min(MAX_ML, Math.max(0, Number(e.target.value) || 0)),
-                      })
+                      campoNumerico(
+                        `${c.id}-ml`,
+                        e.target.value,
+                        { min: 0, max: MAX_ML, rotulo: "Volume", unidade: " ml" },
+                        (valor) => atualizar(c.id, { ml: valor }),
+                      )
                     }
+                    onBlur={() => !erros[`${c.id}-ml`] && limparCampo(`${c.id}-ml`)}
                   />
+                  {erros[`${c.id}-ml`] && (
+                    <p id={`${c.id}-ml-erro`} className="mt-1 text-xs text-destructive">
+                      {erros[`${c.id}-ml`]}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <Label className="sm:hidden text-xs text-muted-foreground">% ABV</Label>
+                  <Label className="sm:hidden text-xs text-muted-foreground" htmlFor={`${c.id}-abv`}>
+                    % ABV
+                  </Label>
                   <Input
-                    type="number"
-                    min={0}
-                    max={MAX_ABV}
-                    step={0.5}
+                    id={`${c.id}-abv`}
+                    type="text"
                     inputMode="decimal"
-                    value={c.abv}
+                    aria-invalid={!!erros[`${c.id}-abv`]}
+                    aria-describedby={erros[`${c.id}-abv`] ? `${c.id}-abv-erro` : undefined}
+                    className={erros[`${c.id}-abv`] ? "border-destructive focus-visible:ring-destructive" : ""}
+                    value={rascunhos[`${c.id}-abv`] ?? String(c.abv)}
                     onChange={(e) =>
-                      atualizar(c.id, {
-                        abv: Math.min(MAX_ABV, Math.max(0, Number(e.target.value) || 0)),
-                      })
+                      campoNumerico(
+                        `${c.id}-abv`,
+                        e.target.value,
+                        { min: 0, max: MAX_ABV, rotulo: "Teor", unidade: "%" },
+                        (valor) => atualizar(c.id, { abv: valor }),
+                      )
                     }
+                    onBlur={() => !erros[`${c.id}-abv`] && limparCampo(`${c.id}-abv`)}
                   />
+                  {erros[`${c.id}-abv`] && (
+                    <p id={`${c.id}-abv-erro`} className="mt-1 text-xs text-destructive">
+                      {erros[`${c.id}-abv`]}
+                    </p>
+                  )}
                 </div>
+
                 <Button
                   variant="ghost"
                   size="icon"
