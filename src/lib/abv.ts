@@ -73,7 +73,37 @@ export function sugerirIngrediente(nome: string): { abv: number; ml: number } {
   return { abv: 0, ml: 30 };
 }
 
+export type ValidacaoNumero = { valor: number | null; erro: string | null };
+
+/** Valida um campo numérico digitado, devolvendo mensagem amigável em pt-BR. */
+export function validarNumero(
+  bruto: string,
+  opcoes: { min: number; max: number; rotulo: string; unidade?: string; obrigatorio?: boolean },
+): ValidacaoNumero {
+  const { min, max, rotulo, unidade = "", obrigatorio = true } = opcoes;
+  const texto = bruto.trim().replace(",", ".");
+
+  if (texto === "") {
+    return obrigatorio
+      ? { valor: null, erro: `Informe ${rotulo.toLowerCase()}.` }
+      : { valor: min, erro: null };
+  }
+  if (!/^-?\d*\.?\d*$/.test(texto)) {
+    return { valor: null, erro: `${rotulo}: use apenas números (ex.: 50).` };
+  }
+  const n = Number(texto);
+  if (!Number.isFinite(n)) return { valor: null, erro: `${rotulo}: valor inválido.` };
+  if (n < min) {
+    return { valor: null, erro: `${rotulo} não pode ser menor que ${min}${unidade}.` };
+  }
+  if (n > max) {
+    return { valor: null, erro: `${rotulo} não pode passar de ${max}${unidade}.` };
+  }
+  return { valor: n, erro: null };
+}
+
 export type ResultadoAbv = {
+
   volumeTotal: number;
   volumeBebidas: number;
   alcoolPuro: number;

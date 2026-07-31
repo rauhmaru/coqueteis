@@ -18,6 +18,8 @@ import {
   calcularAbv,
   classificarAbv,
   sugerirIngrediente,
+  validarNumero,
+
   type Componente,
 } from "@/lib/abv";
 
@@ -74,6 +76,8 @@ function CalculadoraAbvPage() {
   const [manual, setManual] = useState<Componente[] | null>(null);
   const [comGelo, setComGelo] = useState(true);
   const [diluicao, setDiluicao] = useState(20);
+  const [rascunhos, setRascunhos] = useState<Record<string, string>>({});
+  const [erros, setErros] = useState<Record<string, string>>({});
 
   const componentes = manual ?? daReceita ?? padrao();
   const resultado = calcularAbv(componentes, comGelo ? diluicao / 100 : 0);
@@ -82,22 +86,70 @@ function CalculadoraAbvPage() {
   const atualizar = (id: string, patch: Partial<Componente>) =>
     setManual(componentes.map((c) => (c.id === id ? { ...c, ...patch } : c)));
 
-  const remover = (id: string) => setManual(componentes.filter((c) => c.id !== id));
+  const limparCampo = (chave: string) => {
+    setRascunhos((r) => {
+      const { [chave]: _, ...resto } = r;
+      return resto;
+    });
+    setErros((e) => {
+      const { [chave]: _, ...resto } = e;
+      return resto;
+    });
+  };
+
+  /** Valida o campo numérico e só aplica ao cálculo quando o valor é válido. */
+  const campoNumerico = (
+    chave: string,
+    bruto: string,
+    opcoes: { min: number; max: number; rotulo: string; unidade?: string },
+    aplicar: (valor: number) => void,
+  ) => {
+    setRascunhos((r) => ({ ...r, [chave]: bruto }));
+    const { valor, erro } = validarNumero(bruto, opcoes);
+    setErros((e) => {
+      if (!erro) {
+        const { [chave]: _, ...resto } = e;
+        return resto;
+      }
+      return { ...e, [chave]: erro };
+    });
+    if (valor !== null) aplicar(valor);
+  };
+
+  const remover = (id: string) => {
+    limparCampo(`${id}-ml`);
+    limparCampo(`${id}-abv`);
+    setManual(componentes.filter((c) => c.id !== id));
+  };
   const adicionar = () => setManual([...componentes, linhaVazia()]);
-  const reiniciar = () => setManual(daReceita ? daReceita.map((c) => ({ ...c })) : padrao());
+  const reiniciar = () => {
+    setRascunhos({});
+    setErros({});
+    setDiluicao(20);
+    setManual(daReceita ? daReceita.map((c) => ({ ...c })) : padrao());
+  };
 
   const nomeChange = (id: string, nome: string) => {
     const s = sugerirIngrediente(nome);
     const atual = componentes.find((c) => c.id === id);
     const vazio = !atual || (atual.abv === 0 && atual.ml === 0);
     atualizar(id, vazio ? { nome, abv: s.abv, ml: s.ml } : { nome });
+    if (vazio) {
+      limparCampo(`${id}-ml`);
+      limparCampo(`${id}-abv`);
+    }
   };
 
   /** Ao escolher uma sugestão do catálogo, sempre preenche teor e volume sugeridos (editáveis). */
   const nomeSelecionado = (id: string, nome: string) => {
     const s = sugerirIngrediente(nome);
     atualizar(id, { nome, abv: s.abv, ml: s.ml });
+    limparCampo(`${id}-ml`);
+    limparCampo(`${id}-abv`);
   };
+
+  const listaErros = Object.values(erros);
+
 
   return (
     <div className="min-h-screen">
@@ -166,37 +218,62 @@ function CalculadoraAbvPage() {
                 </div>
 
                 <div>
-                  <Label className="sm:hidden text-xs text-muted-foreground">ml</Label>
+                  <Label className="sm:hidden text-xs text-muted-foreground" htmlFor={`${c.id}-ml`}>
+                    ml
+                  </Label>
                   <Input
-                    type="number"
-                    min={0}
-                    max={MAX_ML}
-                    step={5}
-                    inputMode="numeric"
-                    value={c.ml}
+                    id={`${c.id}-ml`}
+                    type="text"
+                    inputMode="decimal"
+                    aria-invalid={!!erros[`${c.id}-ml`]}
+                    aria-describedby={erros[`${c.id}-ml`] ? `${c.id}-ml-erro` : undefined}
+                    className={erros[`${c.id}-ml`] ? "border-destructive focus-visible:ring-destructive" : ""}
+                    value={rascunhos[`${c.id}-ml`] ?? String(c.ml)}
                     onChange={(e) =>
-                      atualizar(c.id, {
-                        ml: Math.min(MAX_ML, Math.max(0, Number(e.target.value) || 0)),
-                      })
+                      campoNumerico(
+                        `${c.id}-ml`,
+                        e.target.value,
+                        { min: 0, max: MAX_ML, rotulo: "Volume", unidade: " ml" },
+                        (valor) => atualizar(c.id, { ml: valor }),
+                      )
                     }
+                    onBlur={() => !erros[`${c.id}-ml`] && limparCampo(`${c.id}-ml`)}
                   />
+                  {erros[`${c.id}-ml`] && (
+                    <p id={`${c.id}-ml-erro`} className="mt-1 text-xs text-destructive">
+                      {erros[`${c.id}-ml`]}
+                    </p>
+                  )}
                 </div>
                 <div>
-                  <Label className="sm:hidden text-xs text-muted-foreground">% ABV</Label>
+                  <Label className="sm:hidden text-xs text-muted-foreground" htmlFor={`${c.id}-abv`}>
+                    % ABV
+                  </Label>
                   <Input
-                    type="number"
-                    min={0}
-                    max={MAX_ABV}
-                    step={0.5}
+                    id={`${c.id}-abv`}
+                    type="text"
                     inputMode="decimal"
-                    value={c.abv}
+                    aria-invalid={!!erros[`${c.id}-abv`]}
+                    aria-describedby={erros[`${c.id}-abv`] ? `${c.id}-abv-erro` : undefined}
+                    className={erros[`${c.id}-abv`] ? "border-destructive focus-visible:ring-destructive" : ""}
+                    value={rascunhos[`${c.id}-abv`] ?? String(c.abv)}
                     onChange={(e) =>
-                      atualizar(c.id, {
-                        abv: Math.min(MAX_ABV, Math.max(0, Number(e.target.value) || 0)),
-                      })
+                      campoNumerico(
+                        `${c.id}-abv`,
+                        e.target.value,
+                        { min: 0, max: MAX_ABV, rotulo: "Teor", unidade: "%" },
+                        (valor) => atualizar(c.id, { abv: valor }),
+                      )
                     }
+                    onBlur={() => !erros[`${c.id}-abv`] && limparCampo(`${c.id}-abv`)}
                   />
+                  {erros[`${c.id}-abv`] && (
+                    <p id={`${c.id}-abv-erro`} className="mt-1 text-xs text-destructive">
+                      {erros[`${c.id}-abv`]}
+                    </p>
+                  )}
                 </div>
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -227,21 +304,54 @@ function CalculadoraAbvPage() {
             </div>
             {comGelo && (
               <div className="space-y-2">
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>Água derretida</span>
-                  <span className="text-foreground">{diluicao}%</span>
+                <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
+                  <Label htmlFor="diluicao" className="text-xs text-muted-foreground">
+                    Água derretida (%)
+                  </Label>
+                  <Input
+                    id="diluicao"
+                    type="text"
+                    inputMode="decimal"
+                    aria-invalid={!!erros.diluicao}
+                    aria-describedby={erros.diluicao ? "diluicao-erro" : undefined}
+                    className={`h-8 w-20 text-right ${erros.diluicao ? "border-destructive focus-visible:ring-destructive" : ""}`}
+                    value={rascunhos.diluicao ?? String(diluicao)}
+                    onChange={(e) =>
+                      campoNumerico(
+                        "diluicao",
+                        e.target.value,
+                        { min: 0, max: 60, rotulo: "Diluição", unidade: "%" },
+                        (valor) => setDiluicao(valor),
+                      )
+                    }
+                    onBlur={() => !erros.diluicao && limparCampo("diluicao")}
+                  />
                 </div>
+                {erros.diluicao && (
+                  <p id="diluicao-erro" className="text-xs text-destructive">
+                    {erros.diluicao}
+                  </p>
+                )}
                 <Slider
                   value={[diluicao]}
                   min={0}
                   max={60}
                   step={5}
-                  onValueChange={(v) => setDiluicao(v[0] ?? 0)}
+                  onValueChange={(v) => {
+                    limparCampo("diluicao");
+                    setDiluicao(v[0] ?? 0);
+                  }}
                   aria-label="Percentual de diluição pelo gelo"
                 />
               </div>
             )}
+            {listaErros.length > 0 && (
+              <p role="alert" className="text-xs text-destructive">
+                Corrija os campos destacados — o resultado abaixo usa os últimos valores válidos.
+              </p>
+            )}
           </div>
+
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2">
