@@ -4,6 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Calculator, Info, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
+import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
