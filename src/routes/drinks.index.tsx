@@ -177,7 +177,7 @@ function DrinksList() {
       <main className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="font-serif text-4xl text-foreground">Drinks</h1>
+            <h1 className="font-serif text-3xl sm:text-4xl text-foreground">Drinks</h1>
             <p className="text-muted-foreground text-sm mt-1">
               {drinks.length} {drinks.length === 1 ? "receita cadastrada" : "receitas cadastradas"}
             </p>

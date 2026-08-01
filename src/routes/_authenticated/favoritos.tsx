@@ -133,7 +133,7 @@ function FavoritosPage() {
         </Link>
 
         <header className="space-y-2">
-          <h1 className="font-serif text-4xl text-foreground inline-flex items-center gap-3">
+          <h1 className="font-serif text-3xl sm:text-4xl text-foreground inline-flex items-center gap-3">
             <Heart className="h-8 w-8 text-primary fill-current" /> Meus Favoritos
           </h1>
           <p className="text-muted-foreground text-sm">

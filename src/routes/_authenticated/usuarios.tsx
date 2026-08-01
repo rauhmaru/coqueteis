@@ -59,7 +59,7 @@ function UsuariosPage() {
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-4 py-10 space-y-8">
         <div>
-          <h1 className="font-serif text-4xl text-foreground flex items-center gap-3">
+          <h1 className="font-serif text-3xl sm:text-4xl text-foreground flex items-center gap-3">
             <UserCog className="h-7 w-7 text-primary" /> Usuários
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
