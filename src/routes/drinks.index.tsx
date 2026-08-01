@@ -58,16 +58,16 @@ function FiltroSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+    <section aria-label={titulo} className="rounded-xl border border-border bg-card p-4 sm:p-5 space-y-3">
       <div className="flex items-center gap-2 text-sm font-medium">
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={open}
           aria-controls={id}
-          className="flex flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
+          className="flex min-h-11 flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
         >
-          <Filter className="h-4 w-4 text-primary" />
+          <Filter className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           <span>{titulo}</span>
           {ativos > 0 && (
             <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs">
@@ -80,10 +80,12 @@ function FiltroSection({
         </button>
         {ativos > 0 && onClear && (
           <button
+            type="button"
             onClick={onClear}
-            className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+            aria-label={`Limpar ${titulo.toLowerCase()}`}
+            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md px-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            <X className="h-3 w-3" /> Limpar
+            <X className="h-3 w-3" aria-hidden="true" /> Limpar
           </button>
         )}
       </div>
