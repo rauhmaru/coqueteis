@@ -81,7 +81,7 @@ export function FavoriteIconButton({
       aria-label={favorito ? "Remover dos favoritos" : "Adicionar aos favoritos"}
       aria-pressed={favorito}
       title={favorito ? "Remover dos favoritos" : "Favoritar"}
-      className={`inline-flex items-center justify-center rounded-full h-8 w-8 backdrop-blur bg-background/70 border border-border hover:bg-background transition-colors ${
+      className={`inline-flex items-center justify-center rounded-full h-11 w-11 sm:h-9 sm:w-9 backdrop-blur bg-background/70 border border-border hover:bg-background transition-colors ${
         favorito ? "text-primary" : "text-muted-foreground hover:text-primary"
       } ${className}`}
     >
