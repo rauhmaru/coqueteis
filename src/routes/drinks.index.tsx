@@ -209,7 +209,9 @@ function DrinksList() {
                 <button
                   key={d}
                   onClick={() => toggleDif(d)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                  type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                     on
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -239,7 +241,9 @@ function DrinksList() {
                   <button
                     key={c.id}
                     onClick={() => toggleCat(c.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                       on
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -274,7 +278,9 @@ function DrinksList() {
                   <button
                     key={ing.id}
                     onClick={() => toggle(ing.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                       on
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -294,10 +300,14 @@ function DrinksList() {
         </FiltroSection>
 
 
+        <p aria-live="polite" className="sr-only">
+          {filtered.length} {filtered.length === 1 ? "drink encontrado" : "drinks encontrados"}
+        </p>
+
         {/* Resultados */}
         {filtered.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center">
-            <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+            <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
             <p className="text-muted-foreground">
               {selected.size > 0 || selectedCats.size > 0
                 ? "Nenhum drink combina com esses filtros."
@@ -305,7 +315,7 @@ function DrinksList() {
             </p>
           </div>
         ) : (
-          <ul className={viewMode === "grid" ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
+          <ul className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
             {filtered.map((d) => (
               viewMode === "grid" ? (
                 <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
@@ -343,13 +353,16 @@ function DrinksList() {
                       <Link
                         to="/drinks/$id/editar"
                         params={{ id: d.id }}
-                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                        className="flex-1 min-h-11 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                        aria-label={`Editar ${d.nome}`}
                       >
                         <Pencil className="h-3 w-3" /> Editar
                       </Link>
                       <button
                         onClick={() => setConfirmId(d.id)}
-                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                        className="flex-1 min-h-11 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                        type="button"
+                        aria-label={`Remover ${d.nome}`}
                       >
                         <Trash2 className="h-3 w-3" /> Remover
                       </button>
@@ -390,15 +403,16 @@ function DrinksList() {
                           <Link
                             to="/drinks/$id/editar"
                             params={{ id: d.id }}
-                            className="p-1.5 text-muted-foreground hover:text-primary"
-                            aria-label="Editar"
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-primary sm:min-h-9 sm:min-w-9"
+                            aria-label={`Editar ${d.nome}`}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </Link>
                           <button
                             onClick={() => setConfirmId(d.id)}
-                            className="p-1.5 text-muted-foreground hover:text-destructive"
-                            aria-label="Remover"
+                            type="button"
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-destructive sm:min-h-9 sm:min-w-9"
+                            aria-label={`Remover ${d.nome}`}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>
