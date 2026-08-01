@@ -58,19 +58,19 @@ function FiltroSection({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+    <section aria-label={titulo} className="rounded-xl border border-border bg-card p-4 sm:p-5 space-y-3">
       <div className="flex items-center gap-2 text-sm font-medium">
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={open}
           aria-controls={id}
-          className="flex flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
+          className="flex min-h-11 flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
         >
-          <Filter className="h-4 w-4 text-primary" />
+          <Filter className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
           <span>{titulo}</span>
           {ativos > 0 && (
-            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[10px]">
+            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs">
               {ativos}
             </span>
           )}
@@ -80,10 +80,12 @@ function FiltroSection({
         </button>
         {ativos > 0 && onClear && (
           <button
+            type="button"
             onClick={onClear}
-            className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 shrink-0"
+            aria-label={`Limpar ${titulo.toLowerCase()}`}
+            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md px-2 text-xs text-muted-foreground hover:text-foreground"
           >
-            <X className="h-3 w-3" /> Limpar
+            <X className="h-3 w-3" aria-hidden="true" /> Limpar
           </button>
         )}
       </div>
@@ -172,12 +174,12 @@ function DrinksList() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h1 className="font-serif text-4xl text-foreground">Drinks</h1>
+            <h1 className="font-serif text-3xl sm:text-4xl text-foreground">Drinks</h1>
             <p className="text-muted-foreground text-sm mt-1">
               {drinks.length} {drinks.length === 1 ? "receita cadastrada" : "receitas cadastradas"}
             </p>
@@ -209,7 +211,9 @@ function DrinksList() {
                 <button
                   key={d}
                   onClick={() => toggleDif(d)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                  type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                     on
                       ? "bg-primary text-primary-foreground border-primary"
                       : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -239,7 +243,9 @@ function DrinksList() {
                   <button
                     key={c.id}
                     onClick={() => toggleCat(c.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                       on
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -274,7 +280,9 @@ function DrinksList() {
                   <button
                     key={ing.id}
                     onClick={() => toggle(ing.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                    type="button"
+                    aria-pressed={on}
+                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
                       on
                         ? "bg-primary text-primary-foreground border-primary"
                         : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
@@ -294,10 +302,14 @@ function DrinksList() {
         </FiltroSection>
 
 
+        <p aria-live="polite" className="sr-only">
+          {filtered.length} {filtered.length === 1 ? "drink encontrado" : "drinks encontrados"}
+        </p>
+
         {/* Resultados */}
         {filtered.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center">
-            <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
+            <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
             <p className="text-muted-foreground">
               {selected.size > 0 || selectedCats.size > 0
                 ? "Nenhum drink combina com esses filtros."
@@ -305,7 +317,7 @@ function DrinksList() {
             </p>
           </div>
         ) : (
-          <ul className={viewMode === "grid" ? "grid sm:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
+          <ul className={viewMode === "grid" ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" : "flex flex-col gap-3"}>
             {filtered.map((d) => (
               viewMode === "grid" ? (
                 <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
@@ -315,25 +327,25 @@ function DrinksList() {
                     </div>
                   )}
                   <Link to="/drinks/$id" params={{ id: d.id }} className="block">
-                    <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
+                    <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
                       <div className="flex flex-wrap items-center gap-1 mt-2">
                         <DifficultyBadge value={d.dificuldade} />
                         {d.drink_drink_categorias.map((c) => (
-                          <Badge key={c.categoria_id} className="text-[10px]">
+                          <Badge key={c.categoria_id} className="text-xs">
                             {c.drink_categorias?.nome ?? "?"}
                           </Badge>
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {d.drink_ingredientes.slice(0, 4).map((di) => (
-                          <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                          <Badge key={di.ingrediente_id} variant="secondary" className="text-xs">
                             {di.ingredientes?.nome ?? "?"}
                           </Badge>
                         ))}
                         {d.drink_ingredientes.length > 4 && (
-                          <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                          <Badge variant="outline" className="text-xs">+{d.drink_ingredientes.length - 4}</Badge>
                         )}
                       </div>
                     </div>
@@ -343,13 +355,16 @@ function DrinksList() {
                       <Link
                         to="/drinks/$id/editar"
                         params={{ id: d.id }}
-                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                        className="flex-1 min-h-11 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
+                        aria-label={`Editar ${d.nome}`}
                       >
                         <Pencil className="h-3 w-3" /> Editar
                       </Link>
                       <button
                         onClick={() => setConfirmId(d.id)}
-                        className="flex-1 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                        className="flex-1 min-h-11 px-3 py-2 text-xs text-muted-foreground hover:text-destructive hover:bg-secondary/40 border-l border-border inline-flex items-center justify-center gap-1"
+                        type="button"
+                        aria-label={`Remover ${d.nome}`}
                       >
                         <Trash2 className="h-3 w-3" /> Remover
                       </button>
@@ -360,25 +375,25 @@ function DrinksList() {
                 <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
                   <div className="flex items-stretch">
                     <Link to="/drinks/$id" params={{ id: d.id }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
-                      <DrinkImage path={d.imagem_url} alt={d.nome} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
+                      <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
                         <div className="flex flex-wrap items-center gap-1 mt-1">
                           <DifficultyBadge value={d.dificuldade} />
                           {d.drink_drink_categorias.slice(0, 3).map((c) => (
-                            <Badge key={c.categoria_id} className="text-[10px]">
+                            <Badge key={c.categoria_id} className="text-xs">
                               {c.drink_categorias?.nome ?? "?"}
                             </Badge>
                           ))}
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {d.drink_ingredientes.slice(0, 4).map((di) => (
-                            <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                            <Badge key={di.ingrediente_id} variant="secondary" className="text-xs">
                               {di.ingredientes?.nome ?? "?"}
                             </Badge>
                           ))}
                           {d.drink_ingredientes.length > 4 && (
-                            <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                            <Badge variant="outline" className="text-xs">+{d.drink_ingredientes.length - 4}</Badge>
                           )}
                         </div>
                       </div>
@@ -390,15 +405,16 @@ function DrinksList() {
                           <Link
                             to="/drinks/$id/editar"
                             params={{ id: d.id }}
-                            className="p-1.5 text-muted-foreground hover:text-primary"
-                            aria-label="Editar"
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-primary sm:min-h-9 sm:min-w-9"
+                            aria-label={`Editar ${d.nome}`}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </Link>
                           <button
                             onClick={() => setConfirmId(d.id)}
-                            className="p-1.5 text-muted-foreground hover:text-destructive"
-                            aria-label="Remover"
+                            type="button"
+                            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-destructive sm:min-h-9 sm:min-w-9"
+                            aria-label={`Remover ${d.nome}`}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>

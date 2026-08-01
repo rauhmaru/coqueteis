@@ -91,11 +91,11 @@ function IngredientesPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-5xl px-4 py-10 space-y-8">
         <div>
-          <h1 className="font-serif text-4xl text-foreground">Ingredientes</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl text-foreground">Ingredientes</h1>
           <p className="text-muted-foreground text-sm mt-1">
             {ingredientes.length} cadastrado(s)
           </p>
@@ -121,11 +121,11 @@ function IngredientesPage() {
               </Select>
             </div>
             <div className="sm:col-span-2 flex gap-2">
-              <Button type="submit" disabled={saving} className="flex-1">
+              <Button type="submit" disabled={saving} className="flex-1 min-h-11">
                 {editing ? <><Pencil className="h-4 w-4 mr-1" /> Atualizar</> : <><Plus className="h-4 w-4 mr-1" /> Adicionar</>}
               </Button>
               {editing && (
-                <Button type="button" variant="outline" size="icon" onClick={reset}>
+                <Button type="button" variant="outline" size="icon" onClick={reset} aria-label="Cancelar edição" className="min-h-11 min-w-11">
                   <X className="h-4 w-4" />
                 </Button>
               )}
@@ -135,10 +135,11 @@ function IngredientesPage() {
 
         <div className="rounded-xl border border-border overflow-hidden">
           <table className="w-full text-sm">
+            <caption className="sr-only">Lista de ingredientes cadastrados com nome e tipo</caption>
             <thead className="bg-secondary/40 text-muted-foreground text-xs uppercase tracking-wider">
               <tr>
-                <th className="text-left px-4 py-3">Nome</th>
-                <th className="text-left px-4 py-3">Tipo</th>
+                <th scope="col" className="text-left px-4 py-3">Nome</th>
+                <th scope="col" className="text-left px-4 py-3">Tipo</th>
               </tr>
             </thead>
             <tbody>
@@ -151,11 +152,23 @@ function IngredientesPage() {
                       <span>{ing.nome}</span>
                       {canManage(ing) && (
                         <span className="space-x-1">
-                          <Button size="sm" variant="ghost" onClick={() => startEdit(ing)}>
-                            <Pencil className="h-3.5 w-3.5" />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => startEdit(ing)}
+                            aria-label={`Editar ingrediente ${ing.nome}`}
+                            className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9"
+                          >
+                            <Pencil className="h-4 w-4" aria-hidden="true" />
                           </Button>
-                          <Button size="sm" variant="ghost" onClick={() => setConfirmId(ing.id)}>
-                            <Trash2 className="h-3.5 w-3.5" />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setConfirmId(ing.id)}
+                            aria-label={`Remover ingrediente ${ing.nome}`}
+                            className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9"
+                          >
+                            <Trash2 className="h-4 w-4" aria-hidden="true" />
                           </Button>
                         </span>
                       )}

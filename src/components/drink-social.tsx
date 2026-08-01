@@ -233,9 +233,9 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
   };
 
   return (
-    <section className="space-y-6 border-t border-border pt-8">
+    <section aria-label="Curtidas e comentários" className="space-y-6 border-t border-border pt-8">
       {/* Curtir drink */}
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <Button
           type="button"
           variant={liked ? "default" : "outline"}
@@ -243,8 +243,9 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
           disabled={loading || toggleLike.isPending || !user}
           onClick={() => toggleLike.mutate()}
           aria-pressed={liked}
+          className="min-h-11 sm:min-h-9"
         >
-          <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} />
+          <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
           {liked ? "Curtido" : "Curtir"}
         </Button>
         <span className="text-sm text-muted-foreground">
@@ -261,14 +262,15 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
       <div className="space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <h2 className="text-xs uppercase tracking-[0.2em] text-primary inline-flex items-center gap-2">
-            <MessageCircle className="h-3.5 w-3.5" /> Comentários
+            <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> Comentários
           </h2>
           {comentarios.length > 1 && (
-            <div className="inline-flex rounded-md border border-border overflow-hidden text-xs">
+            <div role="group" aria-label="Ordenar comentários" className="inline-flex overflow-hidden rounded-md border border-border text-xs">
               <button
                 type="button"
                 onClick={() => setOrdem("recentes")}
-                className={`px-3 py-1.5 transition-colors ${
+                aria-pressed={ordem === "recentes"}
+                className={`min-h-11 px-3 py-1.5 transition-colors sm:min-h-9 ${
                   ordem === "recentes"
                     ? "bg-primary text-primary-foreground"
                     : "bg-transparent text-muted-foreground hover:text-foreground"
@@ -279,7 +281,8 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
               <button
                 type="button"
                 onClick={() => setOrdem("relevantes")}
-                className={`px-3 py-1.5 border-l border-border transition-colors ${
+                aria-pressed={ordem === "relevantes"}
+                className={`min-h-11 border-l border-border px-3 py-1.5 transition-colors sm:min-h-9 ${
                   ordem === "relevantes"
                     ? "bg-primary text-primary-foreground"
                     : "bg-transparent text-muted-foreground hover:text-foreground"
@@ -343,6 +346,7 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
                           variant="ghost"
                           onClick={() => { setEditandoId(c.id); setEditTexto(c.texto); }}
                           aria-label="Editar comentário"
+                          className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                         </Button>
@@ -352,6 +356,7 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
                           variant="ghost"
                           onClick={() => setConfirmId(c.id)}
                           aria-label="Remover comentário"
+                          className="min-h-11 min-w-11 sm:min-h-9 sm:min-w-9"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
                         </Button>
@@ -398,10 +403,11 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
                       type="button"
                       size="sm"
                       variant={stats.likedByMe ? "default" : "ghost"}
-                      className="h-7 px-2"
+                      className="min-h-11 px-3 sm:min-h-8"
                       disabled={!user || toggleCommentLike.isPending}
                       onClick={() => toggleCommentLike.mutate(c.id)}
                       aria-pressed={stats.likedByMe}
+                      aria-label={stats.likedByMe ? "Remover curtida do comentário" : "Curtir comentário"}
                     >
                       <Heart className={`h-3.5 w-3.5 mr-1 ${stats.likedByMe ? "fill-current" : ""}`} />
                       {stats.total}

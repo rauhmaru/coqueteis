@@ -122,19 +122,19 @@ function FavoritosPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <Link
           to="/drinks"
           className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
         >
-          <ArrowLeft className="h-4 w-4" /> Ver todos os drinks
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Ver todos os drinks
         </Link>
 
         <header className="space-y-2">
-          <h1 className="font-serif text-4xl text-foreground inline-flex items-center gap-3">
-            <Heart className="h-8 w-8 text-primary fill-current" /> Meus Favoritos
+          <h1 className="font-serif text-3xl sm:text-4xl text-foreground inline-flex items-center gap-3">
+            <Heart className="h-7 w-7 sm:h-8 sm:w-8 shrink-0 text-primary fill-current" aria-hidden="true" /> Meus Favoritos
           </h1>
           <p className="text-muted-foreground text-sm">
             {isLoading
@@ -146,18 +146,19 @@ function FavoritosPage() {
         </header>
 
         {total > 0 && (
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto] items-center">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-center">
             <div className="relative">
-              <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
               <Input
                 value={busca}
                 onChange={(e) => setBusca(e.target.value)}
                 placeholder="Buscar por nome..."
+                aria-label="Buscar favoritos por nome"
                 className="pl-9"
               />
             </div>
             <Select value={categoria} onValueChange={setCategoria}>
-              <SelectTrigger className="sm:w-[180px]">
+              <SelectTrigger aria-label="Filtrar por categoria" className="min-h-11 w-full sm:min-h-9 sm:w-[180px]">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
@@ -170,7 +171,7 @@ function FavoritosPage() {
               </SelectContent>
             </Select>
             <Select value={sort} onValueChange={(v) => setSort(v as SortKey)}>
-              <SelectTrigger className="sm:w-[180px]">
+              <SelectTrigger aria-label="Ordenar favoritos" className="min-h-11 w-full sm:min-h-9 sm:w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -186,7 +187,7 @@ function FavoritosPage() {
 
         {!isLoading && total === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center space-y-3">
-            <Heart className="h-10 w-10 text-muted-foreground mx-auto" />
+            <Heart className="h-10 w-10 text-muted-foreground mx-auto" aria-hidden="true" />
             <p className="text-muted-foreground">
               Você ainda não tem drinks favoritos. Explore o{" "}
               <Link to="/drinks" className="text-primary underline">catálogo</Link> e clique no coração para salvar.
@@ -195,12 +196,12 @@ function FavoritosPage() {
         ) : !isLoading && filtrados.length === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center space-y-3">
             <p className="text-muted-foreground">Nenhum favorito corresponde aos filtros.</p>
-            <Button variant="outline" size="sm" onClick={limpar}>
+            <Button variant="outline" size="sm" onClick={limpar} className="min-h-11 sm:min-h-9">
               <X className="h-4 w-4 mr-1.5" /> Limpar filtros
             </Button>
           </div>
         ) : (
-          <div className={viewMode === "grid" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-3"}>
+          <div className={viewMode === "grid" ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-3"}>
             {filtrados.map((f) => {
               const d = f.drinks!;
               return viewMode === "grid" ? (
@@ -212,7 +213,7 @@ function FavoritosPage() {
                 >
                   <DrinkImage
                     path={d.imagem_url}
-                    alt={d.nome}
+                    alt={`Foto do drink ${d.nome}`}
                     className="aspect-square w-full object-cover bg-secondary/40"
                   />
                   <div className="p-4 space-y-2">
@@ -223,7 +224,7 @@ function FavoritosPage() {
                       <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
-                          <Badge key={i} variant="secondary" className="text-[10px]">
+                          <Badge key={i} variant="secondary" className="text-xs">
                             {c.drink_categorias.nome}
                           </Badge>
                         ) : null
@@ -240,7 +241,7 @@ function FavoritosPage() {
                 >
                   <DrinkImage
                     path={d.imagem_url}
-                    alt={d.nome}
+                    alt={`Foto do drink ${d.nome}`}
                     className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0"
                   />
                   <div className="min-w-0 flex-1">
@@ -251,7 +252,7 @@ function FavoritosPage() {
                       <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
-                          <Badge key={i} variant="secondary" className="text-[10px]">
+                          <Badge key={i} variant="secondary" className="text-xs">
                             {c.drink_categorias.nome}
                           </Badge>
                         ) : null

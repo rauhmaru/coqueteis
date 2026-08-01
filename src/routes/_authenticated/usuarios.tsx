@@ -30,9 +30,9 @@ function UsuariosPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-dvh">
         <SiteHeader />
-        <main className="mx-auto max-w-3xl px-4 py-16 text-center">
+        <main id="conteudo" className="mx-auto max-w-3xl px-4 py-16 text-center">
           <Shield className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
           <h1 className="font-serif text-3xl text-foreground">Acesso restrito</h1>
           <p className="text-muted-foreground mt-2">Apenas administradores podem gerenciar usuários.</p>
@@ -55,11 +55,11 @@ function UsuariosPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-5xl px-4 py-10 space-y-8">
         <div>
-          <h1 className="font-serif text-4xl text-foreground flex items-center gap-3">
+          <h1 className="font-serif text-3xl sm:text-4xl text-foreground flex items-center gap-3">
             <UserCog className="h-7 w-7 text-primary" /> Usuários
           </h1>
           <p className="text-muted-foreground text-sm mt-1">

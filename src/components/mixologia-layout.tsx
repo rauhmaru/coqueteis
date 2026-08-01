@@ -13,19 +13,19 @@ export function MixologiaPage({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <Link
           to="/mixologia"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
+          className="inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
         >
-          <ArrowLeft className="h-4 w-4" /> Mixologia
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Mixologia
         </Link>
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Mixologia</p>
-          <h1 className="font-serif text-4xl md:text-5xl text-foreground">{title}</h1>
-          {subtitle && <p className="text-muted-foreground text-lg">{subtitle}</p>}
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground">{title}</h1>
+          {subtitle && <p className="text-base text-muted-foreground sm:text-lg">{subtitle}</p>}
         </header>
         <article className="prose-mixologia space-y-6 text-foreground/90 leading-relaxed">
           {children}
@@ -37,14 +37,14 @@ export function MixologiaPage({
 
 export function MixImg({ src, alt, caption }: { src: string; alt: string; caption?: string }) {
   return (
-    <figure className="inline-block m-0">
+    <figure className="m-0 inline-block w-full max-w-[300px]">
       <img
         src={src}
         alt={alt}
         width={300}
         height={300}
         loading="lazy"
-        className="w-[300px] h-[300px] rounded-lg object-cover border border-border"
+        className="aspect-square w-full rounded-lg border border-border object-cover"
       />
       {caption && (
         <figcaption className="mt-2 text-xs text-muted-foreground text-center">{caption}</figcaption>

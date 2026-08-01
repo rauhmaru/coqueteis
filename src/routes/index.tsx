@@ -80,12 +80,12 @@ function HomePage() {
 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-12 space-y-12">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-12 space-y-12">
         <section className="text-center space-y-4">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Bem-vindo ao seu bar</p>
-          <h1 className="font-serif text-5xl md:text-6xl text-foreground">
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground">
             Sua coqueteleria,<br />organizada com elegância.
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
@@ -94,11 +94,14 @@ function HomePage() {
           </p>
         </section>
 
-        <section className="max-w-2xl mx-auto">
+        <section aria-labelledby="busca-titulo" className="max-w-2xl mx-auto">
+          <h2 id="busca-titulo" className="sr-only">
+            Buscar drinks
+          </h2>
           <div className="rounded-xl border border-border bg-card overflow-hidden shadow-2xl">
             <Command shouldFilter={false} className="bg-transparent">
               <div className="flex items-center px-4 border-b border-border">
-                <Search className="h-4 w-4 text-muted-foreground" />
+                <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
                 <CommandInput
                   value={query}
                   onValueChange={setQuery}
@@ -117,7 +120,7 @@ function HomePage() {
                         onSelect={() => navigate({ to: "/drinks/$id", params: { id: d.id } })}
                         className="cursor-pointer"
                       >
-                        <Martini className="h-4 w-4 mr-2 text-primary shrink-0" />
+                        <Martini className="h-4 w-4 mr-2 text-primary shrink-0" aria-hidden="true" />
                         <span className="flex-1 truncate">{d.nome}</span>
                         {d.drink_drink_categorias[0]?.drink_categorias?.nome && (
                           <span className="ml-2 text-xs text-muted-foreground truncate">
@@ -149,17 +152,17 @@ function HomePage() {
 
         {sugestao && (
           <section className="max-w-2xl mx-auto space-y-4">
-            <p className="text-xs uppercase tracking-[0.3em] text-primary text-center">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-primary text-center">
               Sugestão do bartender
-            </p>
+            </h2>
             <Link
               to="/drinks/$id"
               params={{ id: sugestao.id }}
-              className="group block rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors"
+              className="group block rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <DrinkImage
                 path={sugestao.imagem_url}
-                alt={sugestao.nome}
+                alt={`Foto do drink ${sugestao.nome}`}
                 className="aspect-square w-full object-cover"
               />
               <div className="p-4 text-center">
@@ -181,16 +184,16 @@ function StatCard({
   return (
     <Link
       to={to}
-      className="group rounded-xl border border-border bg-card p-6 hover:border-primary transition-colors flex items-center gap-4"
+      className="group flex min-h-11 items-center gap-4 rounded-xl border border-border bg-card p-5 sm:p-6 transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
-      <div className="rounded-full bg-secondary p-3 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+      <div aria-hidden="true" className="shrink-0 rounded-full bg-secondary p-3 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
         {icon}
       </div>
-      <div className="flex-1">
+      <div className="min-w-0 flex-1">
         <div className="text-3xl font-serif text-foreground">{value}</div>
         <div className="text-sm text-muted-foreground">{label}</div>
       </div>
-      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" aria-hidden="true" />
     </Link>
   );
 }

@@ -152,9 +152,9 @@ function CalculadoraAbvPage() {
 
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Consumo consciente</p>
           <h1 className="font-serif text-4xl md:text-5xl text-foreground flex items-center gap-3">
@@ -175,7 +175,7 @@ function CalculadoraAbvPage() {
               className="h-16 w-16 rounded-lg object-cover border border-border bg-secondary/40 shrink-0"
             />
             <div className="min-w-0">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-primary">Receita carregada</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary">Receita carregada</p>
               <p className="font-serif text-xl text-foreground truncate">{drink.nome}</p>
               <Link
                 to="/drinks/$id"
@@ -196,7 +196,7 @@ function CalculadoraAbvPage() {
             </Button>
           </div>
 
-          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_40px] gap-3 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_44px] gap-3 text-xs uppercase tracking-[0.15em] text-muted-foreground">
             <span>Ingrediente</span>
             <span>Volume (ml)</span>
             <span>Teor (%)</span>
@@ -205,8 +205,8 @@ function CalculadoraAbvPage() {
 
           <div className="space-y-3">
             {componentes.map((c) => (
-              <div key={c.id} className="grid grid-cols-[1fr_auto] sm:grid-cols-[1fr_100px_100px_40px] gap-3 items-end">
-                <div className="col-span-2 sm:col-span-1">
+              <div key={c.id} className="grid grid-cols-[minmax(0,1fr)_minmax(0,1fr)_44px] sm:grid-cols-[1fr_100px_100px_44px] gap-2 sm:gap-3 items-end">
+                <div className="col-span-3 min-w-0 sm:col-span-1">
                   <Label className="sm:hidden text-xs text-muted-foreground">Ingrediente</Label>
                   <IngredienteAutocomplete
                     value={c.nome}
@@ -279,6 +279,7 @@ function CalculadoraAbvPage() {
                   size="icon"
                   aria-label={`Remover ${c.nome || "componente"}`}
                   onClick={() => remover(c.id)}
+                  className="min-h-11 min-w-11 shrink-0"
                 >
                   <Trash2 className="h-4 w-4 text-muted-foreground" />
                 </Button>
@@ -286,7 +287,7 @@ function CalculadoraAbvPage() {
             ))}
           </div>
 
-          <Button variant="outline" size="sm" onClick={adicionar}>
+          <Button variant="outline" size="sm" onClick={adicionar} className="min-h-11 w-full sm:w-auto">
             <Plus className="h-4 w-4 mr-1.5" /> Adicionar componente
           </Button>
 
@@ -356,7 +357,7 @@ function CalculadoraAbvPage() {
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className={`rounded-xl border p-6 ${faixa.classe}`}>
-            <p className="text-[11px] uppercase tracking-[0.2em] opacity-80">Teor alcoólico estimado</p>
+            <p className="text-xs uppercase tracking-[0.2em] opacity-80">Teor alcoólico estimado</p>
             <p className="font-serif text-5xl mt-1">
               {resultado.abv.toFixed(1)}
               <span className="text-2xl">%</span>

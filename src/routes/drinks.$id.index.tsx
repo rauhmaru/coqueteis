@@ -27,7 +27,7 @@ export const Route = createFileRoute("/drinks/$id/")({
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
   ),
   notFoundComponent: () => (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <div className="p-12 text-center text-muted-foreground">Drink não encontrado.</div>
     </div>
@@ -42,22 +42,22 @@ function DrinkDetail() {
   if (!drink) return null;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
-        <Link to="/drinks" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
-          <ArrowLeft className="h-4 w-4" /> Voltar para drinks
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+        <Link to="/drinks" className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Voltar para drinks
         </Link>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           <DrinkImage
             path={drink.imagem_url}
-            alt={drink.nome}
+            alt={`Foto do drink ${drink.nome}`}
             className="aspect-square w-full object-cover rounded-xl border border-border bg-secondary/40"
           />
           <div className="space-y-6">
             <div>
-              <h1 className="font-serif text-5xl text-foreground">{drink.nome}</h1>
+              <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground">{drink.nome}</h1>
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
                 <DifficultyBadge value={drink.dificuldade} />
                 {drink.drink_drink_categorias.map((c) => (
@@ -89,14 +89,15 @@ function DrinkDetail() {
             </div>
             <div className="flex flex-wrap gap-2">
               {canManage && (
-                <Button asChild>
+                <Button asChild className="min-h-11 sm:min-h-9">
                   <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
-                    <Pencil className="h-4 w-4 mr-2" /> Editar
+                    <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
                   </Link>
                 </Button>
               )}
               <Button
                 variant="outline"
+                className="min-h-11 sm:min-h-9"
                 onClick={() =>
                   window.open(
                     `https://www.youtube.com/results?search_query=${encodeURIComponent(`receita ${drink.nome}`)}`,
@@ -105,11 +106,11 @@ function DrinkDetail() {
                   )
                 }
               >
-                <Youtube className="h-4 w-4 mr-2" /> Ver no YouTube
+                <Youtube className="h-4 w-4 mr-2" aria-hidden="true" /> Ver no YouTube
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild variant="outline" className="min-h-11 sm:min-h-9">
                 <Link to="/calculadora-abv" search={{ drink: drink.id }}>
-                  <Calculator className="h-4 w-4 mr-2" /> Calcular teor alcoólico
+                  <Calculator className="h-4 w-4 mr-2" aria-hidden="true" /> Calcular teor alcoólico
                 </Link>
               </Button>
 

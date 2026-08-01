@@ -16,10 +16,14 @@ export function DrinkImage({
 
   if (!path || !url) {
     return (
-      <div className={`flex items-center justify-center ${className ?? ""}`}>
-        <Martini className="h-10 w-10 text-muted-foreground/40" />
+      <div
+        role="img"
+        aria-label={alt}
+        className={`flex items-center justify-center ${className ?? ""}`}
+      >
+        <Martini className="h-10 w-10 text-muted-foreground/40" aria-hidden="true" />
       </div>
     );
   }
-  return <img src={url} alt={alt} className={className} loading="lazy" />;
+  return <img src={url} alt={alt} className={className} loading="lazy" decoding="async" />;
 }

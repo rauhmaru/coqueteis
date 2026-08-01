@@ -24,9 +24,9 @@ export const Route = createFileRoute("/consumo-responsavel")({
 
 function ConsumoResponsavelPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-12 space-y-10">
+      <main id="conteudo" className="mx-auto max-w-3xl px-4 py-12 space-y-10">
         <header className="space-y-3">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Beba com moderação</p>
           <h1 className="font-serif text-4xl md:text-5xl text-foreground">Consumo responsável</h1>

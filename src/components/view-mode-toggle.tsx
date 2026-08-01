@@ -9,7 +9,7 @@ interface Props {
 
 export function ViewModeToggle({ value, onChange, className }: Props) {
   const btn = (active: boolean) =>
-    `inline-flex items-center justify-center h-9 w-9 border transition-colors ${
+    `inline-flex items-center justify-center h-11 w-11 sm:h-9 sm:w-9 border transition-colors ${
       active
         ? "bg-primary text-primary-foreground border-primary"
         : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
