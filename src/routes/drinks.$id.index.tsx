@@ -52,7 +52,7 @@ function DrinkDetail() {
         <div className="grid md:grid-cols-2 gap-8">
           <DrinkImage
             path={drink.imagem_url}
-            alt={drink.nome}
+            alt={`Foto do drink ${drink.nome}`}
             className="aspect-square w-full object-cover rounded-xl border border-border bg-secondary/40"
           />
           <div className="space-y-6">

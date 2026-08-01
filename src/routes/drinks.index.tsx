@@ -327,7 +327,7 @@ function DrinksList() {
                     </div>
                   )}
                   <Link to="/drinks/$id" params={{ id: d.id }} className="block">
-                    <DrinkImage path={d.imagem_url} alt={d.nome} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
+                    <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
                       <div className="flex flex-wrap items-center gap-1 mt-2">
@@ -375,7 +375,7 @@ function DrinksList() {
                 <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
                   <div className="flex items-stretch">
                     <Link to="/drinks/$id" params={{ id: d.id }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
-                      <DrinkImage path={d.imagem_url} alt={d.nome} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
+                      <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
                         <div className="flex flex-wrap items-center gap-1 mt-1">
