@@ -24,7 +24,7 @@ export const Route = createFileRoute("/confianca")({
 
 function TrustPage() {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <main className="mx-auto max-w-3xl px-4 py-12 space-y-10">
         <header className="space-y-3">

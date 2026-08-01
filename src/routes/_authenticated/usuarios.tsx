@@ -30,7 +30,7 @@ function UsuariosPage() {
 
   if (!isAdmin) {
     return (
-      <div className="min-h-screen">
+      <div className="min-h-dvh">
         <SiteHeader />
         <main className="mx-auto max-w-3xl px-4 py-16 text-center">
           <Shield className="h-10 w-10 mx-auto text-muted-foreground mb-3" />
@@ -55,7 +55,7 @@ function UsuariosPage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-4 py-10 space-y-8">
         <div>

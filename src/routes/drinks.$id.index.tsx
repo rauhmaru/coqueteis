@@ -27,7 +27,7 @@ export const Route = createFileRoute("/drinks/$id/")({
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
   ),
   notFoundComponent: () => (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <div className="p-12 text-center text-muted-foreground">Drink não encontrado.</div>
     </div>
@@ -42,7 +42,7 @@ function DrinkDetail() {
   if (!drink) return null;
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <Link to="/drinks" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">

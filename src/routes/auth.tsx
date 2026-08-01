@@ -82,7 +82,7 @@ function AuthPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-10">
+    <div className="min-h-dvh flex items-center justify-center bg-background px-4 py-10">
       <div className="w-full max-w-md space-y-6">
         <Link to="/" className="flex items-center justify-center gap-2 group">
           <Martini className="h-7 w-7 text-primary group-hover:rotate-12 transition-transform" />

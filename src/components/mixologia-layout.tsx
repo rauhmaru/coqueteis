@@ -13,7 +13,7 @@ export function MixologiaPage({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-dvh">
       <SiteHeader />
       <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <Link
