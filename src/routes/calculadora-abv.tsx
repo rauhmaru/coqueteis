@@ -175,7 +175,7 @@ function CalculadoraAbvPage() {
               className="h-16 w-16 rounded-lg object-cover border border-border bg-secondary/40 shrink-0"
             />
             <div className="min-w-0">
-              <p className="text-[11px] uppercase tracking-[0.2em] text-primary">Receita carregada</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-primary">Receita carregada</p>
               <p className="font-serif text-xl text-foreground truncate">{drink.nome}</p>
               <Link
                 to="/drinks/$id"
@@ -196,7 +196,7 @@ function CalculadoraAbvPage() {
             </Button>
           </div>
 
-          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_40px] gap-3 text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+          <div className="hidden sm:grid grid-cols-[1fr_100px_100px_40px] gap-3 text-xs uppercase tracking-[0.15em] text-muted-foreground">
             <span>Ingrediente</span>
             <span>Volume (ml)</span>
             <span>Teor (%)</span>
@@ -356,7 +356,7 @@ function CalculadoraAbvPage() {
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className={`rounded-xl border p-6 ${faixa.classe}`}>
-            <p className="text-[11px] uppercase tracking-[0.2em] opacity-80">Teor alcoólico estimado</p>
+            <p className="text-xs uppercase tracking-[0.2em] opacity-80">Teor alcoólico estimado</p>
             <p className="font-serif text-5xl mt-1">
               {resultado.abv.toFixed(1)}
               <span className="text-2xl">%</span>

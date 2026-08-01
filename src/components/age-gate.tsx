@@ -84,7 +84,7 @@ export function AgeGate() {
           </Button>
         </div>
 
-        <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">
+        <p className="text-xs uppercase tracking-[0.15em] text-muted-foreground">
           Beba com moderação. Não dirija após consumir álcool.
         </p>
       </div>

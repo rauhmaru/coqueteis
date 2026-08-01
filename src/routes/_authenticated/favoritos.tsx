@@ -223,7 +223,7 @@ function FavoritosPage() {
                       <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
-                          <Badge key={i} variant="secondary" className="text-[10px]">
+                          <Badge key={i} variant="secondary" className="text-xs">
                             {c.drink_categorias.nome}
                           </Badge>
                         ) : null
@@ -251,7 +251,7 @@ function FavoritosPage() {
                       <DifficultyBadge value={d.dificuldade} />
                       {d.drink_drink_categorias.slice(0, 3).map((c, i) => (
                         c.drink_categorias ? (
-                          <Badge key={i} variant="secondary" className="text-[10px]">
+                          <Badge key={i} variant="secondary" className="text-xs">
                             {c.drink_categorias.nome}
                           </Badge>
                         ) : null

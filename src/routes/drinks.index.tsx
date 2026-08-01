@@ -70,7 +70,7 @@ function FiltroSection({
           <Filter className="h-4 w-4 text-primary" />
           <span>{titulo}</span>
           {ativos > 0 && (
-            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-[10px]">
+            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs">
               {ativos}
             </span>
           )}
@@ -321,19 +321,19 @@ function DrinksList() {
                       <div className="flex flex-wrap items-center gap-1 mt-2">
                         <DifficultyBadge value={d.dificuldade} />
                         {d.drink_drink_categorias.map((c) => (
-                          <Badge key={c.categoria_id} className="text-[10px]">
+                          <Badge key={c.categoria_id} className="text-xs">
                             {c.drink_categorias?.nome ?? "?"}
                           </Badge>
                         ))}
                       </div>
                       <div className="flex flex-wrap gap-1 mt-2">
                         {d.drink_ingredientes.slice(0, 4).map((di) => (
-                          <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                          <Badge key={di.ingrediente_id} variant="secondary" className="text-xs">
                             {di.ingredientes?.nome ?? "?"}
                           </Badge>
                         ))}
                         {d.drink_ingredientes.length > 4 && (
-                          <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                          <Badge variant="outline" className="text-xs">+{d.drink_ingredientes.length - 4}</Badge>
                         )}
                       </div>
                     </div>
@@ -366,19 +366,19 @@ function DrinksList() {
                         <div className="flex flex-wrap items-center gap-1 mt-1">
                           <DifficultyBadge value={d.dificuldade} />
                           {d.drink_drink_categorias.slice(0, 3).map((c) => (
-                            <Badge key={c.categoria_id} className="text-[10px]">
+                            <Badge key={c.categoria_id} className="text-xs">
                               {c.drink_categorias?.nome ?? "?"}
                             </Badge>
                           ))}
                         </div>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {d.drink_ingredientes.slice(0, 4).map((di) => (
-                            <Badge key={di.ingrediente_id} variant="secondary" className="text-[10px]">
+                            <Badge key={di.ingrediente_id} variant="secondary" className="text-xs">
                               {di.ingredientes?.nome ?? "?"}
                             </Badge>
                           ))}
                           {d.drink_ingredientes.length > 4 && (
-                            <Badge variant="outline" className="text-[10px]">+{d.drink_ingredientes.length - 4}</Badge>
+                            <Badge variant="outline" className="text-xs">+{d.drink_ingredientes.length - 4}</Badge>
                           )}
                         </div>
                       </div>
