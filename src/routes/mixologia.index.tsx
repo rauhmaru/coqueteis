@@ -35,7 +35,7 @@ function MixologiaIndex() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-12 space-y-10">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-12 space-y-10">
         <section className="text-center space-y-4">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Aprenda</p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground">Mixologia</h1>

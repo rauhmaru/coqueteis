@@ -124,7 +124,7 @@ function FavoritosPage() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <Link
           to="/drinks"
           className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"

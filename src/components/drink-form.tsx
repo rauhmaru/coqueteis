@@ -147,7 +147,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-10 space-y-6">
+      <main id="conteudo" className="mx-auto max-w-3xl px-4 py-10 space-y-6">
         <Link to="/drinks" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Voltar
         </Link>

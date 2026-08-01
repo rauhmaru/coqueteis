@@ -44,7 +44,7 @@ function DrinkDetail() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <Link to="/drinks" className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Voltar para drinks
         </Link>

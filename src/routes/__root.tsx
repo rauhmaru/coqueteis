@@ -19,7 +19,7 @@ import { AgeGate } from "@/components/age-gate";
 function NotFoundComponent() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <main className="max-w-md text-center">
+      <main id="conteudo" className="max-w-md text-center">
         <p className="text-7xl font-bold text-foreground">404</p>
         <h1 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h1>
         <p className="mt-2 text-sm text-muted-foreground">
@@ -47,7 +47,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <main className="max-w-md text-center">
+      <main id="conteudo" className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
           Esta página não carregou
         </h1>
@@ -130,6 +130,12 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
         <AuthProvider>
+          <a
+            href="#conteudo"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-primary-foreground"
+          >
+            Pular para o conteúdo principal
+          </a>
           <Outlet />
           <AgeGate />
           <ThemedToaster />

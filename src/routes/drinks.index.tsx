@@ -176,7 +176,7 @@ function DrinksList() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-10 space-y-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="font-serif text-3xl sm:text-4xl text-foreground">Drinks</h1>

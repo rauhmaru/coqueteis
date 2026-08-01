@@ -15,7 +15,7 @@ export function MixologiaPage({
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
         <Link
           to="/mixologia"
           className="inline-flex min-h-11 items-center gap-1.5 text-sm text-muted-foreground hover:text-primary transition-colors"
