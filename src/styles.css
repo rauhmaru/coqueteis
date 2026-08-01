@@ -163,8 +163,31 @@
     font-family: var(--font-sans);
   }
 
+  /* Rolagem suave sem quebrar quem prefere menos movimento */
+  html {
+    scroll-behavior: smooth;
+  }
+
   h1, h2, h3, .font-serif {
     font-family: var(--font-serif);
     letter-spacing: -0.01em;
   }
+
+  /* Indicador de foco visível e consistente para navegação por teclado */
+  :focus-visible {
+    outline: 2px solid var(--color-ring);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
+
