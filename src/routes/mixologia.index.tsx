@@ -38,7 +38,7 @@ function MixologiaIndex() {
       <main className="mx-auto max-w-6xl px-4 py-12 space-y-10">
         <section className="text-center space-y-4">
           <p className="text-xs uppercase tracking-[0.3em] text-primary">Aprenda</p>
-          <h1 className="font-serif text-5xl md:text-6xl text-foreground">Mixologia</h1>
+          <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground">Mixologia</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Um guia para amantes da coquetelaria — da origem histórica dos drinks aos utensílios,
             copos, ingredientes e técnicas que transformam bebidas em experiências.
@@ -50,7 +50,7 @@ function MixologiaIndex() {
             <Link
               key={t.to}
               to={t.to}
-              className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors"
+              className="group rounded-xl border border-border bg-card overflow-hidden transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <img
                 src={t.img}
