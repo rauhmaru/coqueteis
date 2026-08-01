@@ -1,9 +1,17 @@
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Heart, LogIn, LogOut, Martini, Shield } from "lucide-react";
+import { Heart, LogIn, LogOut, Martini, Menu, Shield } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,83 +29,117 @@ const publicNav = [
   { to: "/consumo-responsavel", label: "Consumo responsável" },
 ] as const;
 
+const editorNav = [{ to: "/ingredientes", label: "Ingredientes" }] as const;
 
-const editorNav = [
-  { to: "/ingredientes", label: "Ingredientes" },
-] as const;
+const linkBase =
+  "px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
+const linkActive = "px-3 py-1.5 rounded-md text-primary bg-secondary/80";
+
+const mobileLinkBase =
+  "flex min-h-11 items-center rounded-md px-3 text-base text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring";
+const mobileLinkActive =
+  "flex min-h-11 items-center rounded-md px-3 text-base text-primary bg-secondary/80";
 
 export function SiteHeader() {
   const { user, canEdit, isAdmin, signOut } = useAuth();
   const favoritos = useFavoritos();
   const favCount = favoritos.size;
-  const initial = (user?.user_metadata?.display_name as string | undefined)?.[0] ?? user?.email?.[0] ?? "?";
+  const [menuAberto, setMenuAberto] = useState(false);
+  const initial =
+    (user?.user_metadata?.display_name as string | undefined)?.[0] ?? user?.email?.[0] ?? "?";
   const nome = (user?.user_metadata?.display_name as string | undefined) ?? user?.email ?? "";
+
+  const papel = user
+    ? canEdit
+      ? isAdmin
+        ? "Administrador"
+        : "Editor"
+      : "Somente leitura"
+    : "Modo visitante";
+
+  const fechar = () => setMenuAberto(false);
 
   return (
     <header className="border-b border-border/60 bg-card/40 backdrop-blur-sm sticky top-0 z-40">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex flex-wrap items-center gap-x-6 gap-y-3 justify-between">
-        <Link to="/" className="flex items-center gap-2 group">
-          <Martini className="h-6 w-6 text-primary group-hover:rotate-12 transition-transform" />
-          <div className="leading-tight">
-            <div className="font-serif text-lg text-foreground">Destilados &amp; Coquetéis</div>
-            <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-              {user ? (canEdit ? (isAdmin ? "Administrador" : "Editor") : "Somente leitura") : "Modo visitante"}
+      <div className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-4 py-3 md:flex md:flex-wrap md:justify-between md:gap-x-6 md:gap-y-3 md:py-4">
+        <Link
+          to="/"
+          className="group flex min-w-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          <Martini className="h-6 w-6 shrink-0 text-primary transition-transform group-hover:rotate-12" />
+          <div className="min-w-0 leading-tight">
+            <div className="truncate font-serif text-base text-foreground sm:text-lg">
+              Destilados &amp; Coquetéis
+            </div>
+            <div className="truncate text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+              {papel}
             </div>
           </div>
         </Link>
 
-        <nav className="flex items-center gap-1 text-sm">
+        {/* Navegação desktop */}
+        <nav aria-label="Navegação principal" className="hidden items-center gap-1 text-sm md:flex">
           {publicNav.map((item) => (
             <Link
               key={item.to}
               to={item.to}
               activeOptions={{ exact: item.to === "/" }}
-              className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors"
-              activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80" }}
+              className={linkBase}
+              activeProps={{ className: linkActive }}
             >
               {item.label}
             </Link>
           ))}
-          {canEdit && editorNav.map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors"
-              activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80" }}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {canEdit &&
+            editorNav.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={linkBase}
+                activeProps={{ className: linkActive }}
+              >
+                {item.label}
+              </Link>
+            ))}
           {user && (
             <Link
               to="/favoritos"
-              className="px-3 py-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors inline-flex items-center gap-1"
-              activeProps={{ className: "px-3 py-1.5 rounded-md text-primary bg-secondary/80 inline-flex items-center gap-1" }}
+              className={`${linkBase} inline-flex items-center gap-1`}
+              activeProps={{ className: `${linkActive} inline-flex items-center gap-1` }}
             >
-              <Heart className="h-3.5 w-3.5" /> Favoritos
+              <Heart className="h-3.5 w-3.5" aria-hidden="true" /> Favoritos
               {favCount > 0 && (
-                <span className="ml-1 inline-flex items-center justify-center rounded-full bg-primary/15 text-primary text-[10px] font-semibold min-w-[18px] h-[18px] px-1">
+                <span className="ml-1 inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary/15 px-1 text-[11px] font-semibold text-primary">
                   {favCount}
+                  <span className="sr-only"> favoritos</span>
                 </span>
               )}
             </Link>
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle />
+
           {!user ? (
-            <Button asChild size="sm" variant="outline">
-              <Link to="/auth"><LogIn className="h-4 w-4 mr-1.5" /> Entrar</Link>
+            <Button asChild size="sm" variant="outline" className="min-h-11 md:min-h-9">
+              <Link to="/auth">
+                <LogIn className="mr-1.5 h-4 w-4" aria-hidden="true" /> Entrar
+              </Link>
             </Button>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 rounded-full bg-secondary/60 hover:bg-secondary px-2 py-1 transition-colors">
-                  <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold uppercase">
+                <button
+                  aria-label="Abrir menu da conta"
+                  className="flex min-h-11 items-center gap-2 rounded-full bg-secondary/60 px-2 py-1 transition-colors hover:bg-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring md:min-h-9"
+                >
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-xs font-semibold uppercase text-primary-foreground">
                     {initial}
                   </span>
-                  <span className="hidden sm:inline text-xs text-foreground max-w-[140px] truncate">{nome}</span>
+                  <span className="hidden max-w-[140px] truncate text-xs text-foreground sm:inline">
+                    {nome}
+                  </span>
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -106,16 +148,82 @@ export function SiteHeader() {
                 {isAdmin && (
                   <DropdownMenuItem asChild>
                     <Link to="/usuarios" className="cursor-pointer">
-                      <Shield className="h-4 w-4 mr-2" /> Usuários
+                      <Shield className="mr-2 h-4 w-4" aria-hidden="true" /> Usuários
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
-                  <LogOut className="h-4 w-4 mr-2" /> Sair
+                  <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Sair
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           )}
+
+          {/* Navegação mobile */}
+          <Sheet open={menuAberto} onOpenChange={setMenuAberto}>
+            <SheetTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                aria-label="Abrir menu de navegação"
+                className="min-h-11 min-w-11 md:hidden"
+              >
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-[86vw] max-w-xs">
+              <SheetHeader>
+                <SheetTitle className="font-serif">Navegação</SheetTitle>
+              </SheetHeader>
+              <nav aria-label="Navegação principal" className="mt-6 flex flex-col gap-1">
+                {publicNav.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={fechar}
+                    activeOptions={{ exact: item.to === "/" }}
+                    className={mobileLinkBase}
+                    activeProps={{ className: mobileLinkActive }}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+                {canEdit &&
+                  editorNav.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      onClick={fechar}
+                      className={mobileLinkBase}
+                      activeProps={{ className: mobileLinkActive }}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                {user && (
+                  <Link
+                    to="/favoritos"
+                    onClick={fechar}
+                    className={`${mobileLinkBase} gap-2`}
+                    activeProps={{ className: `${mobileLinkActive} gap-2` }}
+                  >
+                    <Heart className="h-4 w-4" aria-hidden="true" /> Favoritos
+                    {favCount > 0 && (
+                      <span className="ml-auto inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-primary/15 px-1.5 text-xs font-semibold text-primary">
+                        {favCount}
+                        <span className="sr-only"> favoritos</span>
+                      </span>
+                    )}
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link to="/usuarios" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
+                    <Shield className="h-4 w-4" aria-hidden="true" /> Usuários
+                  </Link>
+                )}
+              </nav>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>
