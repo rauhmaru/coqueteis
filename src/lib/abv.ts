@@ -158,29 +158,29 @@ export function classificarAbv(abv: number): Faixa {
     return {
       rotulo: "Sem álcool",
       descricao: "Mocktail — pode ser servido a qualquer pessoa.",
-      classe: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
+      classe: "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/30",
     };
   if (abv < 10)
     return {
       rotulo: "Leve",
       descricao: "Teor próximo ao de uma cerveja. Ainda assim, beba com moderação.",
-      classe: "bg-emerald-500/15 text-emerald-500 border-emerald-500/30",
+      classe: "bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border-emerald-500/30",
     };
   if (abv < 20)
     return {
       rotulo: "Moderado",
       descricao: "Teor próximo ao de um vinho. Alterne com água.",
-      classe: "bg-amber-500/15 text-amber-500 border-amber-500/30",
+      classe: "bg-amber-500/15 text-amber-800 dark:text-amber-300 border-amber-500/30",
     };
   if (abv < 30)
     return {
       rotulo: "Forte",
       descricao: "Drink alcoólico forte. Beba devagar e coma antes.",
-      classe: "bg-orange-500/15 text-orange-500 border-orange-500/30",
+      classe: "bg-orange-500/15 text-orange-800 dark:text-orange-300 border-orange-500/30",
     };
   return {
     rotulo: "Muito forte",
     descricao: "Teor muito alto. Uma única unidade já equivale a várias doses.",
-    classe: "bg-destructive/15 text-destructive border-destructive/30",
+    classe: "bg-destructive/15 text-destructive border-destructive/40",
   };
 }

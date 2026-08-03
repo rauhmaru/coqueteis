@@ -211,6 +211,7 @@ function CalculadoraAbvPage() {
                   <IngredienteAutocomplete
                     value={c.nome}
                     placeholder="Ex.: Cachaça, suco de limão..."
+                    aria-label="Ingrediente"
                     onChange={(nome) => nomeChange(c.id, nome)}
                     onSelect={(nome) => nomeSelecionado(c.id, nome)}
                   />
@@ -224,6 +225,7 @@ function CalculadoraAbvPage() {
                   <Input
                     id={`${c.id}-ml`}
                     type="text"
+                    aria-label={`Volume em ml${c.nome ? ` de ${c.nome}` : ""}`}
                     inputMode="decimal"
                     aria-invalid={!!erros[`${c.id}-ml`]}
                     aria-describedby={erros[`${c.id}-ml`] ? `${c.id}-ml-erro` : undefined}
@@ -252,6 +254,7 @@ function CalculadoraAbvPage() {
                   <Input
                     id={`${c.id}-abv`}
                     type="text"
+                    aria-label={`Teor alcoólico em porcentagem${c.nome ? ` de ${c.nome}` : ""}`}
                     inputMode="decimal"
                     aria-invalid={!!erros[`${c.id}-abv`]}
                     aria-describedby={erros[`${c.id}-abv`] ? `${c.id}-abv-erro` : undefined}
@@ -357,13 +360,13 @@ function CalculadoraAbvPage() {
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className={`rounded-xl border p-6 ${faixa.classe}`}>
-            <p className="text-xs uppercase tracking-[0.2em] opacity-80">Teor alcoólico estimado</p>
+            <p className="text-xs uppercase tracking-[0.2em]">Teor alcoólico estimado</p>
             <p className="font-serif text-5xl mt-1">
               {resultado.abv.toFixed(1)}
               <span className="text-2xl">%</span>
             </p>
             <p className="mt-2 text-sm font-semibold">{faixa.rotulo}</p>
-            <p className="text-xs opacity-90">{faixa.descricao}</p>
+            <p className="text-xs">{faixa.descricao}</p>
           </div>
 
           <dl className="rounded-xl border border-border bg-card p-6 grid grid-cols-2 gap-4 text-sm">
