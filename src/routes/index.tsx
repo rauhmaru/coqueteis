@@ -137,8 +137,8 @@ function HomePage() {
                       </CommandItem>
                     ))}
                   </CommandGroup>
-                </CommandList>
-              )}
+                )}
+              </CommandList>
             </Command>
           </div>
         </section>
