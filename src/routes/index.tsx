@@ -109,9 +109,11 @@ function HomePage() {
                   className="border-0 focus:ring-0 text-base"
                 />
               </div>
-              {query.trim() && (
-                <CommandList className="max-h-64">
+              <CommandList className={query.trim() ? "max-h-64" : "hidden"}>
+                {query.trim() && (
                   <CommandEmpty>Nenhum drink encontrado.</CommandEmpty>
+                )}
+                {query.trim() && (
                   <CommandGroup>
                     {filtered.map((d) => (
                       <CommandItem
@@ -135,8 +137,8 @@ function HomePage() {
                       </CommandItem>
                     ))}
                   </CommandGroup>
-                </CommandList>
-              )}
+                )}
+              </CommandList>
             </Command>
           </div>
         </section>

@@ -12,6 +12,7 @@ type Props = {
   placeholder?: string;
   maxLength?: number;
   id?: string;
+  "aria-label"?: string;
 };
 
 const MAX_SUGESTOES = 8;
@@ -23,6 +24,7 @@ export function IngredienteAutocomplete({
   placeholder,
   maxLength = 80,
   id,
+  "aria-label": ariaLabel,
 }: Props) {
   const { data: ingredientes } = useQuery(ingredientesQuery);
   const [aberto, setAberto] = useState(false);
@@ -76,6 +78,7 @@ export function IngredienteAutocomplete({
         maxLength={maxLength}
         placeholder={placeholder}
         role="combobox"
+        aria-label={ariaLabel}
         aria-expanded={mostrar}
         aria-autocomplete="list"
         autoComplete="off"
