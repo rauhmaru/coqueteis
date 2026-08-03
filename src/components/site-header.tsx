@@ -5,6 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { AccessibilityPanel } from "@/components/accessibility-panel";
 import {
   Sheet,
   SheetContent,
@@ -119,6 +120,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
+          <AccessibilityPanel />
           <ThemeToggle />
 
           {!user ? (
