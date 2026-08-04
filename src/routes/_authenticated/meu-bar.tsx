@@ -144,7 +144,11 @@ function MeuBarPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-  const avaliados = useMemo(() => avaliarDrinks(drinks, estoque ?? []), [drinks, estoque]);
+  const avaliados = useMemo(
+    () => avaliarDrinks(drinks, estoque ?? [], doseMl),
+    [drinks, estoque, doseMl],
+  );
+
   const possiveis = useMemo(
     () =>
       avaliados
