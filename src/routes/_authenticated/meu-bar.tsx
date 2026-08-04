@@ -300,6 +300,8 @@ function MeuBarPage() {
                 <ItemEstoque
                   key={item.id}
                   item={item}
+                  doseMl={doseMl}
+
                   salvando={salvarPreco.isPending}
                   onSalvar={(preco, volume) => salvarPreco.mutate({ id: item.id, preco, volume })}
                   onRemover={() => remover.mutate(item.id)}
