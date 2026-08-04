@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Heart, LogIn, LogOut, Martini, Menu, Shield } from "lucide-react";
+import { Heart, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
@@ -104,6 +104,15 @@ export function SiteHeader() {
             ))}
           {user && (
             <Link
+              to="/meu-bar"
+              className={`${linkBase} inline-flex items-center gap-1`}
+              activeProps={{ className: `${linkActive} inline-flex items-center gap-1` }}
+            >
+              <Wine className="h-3.5 w-3.5" aria-hidden="true" /> Meu Bar
+            </Link>
+          )}
+          {user && (
+            <Link
               to="/favoritos"
               className={`${linkBase} inline-flex items-center gap-1`}
               activeProps={{ className: `${linkActive} inline-flex items-center gap-1` }}
@@ -202,6 +211,16 @@ export function SiteHeader() {
                       {item.label}
                     </Link>
                   ))}
+                {user && (
+                  <Link
+                    to="/meu-bar"
+                    onClick={fechar}
+                    className={`${mobileLinkBase} gap-2`}
+                    activeProps={{ className: `${mobileLinkActive} gap-2` }}
+                  >
+                    <Wine className="h-4 w-4" aria-hidden="true" /> Meu Bar
+                  </Link>
+                )}
                 {user && (
                   <Link
                     to="/favoritos"
