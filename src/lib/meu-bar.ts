@@ -1,6 +1,8 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { sugerirIngrediente } from "@/lib/abv";
+import { DOSE_PADRAO_ML } from "@/lib/perfil";
+
 import type { DrinkComIngredientes } from "@/lib/queries";
 
 export type ItemBar = {
