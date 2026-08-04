@@ -82,7 +82,7 @@ export function avaliarDrinks(
         custoCompleto = false;
         continue;
       }
-      const ml = sugerirIngrediente(nome).ml;
+      const ml = Math.round(sugerirIngrediente(nome).ml * fator);
       const porMl = custoPorMl(item);
       if (porMl === null) {
         custoCompleto = false;
