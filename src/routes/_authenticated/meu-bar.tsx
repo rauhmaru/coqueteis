@@ -46,12 +46,30 @@ function MeuBarPage() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useQuery(ingredientesQuery);
   const { data: estoque, isLoading } = useQuery(meuBarQuery(user?.id));
+  const { data: perfil } = useQuery(perfilQuery(user?.id));
+  const doseMl = perfil?.dose_ml ?? DOSE_PADRAO_ML;
 
   const [nome, setNome] = useState("");
   const [preco, setPreco] = useState("");
   const [volume, setVolume] = useState("");
+  const [doseInput, setDoseInput] = useState("");
 
   const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
+
+  const salvarDose = useMutation({
+    mutationFn: async () => {
+      const n = Number(doseInput.trim().replace(",", "."));
+      if (!Number.isFinite(n) || n <= 0 || n > 500)
+        throw new Error("Informe uma dose entre 1 e 500 ml.");
+      await salvarDoseMl(user!.id, n);
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["perfil"] });
+      toast.success("Tamanho da dose atualizado.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
 
   const adicionar = useMutation({
     mutationFn: async () => {
