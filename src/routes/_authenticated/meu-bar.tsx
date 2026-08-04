@@ -355,15 +355,18 @@ function MeuBarPage() {
 
 function ItemEstoque({
   item,
+  doseMl,
   salvando,
   onSalvar,
   onRemover,
 }: {
   item: ItemBar;
+  doseMl: number;
   salvando: boolean;
   onSalvar: (preco: number | null, volume: number | null) => void;
   onRemover: () => void;
 }) {
+
   const [preco, setPreco] = useState(item.preco_garrafa?.toString() ?? "");
   const [volume, setVolume] = useState(item.volume_garrafa_ml?.toString() ?? "");
   const porMl = custoPorMl(item);
