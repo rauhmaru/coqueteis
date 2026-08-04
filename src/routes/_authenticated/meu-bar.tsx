@@ -180,8 +180,52 @@ function MeuBarPage() {
           </p>
         </header>
 
+        {/* Tamanho da dose (perfil) */}
+        <section
+          aria-labelledby="dose-titulo"
+          className="rounded-xl border border-border bg-card/40 p-4 sm:p-6"
+        >
+          <h2 id="dose-titulo" className="mb-1 font-serif text-xl text-foreground">
+            Tamanho da minha dose
+          </h2>
+          <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
+            Definimos as quantidades das receitas com base nesta dose, salva no seu perfil. Assim o
+            custo por dose fica sempre exato para o seu jeito de servir.
+          </p>
+          <form
+            className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,12rem)_auto] sm:items-end"
+            onSubmit={(e) => {
+              e.preventDefault();
+              salvarDose.mutate();
+            }}
+          >
+            <div className="space-y-1.5">
+              <Label htmlFor="dose-ml">Dose (ml)</Label>
+              <Input
+                id="dose-ml"
+                inputMode="decimal"
+                value={doseInput === "" ? String(doseMl) : doseInput}
+                onChange={(e) => setDoseInput(e.target.value)}
+                placeholder="Ex.: 50"
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="outline"
+              className="min-h-11 sm:min-h-10"
+              disabled={salvarDose.isPending}
+            >
+              {salvarDose.isPending && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+              )}
+              Salvar dose
+            </Button>
+          </form>
+        </section>
+
         {/* Cadastro */}
         <section aria-labelledby="add-titulo" className="rounded-xl border border-border bg-card/40 p-4 sm:p-6">
+
           <h2 id="add-titulo" className="mb-4 font-serif text-xl text-foreground">
             Adicionar ao meu bar
           </h2>
