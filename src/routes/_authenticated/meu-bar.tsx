@@ -436,7 +436,7 @@ function ItemEstoque({
 
       <p className="mt-2 text-xs text-muted-foreground">
         {porMl !== null
-          ? `Custo por ml: ${brl(porMl)} · dose de 50 ml: ${brl(porMl * 50)}`
+          ? `Custo por ml: ${brl(porMl)} · dose de ${doseMl} ml: ${brl(porMl * doseMl)}`
           : "Informe preço e volume para calcular o custo."}
       </p>
     </li>
