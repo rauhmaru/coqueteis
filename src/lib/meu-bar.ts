@@ -53,11 +53,15 @@ export function custoPorMl(item: ItemBar): number | null {
 /**
  * Cruza o estoque do usuário com o catálogo de drinks.
  * Retorna, para cada drink, quais ingredientes faltam e o custo estimado.
+ * `doseMl` é o tamanho de dose configurado no perfil: as quantidades sugeridas
+ * de cada ingrediente são proporcionais a ele (referência: 50 ml).
  */
 export function avaliarDrinks(
   drinks: DrinkComIngredientes[],
   estoque: ItemBar[],
+  doseMl: number = DOSE_PADRAO_ML,
 ): DrinkAvaliado[] {
+  const fator = doseMl > 0 ? doseMl / DOSE_PADRAO_ML : 1;
   const porIngrediente = new Map<string, ItemBar>();
   estoque.forEach((i) => porIngrediente.set(i.ingrediente_id, i));
 
@@ -66,6 +70,7 @@ export function avaliarDrinks(
     const componentes: CustoIngrediente[] = [];
     let custo = 0;
     let custoCompleto = drink.drink_ingredientes.length > 0;
+
 
     for (const di of drink.drink_ingredientes) {
       const nome = di.ingredientes?.nome ?? "Ingrediente";
