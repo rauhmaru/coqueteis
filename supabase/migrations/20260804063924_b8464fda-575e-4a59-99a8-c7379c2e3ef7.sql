@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN dose_ml numeric NOT NULL DEFAULT 50;
