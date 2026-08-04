@@ -28,6 +28,7 @@ import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
 import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
@@ -128,6 +129,11 @@ const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMeuBarRoute = AuthenticatedMeuBarRouteImport.update({
+  id: '/meu-bar',
+  path: '/meu-bar',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedIngredientesRoute =
   AuthenticatedIngredientesRouteImport.update({
     id: '/ingredientes',
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/mixologia': typeof MixologiaRouteWithChildren
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
+  '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -189,6 +196,7 @@ export interface FileRoutesByTo {
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
+  '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/mixologia': typeof MixologiaRouteWithChildren
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
+  '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/mixologia'
     | '/favoritos'
     | '/ingredientes'
+    | '/meu-bar'
     | '/usuarios'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/consumo-responsavel'
     | '/favoritos'
     | '/ingredientes'
+    | '/meu-bar'
     | '/usuarios'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/mixologia'
     | '/_authenticated/favoritos'
     | '/_authenticated/ingredientes'
+    | '/_authenticated/meu-bar'
     | '/_authenticated/usuarios'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -452,6 +464,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/meu-bar': {
+      id: '/_authenticated/meu-bar'
+      path: '/meu-bar'
+      fullPath: '/meu-bar'
+      preLoaderRoute: typeof AuthenticatedMeuBarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/ingredientes': {
       id: '/_authenticated/ingredientes'
       path: '/ingredientes'
@@ -493,6 +512,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
+  AuthenticatedMeuBarRoute: typeof AuthenticatedMeuBarRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
   AuthenticatedDrinksIdEditarRoute: typeof AuthenticatedDrinksIdEditarRoute
@@ -501,6 +521,7 @@ interface AuthenticatedRouteRouteChildren {
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
+  AuthenticatedMeuBarRoute: AuthenticatedMeuBarRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
   AuthenticatedDrinksIdEditarRoute: AuthenticatedDrinksIdEditarRoute,

@@ -297,6 +297,44 @@ export type Database = {
           },
         ]
       }
+      meu_bar: {
+        Row: {
+          created_at: string
+          id: string
+          ingrediente_id: string
+          preco_garrafa: number | null
+          updated_at: string
+          user_id: string
+          volume_garrafa_ml: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ingrediente_id: string
+          preco_garrafa?: number | null
+          updated_at?: string
+          user_id: string
+          volume_garrafa_ml?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ingrediente_id?: string
+          preco_garrafa?: number | null
+          updated_at?: string
+          user_id?: string
+          volume_garrafa_ml?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "meu_bar_ingrediente_id_fkey"
+            columns: ["ingrediente_id"]
+            isOneToOne: false
+            referencedRelation: "ingredientes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string

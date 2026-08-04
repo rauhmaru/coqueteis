@@ -1,0 +1,434 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
+import { toast } from "sonner";
+import { SiteHeader } from "@/components/site-header";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { drinksQuery, ingredientesQuery } from "@/lib/queries";
+import { avaliarDrinks, brl, custoPorMl, meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
+import { normalizar } from "@/lib/abv";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { DrinkImage } from "@/components/drink-image";
+import { DifficultyBadge } from "@/components/difficulty-badge";
+
+export const Route = createFileRoute("/_authenticated/meu-bar")({
+  head: () => ({
+    meta: [
+      { title: "Meu Bar — estoque e custo por dose" },
+      {
+        name: "description",
+        content:
+          "Cadastre as garrafas que você tem em casa, veja os coquetéis possíveis de fazer e calcule o custo por dose.",
+      },
+      { property: "og:title", content: "Meu Bar — estoque e custo por dose" },
+      {
+        property: "og:description",
+        content: "Veja o que dá para preparar com o seu estoque e quanto custa cada drink.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: MeuBarPage,
+});
+
+function MeuBarPage() {
+  const { user } = useAuth();
+  const qc = useQueryClient();
+  const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { data: ingredientes } = useQuery(ingredientesQuery);
+  const { data: estoque, isLoading } = useQuery(meuBarQuery(user?.id));
+
+  const [nome, setNome] = useState("");
+  const [preco, setPreco] = useState("");
+  const [volume, setVolume] = useState("");
+
+  const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
+
+  const adicionar = useMutation({
+    mutationFn: async () => {
+      const limpo = nome.trim();
+      if (!limpo) throw new Error("Informe o nome da bebida ou ingrediente.");
+      const alvo = normalizar(limpo);
+      let ingredienteId = (ingredientes ?? []).find((i) => normalizar(i.nome) === alvo)?.id;
+
+      if (!ingredienteId) {
+        const { data, error } = await supabase
+          .from("ingredientes")
+          .insert({ nome: limpo })
+          .select("id")
+          .single();
+        if (error) throw error;
+        ingredienteId = data.id;
+      }
+
+      const precoNum = preco.trim() ? Number(preco.replace(",", ".")) : null;
+      const volumeNum = volume.trim() ? Number(volume.replace(",", ".")) : null;
+      if (precoNum !== null && (!Number.isFinite(precoNum) || precoNum < 0))
+        throw new Error("Preço inválido.");
+      if (volumeNum !== null && (!Number.isFinite(volumeNum) || volumeNum <= 0))
+        throw new Error("Volume inválido.");
+
+      const { error } = await supabase.from("meu_bar").upsert(
+        {
+          user_id: user!.id,
+          ingrediente_id: ingredienteId,
+          preco_garrafa: precoNum,
+          volume_garrafa_ml: volumeNum,
+        },
+        { onConflict: "user_id,ingrediente_id" },
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      setNome("");
+      setPreco("");
+      setVolume("");
+      qc.invalidateQueries({ queryKey: ["ingredientes"] });
+      invalidar();
+      toast.success("Item adicionado ao seu bar.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const salvarPreco = useMutation({
+    mutationFn: async (v: { id: string; preco: number | null; volume: number | null }) => {
+      const { error } = await supabase
+        .from("meu_bar")
+        .update({ preco_garrafa: v.preco, volume_garrafa_ml: v.volume })
+        .eq("id", v.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      invalidar();
+      toast.success("Valores atualizados.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const remover = useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase.from("meu_bar").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      invalidar();
+      toast.success("Item removido do seu bar.");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
+  const avaliados = useMemo(() => avaliarDrinks(drinks, estoque ?? []), [drinks, estoque]);
+  const possiveis = useMemo(
+    () =>
+      avaliados
+        .filter((a) => a.faltando.length === 0 && a.drink.drink_ingredientes.length > 0)
+        .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
+    [avaliados],
+  );
+  const quaseLa = useMemo(
+    () =>
+      avaliados
+        .filter((a) => a.faltando.length === 1)
+        .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
+    [avaliados],
+  );
+
+  return (
+    <div className="min-h-dvh">
+      <SiteHeader />
+      <main id="conteudo" className="mx-auto max-w-6xl space-y-10 px-4 py-10">
+        <header className="space-y-2">
+          <h1 className="inline-flex items-center gap-3 font-serif text-3xl text-foreground sm:text-4xl">
+            <Wine className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" /> Meu Bar
+          </h1>
+          <p className="max-w-2xl text-sm text-muted-foreground">
+            Cadastre as garrafas e ingredientes que você tem em casa. Mostramos os coquetéis
+            possíveis com o seu estoque, sinalizamos os que estão{" "}
+            <span className="text-foreground">quase lá</span> (falta 1 ingrediente) e calculamos o
+            custo por dose com base no preço que você pagou.
+          </p>
+        </header>
+
+        {/* Cadastro */}
+        <section aria-labelledby="add-titulo" className="rounded-xl border border-border bg-card/40 p-4 sm:p-6">
+          <h2 id="add-titulo" className="mb-4 font-serif text-xl text-foreground">
+            Adicionar ao meu bar
+          </h2>
+          <form
+            className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end"
+            onSubmit={(e) => {
+              e.preventDefault();
+              adicionar.mutate();
+            }}
+          >
+            <div className="space-y-1.5">
+              <Label htmlFor="bar-nome">Bebida ou ingrediente</Label>
+              <IngredienteAutocomplete
+                id="bar-nome"
+                value={nome}
+                onChange={setNome}
+                onSelect={setNome}
+                placeholder="Ex.: Gin"
+                aria-label="Bebida ou ingrediente"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="bar-preco">Preço da garrafa (R$)</Label>
+              <Input
+                id="bar-preco"
+                inputMode="decimal"
+                value={preco}
+                onChange={(e) => setPreco(e.target.value)}
+                placeholder="Ex.: 89,90"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="bar-volume">Volume (ml)</Label>
+              <Input
+                id="bar-volume"
+                inputMode="decimal"
+                value={volume}
+                onChange={(e) => setVolume(e.target.value)}
+                placeholder="Ex.: 750"
+              />
+            </div>
+            <Button type="submit" className="min-h-11 sm:min-h-10" disabled={adicionar.isPending}>
+              {adicionar.isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+              ) : (
+                <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+              )}
+              Adicionar
+            </Button>
+          </form>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Preço e volume são opcionais — sem eles o item conta para as receitas, mas não entra no
+            cálculo de custo.
+          </p>
+        </section>
+
+        {/* Estoque */}
+        <section aria-labelledby="estoque-titulo" className="space-y-4">
+          <h2 id="estoque-titulo" className="font-serif text-2xl text-foreground">
+            Meu estoque{" "}
+            <span className="text-base text-muted-foreground">({estoque?.length ?? 0})</span>
+          </h2>
+          {isLoading ? (
+            <p className="text-sm text-muted-foreground">Carregando seu bar...</p>
+          ) : (estoque ?? []).length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Seu bar está vazio. Adicione a primeira garrafa acima.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              {(estoque ?? []).map((item) => (
+                <ItemEstoque
+                  key={item.id}
+                  item={item}
+                  salvando={salvarPreco.isPending}
+                  onSalvar={(preco, volume) => salvarPreco.mutate({ id: item.id, preco, volume })}
+                  onRemover={() => remover.mutate(item.id)}
+                />
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Possíveis */}
+        <section aria-labelledby="possiveis-titulo" className="space-y-4">
+          <h2 id="possiveis-titulo" className="font-serif text-2xl text-foreground">
+            Dá para fazer agora{" "}
+            <span className="text-base text-muted-foreground">({possiveis.length})</span>
+          </h2>
+          {possiveis.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Nenhuma receita completa ainda. Continue cadastrando seu estoque.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {possiveis.map((a) => (
+                <CardDrink key={a.drink.id} avaliado={a} />
+              ))}
+            </ul>
+          )}
+        </section>
+
+        {/* Quase lá */}
+        <section aria-labelledby="quase-titulo" className="space-y-4">
+          <h2 id="quase-titulo" className="inline-flex items-center gap-2 font-serif text-2xl text-foreground">
+            <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" /> Quase lá{" "}
+            <span className="text-base text-muted-foreground">({quaseLa.length})</span>
+          </h2>
+          {quaseLa.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
+            </p>
+          ) : (
+            <ul className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {quaseLa.map((a) => (
+                <CardDrink key={a.drink.id} avaliado={a} quase />
+              ))}
+            </ul>
+          )}
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function ItemEstoque({
+  item,
+  salvando,
+  onSalvar,
+  onRemover,
+}: {
+  item: ItemBar;
+  salvando: boolean;
+  onSalvar: (preco: number | null, volume: number | null) => void;
+  onRemover: () => void;
+}) {
+  const [preco, setPreco] = useState(item.preco_garrafa?.toString() ?? "");
+  const [volume, setVolume] = useState(item.volume_garrafa_ml?.toString() ?? "");
+  const porMl = custoPorMl(item);
+  const nome = item.ingredientes?.nome ?? "Ingrediente";
+
+  const parse = (v: string) => {
+    const t = v.trim().replace(",", ".");
+    if (!t) return null;
+    const n = Number(t);
+    return Number.isFinite(n) && n >= 0 ? n : null;
+  };
+
+  return (
+    <li className="rounded-xl border border-border bg-card/40 p-4">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <p className="truncate font-medium text-foreground">{nome}</p>
+          {item.ingredientes?.categorias?.nome && (
+            <p className="truncate text-xs text-muted-foreground">
+              {item.ingredientes.categorias.nome}
+            </p>
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="min-h-11 min-w-11 shrink-0 text-muted-foreground hover:text-destructive"
+          aria-label={`Remover ${nome} do meu bar`}
+          onClick={onRemover}
+        >
+          <Trash2 className="h-4 w-4" aria-hidden="true" />
+        </Button>
+      </div>
+
+      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+        <div className="space-y-1">
+          <Label htmlFor={`preco-${item.id}`} className="text-xs">
+            Preço (R$)
+          </Label>
+          <Input
+            id={`preco-${item.id}`}
+            inputMode="decimal"
+            value={preco}
+            onChange={(e) => setPreco(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor={`volume-${item.id}`} className="text-xs">
+            Volume (ml)
+          </Label>
+          <Input
+            id={`volume-${item.id}`}
+            inputMode="decimal"
+            value={volume}
+            onChange={(e) => setVolume(e.target.value)}
+          />
+        </div>
+        <Button
+          variant="outline"
+          className="min-h-11 sm:min-h-10"
+          disabled={salvando}
+          onClick={() => onSalvar(parse(preco), parse(volume))}
+        >
+          Salvar
+        </Button>
+      </div>
+
+      <p className="mt-2 text-xs text-muted-foreground">
+        {porMl !== null
+          ? `Custo por ml: ${brl(porMl)} · dose de 50 ml: ${brl(porMl * 50)}`
+          : "Informe preço e volume para calcular o custo."}
+      </p>
+    </li>
+  );
+}
+
+function CardDrink({
+  avaliado,
+  quase = false,
+}: {
+  avaliado: ReturnType<typeof avaliarDrinks>[number];
+  quase?: boolean;
+}) {
+  const { drink, faltando, custo, custoCompleto } = avaliado;
+  return (
+    <li className="overflow-hidden rounded-xl border border-border bg-card/40 transition-colors hover:border-primary/50">
+      <Link
+        to="/drinks/$id"
+        params={{ id: drink.id }}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <DrinkImage
+          path={drink.imagem_url}
+          alt={`Foto do drink ${drink.nome}`}
+          className="aspect-square w-full object-cover"
+        />
+        <div className="space-y-2 p-3">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="min-w-0 truncate font-serif text-lg text-foreground">{drink.nome}</h3>
+            {quase && (
+              <Badge className="shrink-0 bg-primary/15 text-primary">
+                <Sparkles className="mr-1 h-3 w-3" aria-hidden="true" /> Quase lá
+              </Badge>
+            )}
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <DifficultyBadge value={drink.dificuldade} />
+            {drink.drink_drink_categorias.slice(0, 2).map((c) => (
+              <Badge key={c.categoria_id} variant="secondary">
+                {c.drink_categorias?.nome ?? "?"}
+              </Badge>
+            ))}
+          </div>
+          {quase && faltando.length > 0 && (
+            <p className="text-xs text-muted-foreground">
+              Falta: <span className="text-foreground">{faltando[0]}</span>
+            </p>
+          )}
+          <p className="inline-flex items-center gap-1.5 text-sm text-foreground">
+            <Wallet className="h-4 w-4 text-primary" aria-hidden="true" />
+            {custo > 0 ? (
+              <>
+                {brl(custo)} por dose{" "}
+                {!custoCompleto && (
+                  <span className="text-xs text-muted-foreground">(parcial)</span>
+                )}
+              </>
+            ) : (
+              <span className="text-xs text-muted-foreground">
+                Informe preço e volume das garrafas para ver o custo
+              </span>
+            )}
+          </p>
+        </div>
+      </Link>
+    </li>
+  );
+}
