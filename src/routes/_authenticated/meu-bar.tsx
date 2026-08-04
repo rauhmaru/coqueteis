@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { drinksQuery, ingredientesQuery } from "@/lib/queries";
 import { avaliarDrinks, brl, custoPorMl, meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
+
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
 import { Button } from "@/components/ui/button";
