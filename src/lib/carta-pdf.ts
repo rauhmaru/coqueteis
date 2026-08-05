@@ -69,14 +69,15 @@ export async function gerarCartaPdf({ titulo, subtitulo, drinks, baseUrl }: Cart
   doc.line(W / 2 - 18, y, W / 2 + 18, y);
   y += 10;
 
-  const qrSize = 22;
+  const qrSize = drinks.length <= 3 ? 26 : 22;
   const areaDisponivel = H - M - 26 - y;
-  const alturaBloco = Math.min(areaDisponivel / Math.max(drinks.length, 1), 40);
-  // Centraliza verticalmente a pilha de drinks no espaço restante da página
-  const inicio = y + Math.max((areaDisponivel - alturaBloco * drinks.length) / 2, 0);
+  // Distribui os drinks por todo o espaço restante da página
+  const alturaBloco = areaDisponivel / Math.max(drinks.length, 1);
+  const inicio = y;
 
   for (const [i, d] of drinks.entries()) {
     const topo = inicio + i * alturaBloco;
+
 
     const textoLargura = W - M * 2 - qrSize - 8;
 
