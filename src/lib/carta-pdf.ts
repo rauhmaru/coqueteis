@@ -76,10 +76,11 @@ export async function gerarCartaPdf({ titulo, subtitulo, drinks, baseUrl }: Cart
   const inicio = y;
 
   for (const [i, d] of drinks.entries()) {
-    const topo = inicio + i * alturaBloco;
-
-
+    // Centraliza o conteúdo dentro da faixa reservada ao drink
+    const alturaConteudo = Math.max(qrSize + 4, 26);
+    const topo = inicio + i * alturaBloco + Math.max((alturaBloco - alturaConteudo) / 2, 0);
     const textoLargura = W - M * 2 - qrSize - 8;
+
 
     // QR Code da receita
     const url = `${baseUrl}/drinks/${d.id}`;
