@@ -27,6 +27,7 @@ const publicNav = [
   { to: "/drinks", label: "Drinks" },
   { to: "/mixologia", label: "Mixologia" },
   { to: "/calculadora-abv", label: "Calculadora ABV" },
+  { to: "/carta", label: "Carta de eventos" },
   { to: "/consumo-responsavel", label: "Consumo responsável" },
 ] as const;
 
