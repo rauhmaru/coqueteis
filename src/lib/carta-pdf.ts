@@ -70,10 +70,14 @@ export async function gerarCartaPdf({ titulo, subtitulo, drinks, baseUrl }: Cart
   y += 10;
 
   const qrSize = 22;
-  const alturaBloco = (H - M - 26 - y) / Math.max(drinks.length, 1);
+  const areaDisponivel = H - M - 26 - y;
+  const alturaBloco = Math.min(areaDisponivel / Math.max(drinks.length, 1), 40);
+  // Centraliza verticalmente a pilha de drinks no espaço restante da página
+  const inicio = y + Math.max((areaDisponivel - alturaBloco * drinks.length) / 2, 0);
 
   for (const [i, d] of drinks.entries()) {
-    const topo = y + i * alturaBloco;
+    const topo = inicio + i * alturaBloco;
+
     const textoLargura = W - M * 2 - qrSize - 8;
 
     // QR Code da receita
