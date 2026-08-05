@@ -116,12 +116,14 @@ export async function gerarCartaPdf({ titulo, subtitulo, drinks, baseUrl }: Cart
     const ing = doc.splitTextToSize(d.ingredientes.join(" · ") || "—", textoLargura);
     doc.text(ing.slice(0, 3), M, ty);
 
-    // Separador
+    // Separador na divisa entre as faixas
     if (i < drinks.length - 1) {
+      const linhaY = inicio + (i + 1) * alturaBloco - 2;
       doc.setDrawColor(214, 202, 184);
       doc.setLineWidth(0.2);
-      doc.line(M, topo + alturaBloco - 4, W - M, topo + alturaBloco - 4);
+      doc.line(M, linhaY, W - M, linhaY);
     }
+
   }
 
   // Rodapé
