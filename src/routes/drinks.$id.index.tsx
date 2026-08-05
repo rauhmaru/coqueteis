@@ -9,6 +9,7 @@ import { DrinkImage } from "@/components/drink-image";
 import { DifficultyBadge } from "@/components/difficulty-badge";
 import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
+import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
@@ -119,6 +120,11 @@ function DrinkDetail() {
             </div>
           </div>
         </div>
+
+        <PortionCalculator
+          nome={drink.nome}
+          ingredientes={drink.drink_ingredientes.map((di) => di.ingredientes?.nome ?? "Ingrediente")}
+        />
 
         <DrinkSocial drinkId={drink.id} />
       </main>
