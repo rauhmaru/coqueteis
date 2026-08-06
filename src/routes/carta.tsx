@@ -198,7 +198,7 @@ function CartaPage() {
         </p>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_20rem]">
-          <div className="space-y-8">
+          <div className="min-w-0 space-y-8">
             <section aria-labelledby="escolher-titulo" className="space-y-4">
               <h2 id="escolher-titulo" className="font-serif text-xl text-foreground">
                 1. Escolha os drinks
