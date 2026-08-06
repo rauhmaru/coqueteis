@@ -215,7 +215,7 @@ export async function gerarCartaPdf({
 
     doc.setFontSize(10);
     for (const item of compras.itens) {
-      if (ly > H - M - 20) break;
+      if (ly > H - M - 24) break;
       doc.setTextColor(...t.tinta);
       doc.text(doc.splitTextToSize(item.nome, W - M * 2 - 70)[0]!, M, ly);
       doc.setTextColor(...t.suave);
@@ -225,11 +225,12 @@ export async function gerarCartaPdf({
         W - M - 34,
         ly,
       );
-      ly += 5;
       doc.setDrawColor(...t.linha);
       doc.setLineWidth(0.1);
-      doc.line(M, ly - 2, W - M, ly - 2);
+      doc.line(M, ly + 3, W - M, ly + 3);
+      ly += 9;
     }
+
 
     doc.setFont(t.fonteCorpo, "normal");
     doc.setFontSize(8);
