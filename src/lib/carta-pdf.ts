@@ -148,29 +148,31 @@ export async function gerarCartaPdf({
   }
 
   // Rodapé
+  if (linkPublico) {
+    const mini = 16;
+    const miniQr = await QRCode.toDataURL(linkPublico, {
+      margin: 0,
+      width: 300,
+      color: { dark: hex(t.tinta), light: hex(t.fundo) },
+    });
+    doc.addImage(miniQr, "PNG", M, H - M - mini - 2, mini, mini);
+    doc.setFont(t.fonteCorpo, "normal");
+    doc.setFontSize(7);
+    doc.setTextColor(...t.suave);
+    doc.text("carta completa online", M + mini / 2, H - M + 1, { align: "center" });
+  }
   doc.setFont(t.fonteCorpo, "normal");
   doc.setFontSize(8);
   doc.setTextColor(...t.suave);
-  doc.text(
-    linkPublico
-      ? "Aponte a câmera para o QR Code — ou acesse a carta completa online:"
-      : "Aponte a câmera do celular para o QR Code e veja a receita completa.",
-    W / 2,
-    H - M - 6,
-    { align: "center" },
-  );
-  if (linkPublico) {
-    doc.setFontSize(7);
-    doc.setTextColor(...t.destaque);
-    doc.text(doc.splitTextToSize(linkPublico, W - M * 2)[0]!, W / 2, H - M - 2, {
-      align: "center",
-    });
-  }
-  doc.setTextColor(...t.destaque);
-  doc.setFontSize(7.5);
-  doc.text("Aprecie com moderação. Venda proibida para menores de 18 anos.", W / 2, H - M + 2, {
+  doc.text("Aponte a câmera do celular para o QR Code e veja a receita completa.", W / 2, H - M - 6, {
     align: "center",
   });
+  doc.setTextColor(...t.destaque);
+  doc.setFontSize(7.5);
+  doc.text("Aprecie com moderação. Venda proibida para menores de 18 anos.", W / 2, H - M - 1, {
+    align: "center",
+  });
+
 
   // Página 2 — lista de compras
   if (compras && compras.itens.length > 0) {
