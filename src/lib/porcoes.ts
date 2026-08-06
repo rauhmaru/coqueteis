@@ -74,3 +74,31 @@ export function calcularPorcoes(
   const volumeTotalMl = itens.reduce((s, i) => s + i.mlTotal, 0);
   return { itens, volumeTotalMl };
 }
+
+/** Soma as necessidades de várias receitas para montar a lista de compras da festa. */
+export function calcularListaCompras(
+  receitas: { ingredientes: string[] }[],
+  porcoesPorReceita: number,
+): { itens: PorcaoIngrediente[]; volumeTotalMl: number } {
+  const mapa = new Map<string, number>();
+  for (const r of receitas) {
+    for (const nome of r.ingredientes) {
+      const ml = sugerirIngrediente(nome).ml * Math.max(0, Math.floor(porcoesPorReceita));
+      mapa.set(nome, (mapa.get(nome) ?? 0) + ml);
+    }
+  }
+  const itens = [...mapa.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .map(([nome, mlTotal]) => {
+      const emb = embalagemSugerida(nome);
+      return {
+        nome,
+        mlUnitario: sugerirIngrediente(nome).ml,
+        mlTotal,
+        quantidade: formatarVolume(mlTotal),
+        embalagem: emb.rotulo,
+        garrafas: mlTotal > 0 ? Math.ceil(mlTotal / emb.ml) : null,
+      };
+    });
+  return { itens, volumeTotalMl: itens.reduce((s, i) => s + i.mlTotal, 0) };
+}
