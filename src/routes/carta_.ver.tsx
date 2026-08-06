@@ -124,7 +124,7 @@ function CartaPublicaPage() {
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-serif text-lg text-foreground">{d!.nome}</span>
-                    <DifficultyBadge dificuldade={d!.dificuldade} />
+                    <DifficultyBadge value={d!.dificuldade} />
                   </span>
                   <span className="mt-1 line-clamp-2 block text-xs text-muted-foreground">
                     {d!.drink_ingredientes
