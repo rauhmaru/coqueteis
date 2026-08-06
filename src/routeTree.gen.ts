@@ -28,6 +28,7 @@ import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
 import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
 import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
+import { Route as CartaVerRouteImport } from './routes/carta_.ver'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
@@ -130,6 +131,11 @@ const DrinksIdRoute = DrinksIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => DrinksRoute,
 } as any)
+const CartaVerRoute = CartaVerRouteImport.update({
+  id: '/carta_/ver',
+  path: '/carta/ver',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
@@ -181,6 +187,7 @@ export interface FileRoutesByFullPath {
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/carta/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
@@ -206,6 +213,7 @@ export interface FileRoutesByTo {
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/carta/ver': typeof CartaVerRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
   '/mixologia/gelo': typeof MixologiaGeloRoute
@@ -234,6 +242,7 @@ export interface FileRoutesById {
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
+  '/carta_/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
@@ -263,6 +272,7 @@ export interface FileRouteTypes {
     | '/ingredientes'
     | '/meu-bar'
     | '/usuarios'
+    | '/carta/ver'
     | '/drinks/$id'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
@@ -288,6 +298,7 @@ export interface FileRouteTypes {
     | '/ingredientes'
     | '/meu-bar'
     | '/usuarios'
+    | '/carta/ver'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
     | '/mixologia/gelo'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ingredientes'
     | '/_authenticated/meu-bar'
     | '/_authenticated/usuarios'
+    | '/carta_/ver'
     | '/drinks/$id'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
@@ -340,6 +352,7 @@ export interface RootRouteChildren {
   ConsumoResponsavelRoute: typeof ConsumoResponsavelRoute
   DrinksRoute: typeof DrinksRouteWithChildren
   MixologiaRoute: typeof MixologiaRouteWithChildren
+  CartaVerRoute: typeof CartaVerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -477,6 +490,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIdRouteImport
       parentRoute: typeof DrinksRoute
     }
+    '/carta_/ver': {
+      id: '/carta_/ver'
+      path: '/carta/ver'
+      fullPath: '/carta/ver'
+      preLoaderRoute: typeof CartaVerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/usuarios': {
       id: '/_authenticated/usuarios'
       path: '/usuarios'
@@ -611,17 +631,8 @@ const rootRouteChildren: RootRouteChildren = {
   ConsumoResponsavelRoute: ConsumoResponsavelRoute,
   DrinksRoute: DrinksRouteWithChildren,
   MixologiaRoute: MixologiaRouteWithChildren,
+  CartaVerRoute: CartaVerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
