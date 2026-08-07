@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { drinksQuery } from "@/lib/queries";
+import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
+import { useDrinkFilters } from "@/components/drink-filters";
+
 import { gerarCartaPdf } from "@/lib/carta-pdf";
 import { CARTA_TEMPLATES, QR_TAMANHOS, qrMm, type QrTamanhoId } from "@/lib/carta-templates";
 import { urlDaCarta } from "@/lib/carta-link";
@@ -41,7 +43,13 @@ export const Route = createFileRoute("/carta")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(drinksQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(drinksQuery),
+      context.queryClient.ensureQueryData(ingredientesQuery),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
+    ]),
+
   component: CartaPage,
 });
 
@@ -63,6 +71,8 @@ function parseNum(valor: string, max: number): { n: number | null; erro: string 
 
 function CartaPage() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string[]>([]);
   const [titulo, setTitulo] = useState("");
@@ -75,17 +85,25 @@ function CartaPage() {
   const [incluirCompras, setIncluirCompras] = useState(true);
   const [copiado, setCopiado] = useState(false);
 
+  const { filtered: porFiltros, element: filtrosUI } = useDrinkFilters({
+    drinks,
+    ingredientes,
+    categorias,
+    idPrefix: "carta-filtro",
+  });
+
   const filtrados = useMemo(() => {
     const q = norm(busca.trim());
     const base = q
-      ? drinks.filter(
+      ? porFiltros.filter(
           (d) =>
             norm(d.nome).includes(q) ||
             d.drink_ingredientes.some((di) => norm(di.ingredientes?.nome ?? "").includes(q)),
         )
-      : drinks;
+      : porFiltros;
     return base.slice(0, 60);
-  }, [drinks, busca]);
+  }, [porFiltros, busca]);
+
 
   const selecionados = useMemo(
     () => sel.map((id) => drinks.find((d) => d.id === id)).filter(Boolean),
@@ -223,6 +241,10 @@ function CartaPage() {
                   className="min-h-11 pl-9"
                 />
               </div>
+
+              {filtrosUI}
+
+
 
               <ul className="grid gap-2 sm:grid-cols-2">
                 {filtrados.map((d) => {

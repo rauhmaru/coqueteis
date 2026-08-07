@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Martini, Filter, X, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Plus, Pencil, Trash2, Martini } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,14 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
-import { DifficultyBadge, DIFICULDADES } from "@/components/difficulty-badge";
+import { DifficultyBadge } from "@/components/difficulty-badge";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
+import { useDrinkFilters } from "@/components/drink-filters";
+
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
@@ -40,64 +42,6 @@ export const Route = createFileRoute("/drinks/")({
   notFoundComponent: () => <div className="p-8 text-center">Não encontrado.</div>,
 });
 
-function FiltroSection({
-  id,
-  titulo,
-  ativos,
-  open,
-  onToggle,
-  onClear,
-  children,
-}: {
-  id: string;
-  titulo: string;
-  ativos: number;
-  open: boolean;
-  onToggle: () => void;
-  onClear?: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <section aria-label={titulo} className="rounded-xl border border-border bg-card p-4 sm:p-5 space-y-3">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          aria-controls={id}
-          className="flex min-h-11 flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
-        >
-          <Filter className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-          <span>{titulo}</span>
-          {ativos > 0 && (
-            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs">
-              {ativos}
-            </span>
-          )}
-          <ChevronDown
-            className={`h-4 w-4 ml-auto text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-          />
-        </button>
-        {ativos > 0 && onClear && (
-          <button
-            type="button"
-            onClick={onClear}
-            aria-label={`Limpar ${titulo.toLowerCase()}`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md px-2 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-3 w-3" aria-hidden="true" /> Limpar
-          </button>
-        )}
-      </div>
-      {open && (
-        <div id={id} className="space-y-3">
-          {children}
-        </div>
-      )}
-    </section>
-  );
-}
-
 function DrinksList() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
@@ -105,57 +49,17 @@ function DrinksList() {
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
-  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const [openDif, setOpenDif] = useState(false);
-  const [openCat, setOpenCat] = useState(false);
-  const [openIng, setOpenIng] = useState(false);
-
-  const filtered = useMemo(() => {
-    return drinks.filter((d) => {
-      if (selected.size > 0) {
-        const ids = new Set(d.drink_ingredientes.map((di) => di.ingrediente_id));
-        for (const sel of selected) if (!ids.has(sel)) return false;
-      }
-      if (selectedCats.size > 0) {
-        const cats = new Set(d.drink_drink_categorias.map((c) => c.categoria_id));
-        for (const sel of selectedCats) if (!cats.has(sel)) return false;
-      }
-      if (selectedDifs.size > 0 && !selectedDifs.has(d.dificuldade)) return false;
-      return true;
-    });
-  }, [drinks, selected, selectedCats, selectedDifs]);
-
-
-  const toggle = (id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-  const toggleCat = (id: string) => {
-    setSelectedCats((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-  const toggleDif = (d: string) => {
-    setSelectedDifs((prev) => {
-      const next = new Set(prev);
-      if (next.has(d)) next.delete(d);
-      else next.add(d);
-      return next;
-    });
-  };
+  const { filtered, element: filtrosUI, temFiltro } = useDrinkFilters({
+    drinks,
+    ingredientes,
+    categorias,
+    idPrefix: "drinks-filtro",
+  });
 
   const canManage = (d: (typeof drinks)[number]) =>
     canManageItem({ user, isAdmin, canEdit }, d);
+
 
   const remover = async (id: string) => {
     const drink = drinks.find((d) => d.id === id);
@@ -194,113 +98,7 @@ function DrinksList() {
           </div>
         </div>
 
-
-        {/* Filtro por dificuldade */}
-        <FiltroSection
-          id="filtro-dificuldade"
-          titulo="Filtrar por dificuldade de preparo"
-          ativos={selectedDifs.size}
-          open={openDif}
-          onToggle={() => setOpenDif((v) => !v)}
-          onClear={() => setSelectedDifs(new Set())}
-        >
-          <div className="flex flex-wrap gap-2">
-            {DIFICULDADES.map((d) => {
-              const on = selectedDifs.has(d);
-              return (
-                <button
-                  key={d}
-                  onClick={() => toggleDif(d)}
-                  type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                    on
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                  }`}
-                >
-                  {d}
-                </button>
-              );
-            })}
-          </div>
-        </FiltroSection>
-
-        {/* Filtro por categorias */}
-        {categorias.length > 0 && (
-          <FiltroSection
-            id="filtro-categorias"
-            titulo="Filtrar por categorias"
-            ativos={selectedCats.size}
-            open={openCat}
-            onToggle={() => setOpenCat((v) => !v)}
-            onClear={() => setSelectedCats(new Set())}
-          >
-            <div className="flex flex-wrap gap-2">
-              {categorias.map((c) => {
-                const on = selectedCats.has(c.id);
-                return (
-                  <button
-                    key={c.id}
-                    onClick={() => toggleCat(c.id)}
-                    type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                      on
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                    }`}
-                  >
-                    {c.nome}
-                  </button>
-                );
-              })}
-            </div>
-          </FiltroSection>
-        )}
-
-        {/* Filtro por ingredientes */}
-        <FiltroSection
-          id="filtro-ingredientes"
-          titulo="Filtrar por ingredientes disponíveis"
-          ativos={selected.size}
-          open={openIng}
-          onToggle={() => setOpenIng((v) => !v)}
-          onClear={() => setSelected(new Set())}
-        >
-          {ingredientes.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Cadastre ingredientes em <Link to="/ingredientes" className="text-primary underline">Ingredientes</Link>.
-            </p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {ingredientes.map((ing) => {
-                const on = selected.has(ing.id);
-                return (
-                  <button
-                    key={ing.id}
-                    onClick={() => toggle(ing.id)}
-                    type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                      on
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                    }`}
-                  >
-                    {ing.nome}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          {selected.size > 0 && (
-            <p className="text-xs text-muted-foreground">
-              Mostrando drinks que contêm <strong>todos</strong> os {selected.size} ingredientes selecionados.
-            </p>
-          )}
-        </FiltroSection>
-
+        {filtrosUI}
 
         <p aria-live="polite" className="sr-only">
           {filtered.length} {filtered.length === 1 ? "drink encontrado" : "drinks encontrados"}
@@ -311,9 +109,10 @@ function DrinksList() {
           <div className="rounded-xl border border-dashed border-border p-12 text-center">
             <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
             <p className="text-muted-foreground">
-              {selected.size > 0 || selectedCats.size > 0
+              {temFiltro
                 ? "Nenhum drink combina com esses filtros."
                 : "Nenhum drink cadastrado ainda."}
+
             </p>
           </div>
         ) : (
