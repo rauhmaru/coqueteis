@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import { Plus, Pencil, Trash2, Martini, Filter, X, ChevronDown } from "lucide-react";
+import { useState } from "react";
+import { Plus, Pencil, Trash2, Martini } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
@@ -13,12 +13,14 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DrinkImage } from "@/components/drink-image";
-import { DifficultyBadge, DIFICULDADES } from "@/components/difficulty-badge";
+import { DifficultyBadge } from "@/components/difficulty-badge";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
+import { useDrinkFilters } from "@/components/drink-filters";
+
 
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
