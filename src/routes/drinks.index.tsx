@@ -57,32 +57,7 @@ function DrinksList() {
     idPrefix: "drinks-filtro",
   });
 
-
-
-  const toggle = (id: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-  const toggleCat = (id: string) => {
-    setSelectedCats((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-  };
-  const toggleDif = (d: string) => {
-    setSelectedDifs((prev) => {
-      const next = new Set(prev);
-      if (next.has(d)) next.delete(d);
-      else next.add(d);
-      return next;
-    });
-  };
+  const canManage = (d: (typeof drinks)[number]) =>
 
   const canManage = (d: (typeof drinks)[number]) =>
     canManageItem({ user, isAdmin, canEdit }, d);
