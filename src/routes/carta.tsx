@@ -242,6 +242,10 @@ function CartaPage() {
                 />
               </div>
 
+              {filtrosUI}
+
+
+
               <ul className="grid gap-2 sm:grid-cols-2">
                 {filtrados.map((d) => {
                   const ativo = sel.includes(d.id);
