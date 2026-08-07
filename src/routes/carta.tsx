@@ -43,7 +43,13 @@ export const Route = createFileRoute("/carta")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(drinksQuery),
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(drinksQuery),
+      context.queryClient.ensureQueryData(ingredientesQuery),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
+    ]),
+
   component: CartaPage,
 });
 
