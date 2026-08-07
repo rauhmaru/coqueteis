@@ -71,6 +71,8 @@ function parseNum(valor: string, max: number): { n: number | null; erro: string 
 
 function CartaPage() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const [busca, setBusca] = useState("");
   const [sel, setSel] = useState<string[]>([]);
   const [titulo, setTitulo] = useState("");
@@ -83,17 +85,25 @@ function CartaPage() {
   const [incluirCompras, setIncluirCompras] = useState(true);
   const [copiado, setCopiado] = useState(false);
 
+  const { filtered: porFiltros, element: filtrosUI } = useDrinkFilters({
+    drinks,
+    ingredientes,
+    categorias,
+    idPrefix: "carta-filtro",
+  });
+
   const filtrados = useMemo(() => {
     const q = norm(busca.trim());
     const base = q
-      ? drinks.filter(
+      ? porFiltros.filter(
           (d) =>
             norm(d.nome).includes(q) ||
             d.drink_ingredientes.some((di) => norm(di.ingredientes?.nome ?? "").includes(q)),
         )
-      : drinks;
+      : porFiltros;
     return base.slice(0, 60);
-  }, [drinks, busca]);
+  }, [porFiltros, busca]);
+
 
   const selecionados = useMemo(
     () => sel.map((id) => drinks.find((d) => d.id === id)).filter(Boolean),
