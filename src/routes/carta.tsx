@@ -8,7 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { drinksQuery } from "@/lib/queries";
+import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
+import { useDrinkFilters } from "@/components/drink-filters";
+
 import { gerarCartaPdf } from "@/lib/carta-pdf";
 import { CARTA_TEMPLATES, QR_TAMANHOS, qrMm, type QrTamanhoId } from "@/lib/carta-templates";
 import { urlDaCarta } from "@/lib/carta-link";
