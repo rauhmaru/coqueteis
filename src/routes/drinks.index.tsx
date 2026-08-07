@@ -58,9 +58,8 @@ function DrinksList() {
   });
 
   const canManage = (d: (typeof drinks)[number]) =>
-
-  const canManage = (d: (typeof drinks)[number]) =>
     canManageItem({ user, isAdmin, canEdit }, d);
+
 
   const remover = async (id: string) => {
     const drink = drinks.find((d) => d.id === id);
