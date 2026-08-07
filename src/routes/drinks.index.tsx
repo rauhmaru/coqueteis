@@ -42,64 +42,6 @@ export const Route = createFileRoute("/drinks/")({
   notFoundComponent: () => <div className="p-8 text-center">Não encontrado.</div>,
 });
 
-function FiltroSection({
-  id,
-  titulo,
-  ativos,
-  open,
-  onToggle,
-  onClear,
-  children,
-}: {
-  id: string;
-  titulo: string;
-  ativos: number;
-  open: boolean;
-  onToggle: () => void;
-  onClear?: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <section aria-label={titulo} className="rounded-xl border border-border bg-card p-4 sm:p-5 space-y-3">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        <button
-          type="button"
-          onClick={onToggle}
-          aria-expanded={open}
-          aria-controls={id}
-          className="flex min-h-11 flex-1 items-center gap-2 text-left hover:text-primary transition-colors"
-        >
-          <Filter className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-          <span>{titulo}</span>
-          {ativos > 0 && (
-            <span className="rounded-full bg-primary/15 text-primary px-2 py-0.5 text-xs">
-              {ativos}
-            </span>
-          )}
-          <ChevronDown
-            className={`h-4 w-4 ml-auto text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-          />
-        </button>
-        {ativos > 0 && onClear && (
-          <button
-            type="button"
-            onClick={onClear}
-            aria-label={`Limpar ${titulo.toLowerCase()}`}
-            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md px-2 text-xs text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-3 w-3" aria-hidden="true" /> Limpar
-          </button>
-        )}
-      </div>
-      {open && (
-        <div id={id} className="space-y-3">
-          {children}
-        </div>
-      )}
-    </section>
-  );
-}
-
 function DrinksList() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
@@ -107,28 +49,14 @@ function DrinksList() {
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
-  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const [openDif, setOpenDif] = useState(false);
-  const [openCat, setOpenCat] = useState(false);
-  const [openIng, setOpenIng] = useState(false);
+  const { filtered, element: filtrosUI, temFiltro } = useDrinkFilters({
+    drinks,
+    ingredientes,
+    categorias,
+    idPrefix: "drinks-filtro",
+  });
 
-  const filtered = useMemo(() => {
-    return drinks.filter((d) => {
-      if (selected.size > 0) {
-        const ids = new Set(d.drink_ingredientes.map((di) => di.ingrediente_id));
-        for (const sel of selected) if (!ids.has(sel)) return false;
-      }
-      if (selectedCats.size > 0) {
-        const cats = new Set(d.drink_drink_categorias.map((c) => c.categoria_id));
-        for (const sel of selectedCats) if (!cats.has(sel)) return false;
-      }
-      if (selectedDifs.size > 0 && !selectedDifs.has(d.dificuldade)) return false;
-      return true;
-    });
-  }, [drinks, selected, selectedCats, selectedDifs]);
 
 
   const toggle = (id: string) => {
