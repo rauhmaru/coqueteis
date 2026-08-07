@@ -98,113 +98,7 @@ function DrinksList() {
           </div>
         </div>
 
-
-        {/* Filtro por dificuldade */}
-        <FiltroSection
-          id="filtro-dificuldade"
-          titulo="Filtrar por dificuldade de preparo"
-          ativos={selectedDifs.size}
-          open={openDif}
-          onToggle={() => setOpenDif((v) => !v)}
-          onClear={() => setSelectedDifs(new Set())}
-        >
-          <div className="flex flex-wrap gap-2">
-            {DIFICULDADES.map((d) => {
-              const on = selectedDifs.has(d);
-              return (
-                <button
-                  key={d}
-                  onClick={() => toggleDif(d)}
-                  type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                    on
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                  }`}
-                >
-                  {d}
-                </button>
-              );
-            })}
-          </div>
-        </FiltroSection>
-
-        {/* Filtro por categorias */}
-        {categorias.length > 0 && (
-          <FiltroSection
-            id="filtro-categorias"
-            titulo="Filtrar por categorias"
-            ativos={selectedCats.size}
-            open={openCat}
-            onToggle={() => setOpenCat((v) => !v)}
-            onClear={() => setSelectedCats(new Set())}
-          >
-            <div className="flex flex-wrap gap-2">
-              {categorias.map((c) => {
-                const on = selectedCats.has(c.id);
-                return (
-                  <button
-                    key={c.id}
-                    onClick={() => toggleCat(c.id)}
-                    type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                      on
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                    }`}
-                  >
-                    {c.nome}
-                  </button>
-                );
-              })}
-            </div>
-          </FiltroSection>
-        )}
-
-        {/* Filtro por ingredientes */}
-        <FiltroSection
-          id="filtro-ingredientes"
-          titulo="Filtrar por ingredientes disponíveis"
-          ativos={selected.size}
-          open={openIng}
-          onToggle={() => setOpenIng((v) => !v)}
-          onClear={() => setSelected(new Set())}
-        >
-          {ingredientes.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              Cadastre ingredientes em <Link to="/ingredientes" className="text-primary underline">Ingredientes</Link>.
-            </p>
-          ) : (
-            <div className="flex flex-wrap gap-2">
-              {ingredientes.map((ing) => {
-                const on = selected.has(ing.id);
-                return (
-                  <button
-                    key={ing.id}
-                    onClick={() => toggle(ing.id)}
-                    type="button"
-                    aria-pressed={on}
-                    className={`inline-flex min-h-11 items-center rounded-full border px-3 py-1.5 text-xs transition-colors sm:min-h-9 ${
-                      on
-                        ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-secondary/40 text-muted-foreground border-border hover:border-primary/60"
-                    }`}
-                  >
-                    {ing.nome}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          {selected.size > 0 && (
-            <p className="text-xs text-muted-foreground">
-              Mostrando drinks que contêm <strong>todos</strong> os {selected.size} ingredientes selecionados.
-            </p>
-          )}
-        </FiltroSection>
-
+        {filtrosUI}
 
         <p aria-live="polite" className="sr-only">
           {filtered.length} {filtered.length === 1 ? "drink encontrado" : "drinks encontrados"}
@@ -215,9 +109,10 @@ function DrinksList() {
           <div className="rounded-xl border border-dashed border-border p-12 text-center">
             <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
             <p className="text-muted-foreground">
-              {selected.size > 0 || selectedCats.size > 0
+              {temFiltro
                 ? "Nenhum drink combina com esses filtros."
                 : "Nenhum drink cadastrado ainda."}
+
             </p>
           </div>
         ) : (
