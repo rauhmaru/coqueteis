@@ -380,6 +380,11 @@ function MeuBarPage() {
           total={possiveis.length}
           open={openPossiveis}
           onToggle={() => setOpenPossiveis((v) => !v)}
+          resumo={possiveis.map((a) => ({
+            id: a.drink.id,
+            nome: a.drink.nome,
+            detalhe: `${a.drink.drink_ingredientes.length} ingrediente${a.drink.drink_ingredientes.length === 1 ? "" : "s"}`,
+          }))}
         >
           {possiveis.length === 0 ? (
             <p className="text-sm text-muted-foreground">
@@ -401,8 +406,14 @@ function MeuBarPage() {
           total={quaseLa.length}
           open={openQuase}
           onToggle={() => setOpenQuase((v) => !v)}
+          resumo={quaseLa.map((a) => ({
+            id: a.drink.id,
+            nome: a.drink.nome,
+            detalhe: `falta: ${a.faltando.join(", ")}`,
+          }))}
           icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
         >
+
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
