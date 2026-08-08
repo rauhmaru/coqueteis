@@ -14,6 +14,8 @@ import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { DrinkImage } from "@/components/drink-image";
@@ -120,10 +122,19 @@ function MeuBarPage() {
   });
 
   const salvarPreco = useMutation({
-    mutationFn: async (v: { id: string; preco: number | null; volume: number | null }) => {
+    mutationFn: async (v: {
+      id: string;
+      preco: number | null;
+      volume: number | null;
+      observacoes: string | null;
+    }) => {
       const { error } = await supabase
         .from("meu_bar")
-        .update({ preco_garrafa: v.preco, volume_garrafa_ml: v.volume })
+        .update({
+          preco_garrafa: v.preco,
+          volume_garrafa_ml: v.volume,
+          observacoes: v.observacoes,
+        })
         .eq("id", v.id);
       if (error) throw error;
     },
@@ -133,6 +144,7 @@ function MeuBarPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
 
   const remover = useMutation({
     mutationFn: async (id: string) => {
@@ -349,11 +361,13 @@ function MeuBarPage() {
                   key={item.id}
                   item={item}
                   doseMl={doseMl}
-
                   salvando={salvarPreco.isPending}
-                  onSalvar={(preco, volume) => salvarPreco.mutate({ id: item.id, preco, volume })}
+                  onSalvar={(preco, volume, observacoes) =>
+                    salvarPreco.mutate({ id: item.id, preco, volume, observacoes })
+                  }
                   onRemover={() => remover.mutate(item.id)}
                 />
+
               ))}
             </ul>
           )}
@@ -457,12 +471,13 @@ function ItemEstoque({
   item: ItemBar;
   doseMl: number;
   salvando: boolean;
-  onSalvar: (preco: number | null, volume: number | null) => void;
+  onSalvar: (preco: number | null, volume: number | null, observacoes: string | null) => void;
   onRemover: () => void;
 }) {
-
   const [preco, setPreco] = useState(item.preco_garrafa?.toString() ?? "");
   const [volume, setVolume] = useState(item.volume_garrafa_ml?.toString() ?? "");
+  const [obs, setObs] = useState(item.observacoes ?? "");
+
   const porMl = custoPorMl(item);
   const nome = item.ingredientes?.nome ?? "Ingrediente";
 
@@ -522,11 +537,29 @@ function ItemEstoque({
           variant="outline"
           className="min-h-11 sm:min-h-10"
           disabled={salvando}
-          onClick={() => onSalvar(parse(preco), parse(volume))}
+          onClick={() => onSalvar(parse(preco), parse(volume), obs.trim() || null)}
         >
           Salvar
         </Button>
       </div>
+
+      <div className="mt-3 space-y-1">
+        <Label htmlFor={`obs-${item.id}`} className="text-xs">
+          Observações
+        </Label>
+        <Textarea
+          id={`obs-${item.id}`}
+          value={obs}
+          maxLength={500}
+          rows={2}
+          placeholder="Ex.: comprada no mercado X, sabor mais adocicado, guardar na geladeira..."
+          onChange={(e) => setObs(e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">
+          Clique em “Salvar” para gravar as observações.
+        </p>
+      </div>
+
 
       <p className="mt-2 text-xs text-muted-foreground">
         {porMl !== null

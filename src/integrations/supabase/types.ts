@@ -302,6 +302,7 @@ export type Database = {
           created_at: string
           id: string
           ingrediente_id: string
+          observacoes: string | null
           preco_garrafa: number | null
           updated_at: string
           user_id: string
@@ -311,6 +312,7 @@ export type Database = {
           created_at?: string
           id?: string
           ingrediente_id: string
+          observacoes?: string | null
           preco_garrafa?: number | null
           updated_at?: string
           user_id: string
@@ -320,6 +322,7 @@ export type Database = {
           created_at?: string
           id?: string
           ingrediente_id?: string
+          observacoes?: string | null
           preco_garrafa?: number | null
           updated_at?: string
           user_id?: string

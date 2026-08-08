@@ -1,0 +1,1 @@
+ALTER TABLE public.meu_bar ADD COLUMN IF NOT EXISTS observacoes text;
