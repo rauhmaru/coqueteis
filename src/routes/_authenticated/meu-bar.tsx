@@ -291,6 +291,43 @@ function MeuBarPage() {
           </p>
         </section>
 
+        {/* Resumo de gastos */}
+        <section
+          aria-labelledby="resumo-titulo"
+          className="rounded-xl border border-border bg-card/40 p-4 sm:p-6"
+        >
+          <h2
+            id="resumo-titulo"
+            className="mb-4 inline-flex items-center gap-2 font-serif text-xl text-foreground"
+          >
+            <Wallet className="h-5 w-5 text-primary" aria-hidden="true" /> Resumo de gastos
+          </h2>
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <dt className="text-xs text-muted-foreground">Total gasto nas bebidas</dt>
+              <dd className="font-serif text-2xl text-primary">{brl(totalGasto)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">Itens no estoque</dt>
+              <dd className="font-serif text-2xl text-foreground">{estoque?.length ?? 0}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">Itens com preço informado</dt>
+              <dd className="font-serif text-2xl text-foreground">
+                {comPreco}
+                <span className="ml-1 text-sm text-muted-foreground">
+                  de {estoque?.length ?? 0}
+                </span>
+              </dd>
+            </div>
+          </dl>
+          {comPreco < (estoque?.length ?? 0) && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              O total considera apenas os itens com preço de garrafa cadastrado.
+            </p>
+          )}
+        </section>
+
         {/* Estoque */}
         <section aria-labelledby="estoque-titulo" className="space-y-4">
           <h2 id="estoque-titulo" className="font-serif text-2xl text-foreground">
@@ -321,11 +358,13 @@ function MeuBarPage() {
         </section>
 
         {/* Possíveis */}
-        <section aria-labelledby="possiveis-titulo" className="space-y-4">
-          <h2 id="possiveis-titulo" className="font-serif text-2xl text-foreground">
-            Dá para fazer agora{" "}
-            <span className="text-base text-muted-foreground">({possiveis.length})</span>
-          </h2>
+        <SecaoRecolhivel
+          id="possiveis-lista"
+          titulo="Dá para fazer agora"
+          total={possiveis.length}
+          open={openPossiveis}
+          onToggle={() => setOpenPossiveis((v) => !v)}
+        >
           {possiveis.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nenhuma receita completa ainda. Continue cadastrando seu estoque.
@@ -337,14 +376,17 @@ function MeuBarPage() {
               ))}
             </ul>
           )}
-        </section>
+        </SecaoRecolhivel>
 
         {/* Quase lá */}
-        <section aria-labelledby="quase-titulo" className="space-y-4">
-          <h2 id="quase-titulo" className="inline-flex items-center gap-2 font-serif text-2xl text-foreground">
-            <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" /> Quase lá{" "}
-            <span className="text-base text-muted-foreground">({quaseLa.length})</span>
-          </h2>
+        <SecaoRecolhivel
+          id="quase-lista"
+          titulo="Quase lá"
+          total={quaseLa.length}
+          open={openQuase}
+          onToggle={() => setOpenQuase((v) => !v)}
+          icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
+        >
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
@@ -356,7 +398,7 @@ function MeuBarPage() {
               ))}
             </ul>
           )}
-        </section>
+        </SecaoRecolhivel>
       </main>
     </div>
   );
