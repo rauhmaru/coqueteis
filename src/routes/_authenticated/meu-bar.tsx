@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
+import { ChevronDown, Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,6 +53,8 @@ function MeuBarPage() {
   const [preco, setPreco] = useState("");
   const [volume, setVolume] = useState("");
   const [doseInput, setDoseInput] = useState("");
+  const [openPossiveis, setOpenPossiveis] = useState(true);
+  const [openQuase, setOpenQuase] = useState(true);
 
   const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
 
@@ -156,6 +158,15 @@ function MeuBarPage() {
         .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
     [avaliados],
   );
+  const totalGasto = useMemo(
+    () => (estoque ?? []).reduce((soma, i) => soma + (i.preco_garrafa ?? 0), 0),
+    [estoque],
+  );
+  const comPreco = useMemo(
+    () => (estoque ?? []).filter((i) => (i.preco_garrafa ?? 0) > 0).length,
+    [estoque],
+  );
+
   const quaseLa = useMemo(
     () =>
       avaliados
@@ -282,6 +293,43 @@ function MeuBarPage() {
           </p>
         </section>
 
+        {/* Resumo de gastos */}
+        <section
+          aria-labelledby="resumo-titulo"
+          className="rounded-xl border border-border bg-card/40 p-4 sm:p-6"
+        >
+          <h2
+            id="resumo-titulo"
+            className="mb-4 inline-flex items-center gap-2 font-serif text-xl text-foreground"
+          >
+            <Wallet className="h-5 w-5 text-primary" aria-hidden="true" /> Resumo de gastos
+          </h2>
+          <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div>
+              <dt className="text-xs text-muted-foreground">Total gasto nas bebidas</dt>
+              <dd className="font-serif text-2xl text-primary">{brl(totalGasto)}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">Itens no estoque</dt>
+              <dd className="font-serif text-2xl text-foreground">{estoque?.length ?? 0}</dd>
+            </div>
+            <div>
+              <dt className="text-xs text-muted-foreground">Itens com preço informado</dt>
+              <dd className="font-serif text-2xl text-foreground">
+                {comPreco}
+                <span className="ml-1 text-sm text-muted-foreground">
+                  de {estoque?.length ?? 0}
+                </span>
+              </dd>
+            </div>
+          </dl>
+          {comPreco < (estoque?.length ?? 0) && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              O total considera apenas os itens com preço de garrafa cadastrado.
+            </p>
+          )}
+        </section>
+
         {/* Estoque */}
         <section aria-labelledby="estoque-titulo" className="space-y-4">
           <h2 id="estoque-titulo" className="font-serif text-2xl text-foreground">
@@ -312,11 +360,13 @@ function MeuBarPage() {
         </section>
 
         {/* Possíveis */}
-        <section aria-labelledby="possiveis-titulo" className="space-y-4">
-          <h2 id="possiveis-titulo" className="font-serif text-2xl text-foreground">
-            Dá para fazer agora{" "}
-            <span className="text-base text-muted-foreground">({possiveis.length})</span>
-          </h2>
+        <SecaoRecolhivel
+          id="possiveis-lista"
+          titulo="Dá para fazer agora"
+          total={possiveis.length}
+          open={openPossiveis}
+          onToggle={() => setOpenPossiveis((v) => !v)}
+        >
           {possiveis.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nenhuma receita completa ainda. Continue cadastrando seu estoque.
@@ -328,14 +378,17 @@ function MeuBarPage() {
               ))}
             </ul>
           )}
-        </section>
+        </SecaoRecolhivel>
 
         {/* Quase lá */}
-        <section aria-labelledby="quase-titulo" className="space-y-4">
-          <h2 id="quase-titulo" className="inline-flex items-center gap-2 font-serif text-2xl text-foreground">
-            <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" /> Quase lá{" "}
-            <span className="text-base text-muted-foreground">({quaseLa.length})</span>
-          </h2>
+        <SecaoRecolhivel
+          id="quase-lista"
+          titulo="Quase lá"
+          total={quaseLa.length}
+          open={openQuase}
+          onToggle={() => setOpenQuase((v) => !v)}
+          icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
+        >
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
@@ -347,9 +400,50 @@ function MeuBarPage() {
               ))}
             </ul>
           )}
-        </section>
+        </SecaoRecolhivel>
       </main>
     </div>
+  );
+}
+
+function SecaoRecolhivel({
+  id,
+  titulo,
+  total,
+  open,
+  onToggle,
+  icone,
+  children,
+}: {
+  id: string;
+  titulo: string;
+  total: number;
+  open: boolean;
+  onToggle: () => void;
+  icone?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section aria-label={titulo} className="space-y-4">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={id}
+        className="flex min-h-11 w-full items-center gap-2 text-left font-serif text-2xl text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {icone}
+        <span>{titulo}</span>
+        <span className="text-base text-muted-foreground">({total})</span>
+        <ChevronDown
+          className={`ml-auto h-5 w-5 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      <div id={id} hidden={!open}>
+        {children}
+      </div>
+    </section>
   );
 }
 
