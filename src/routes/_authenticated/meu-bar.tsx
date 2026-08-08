@@ -469,12 +469,13 @@ function ItemEstoque({
   item: ItemBar;
   doseMl: number;
   salvando: boolean;
-  onSalvar: (preco: number | null, volume: number | null) => void;
+  onSalvar: (preco: number | null, volume: number | null, observacoes: string | null) => void;
   onRemover: () => void;
 }) {
-
   const [preco, setPreco] = useState(item.preco_garrafa?.toString() ?? "");
   const [volume, setVolume] = useState(item.volume_garrafa_ml?.toString() ?? "");
+  const [obs, setObs] = useState(item.observacoes ?? "");
+
   const porMl = custoPorMl(item);
   const nome = item.ingredientes?.nome ?? "Ingrediente";
 
