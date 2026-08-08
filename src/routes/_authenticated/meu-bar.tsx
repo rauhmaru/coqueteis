@@ -53,6 +53,8 @@ function MeuBarPage() {
   const [preco, setPreco] = useState("");
   const [volume, setVolume] = useState("");
   const [doseInput, setDoseInput] = useState("");
+  const [openPossiveis, setOpenPossiveis] = useState(true);
+  const [openQuase, setOpenQuase] = useState(true);
 
   const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
 
