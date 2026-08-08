@@ -380,6 +380,11 @@ function MeuBarPage() {
           total={possiveis.length}
           open={openPossiveis}
           onToggle={() => setOpenPossiveis((v) => !v)}
+          resumo={possiveis.map((a) => ({
+            id: a.drink.id,
+            nome: a.drink.nome,
+            detalhe: `${a.drink.drink_ingredientes.length} ingrediente${a.drink.drink_ingredientes.length === 1 ? "" : "s"}`,
+          }))}
         >
           {possiveis.length === 0 ? (
             <p className="text-sm text-muted-foreground">
@@ -401,8 +406,14 @@ function MeuBarPage() {
           total={quaseLa.length}
           open={openQuase}
           onToggle={() => setOpenQuase((v) => !v)}
+          resumo={quaseLa.map((a) => ({
+            id: a.drink.id,
+            nome: a.drink.nome,
+            detalhe: `falta: ${a.faltando.join(", ")}`,
+          }))}
           icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
         >
+
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
@@ -427,6 +438,7 @@ function SecaoRecolhivel({
   open,
   onToggle,
   icone,
+  resumo,
   children,
 }: {
   id: string;
@@ -435,31 +447,64 @@ function SecaoRecolhivel({
   open: boolean;
   onToggle: () => void;
   icone?: React.ReactNode;
+  resumo?: { id: string; nome: string; detalhe: string }[];
   children: React.ReactNode;
 }) {
+  const [verResumo, setVerResumo] = useState(false);
+  const resumoId = `${id}-resumo`;
+  const mostrarResumo = !open && verResumo && (resumo?.length ?? 0) > 0;
+
   return (
     <section aria-label={titulo} className="space-y-4">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
-        aria-controls={id}
-        className="flex min-h-11 w-full items-center gap-2 text-left font-serif text-2xl text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      >
-        {icone}
-        <span>{titulo}</span>
-        <span className="text-base text-muted-foreground">({total})</span>
-        <ChevronDown
-          className={`ml-auto h-5 w-5 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
-          aria-hidden="true"
-        />
-      </button>
+      <div className="flex min-h-11 w-full items-center gap-2">
+        <button
+          type="button"
+          onClick={onToggle}
+          aria-expanded={open}
+          aria-controls={id}
+          className="flex flex-1 items-center gap-2 text-left font-serif text-2xl text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {icone}
+          <span>{titulo}</span>
+          <ChevronDown
+            className={`ml-auto h-5 w-5 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+            aria-hidden="true"
+          />
+        </button>
+        <button
+          type="button"
+          onClick={() => setVerResumo((v) => (open ? true : !v))}
+          aria-expanded={mostrarResumo}
+          aria-controls={resumoId}
+          aria-label={`Ver lista resumida de ${titulo} (${total})`}
+          disabled={total === 0}
+          className="min-h-11 rounded-full border border-border px-3 text-base text-muted-foreground transition-colors hover:text-primary disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          ({total})
+        </button>
+      </div>
+
+      {mostrarResumo && (
+        <ul id={resumoId} className="rounded-lg border border-border bg-card/50 p-3 text-sm">
+          {resumo!.map((r) => (
+            <li
+              key={r.id}
+              className="flex items-center justify-between gap-3 border-b border-border/50 py-1.5 last:border-0"
+            >
+              <span className="truncate text-foreground">{r.nome}</span>
+              <span className="shrink-0 text-xs text-muted-foreground">{r.detalhe}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div id={id} hidden={!open}>
         {children}
       </div>
     </section>
   );
 }
+
 
 function ItemEstoque({
   item,
