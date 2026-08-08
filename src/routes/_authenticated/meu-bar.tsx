@@ -535,11 +535,29 @@ function ItemEstoque({
           variant="outline"
           className="min-h-11 sm:min-h-10"
           disabled={salvando}
-          onClick={() => onSalvar(parse(preco), parse(volume))}
+          onClick={() => onSalvar(parse(preco), parse(volume), obs.trim() || null)}
         >
           Salvar
         </Button>
       </div>
+
+      <div className="mt-3 space-y-1">
+        <Label htmlFor={`obs-${item.id}`} className="text-xs">
+          Observações
+        </Label>
+        <Textarea
+          id={`obs-${item.id}`}
+          value={obs}
+          maxLength={500}
+          rows={2}
+          placeholder="Ex.: comprada no mercado X, sabor mais adocicado, guardar na geladeira..."
+          onChange={(e) => setObs(e.target.value)}
+        />
+        <p className="text-xs text-muted-foreground">
+          Clique em “Salvar” para gravar as observações.
+        </p>
+      </div>
+
 
       <p className="mt-2 text-xs text-muted-foreground">
         {porMl !== null
