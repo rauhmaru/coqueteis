@@ -156,6 +156,15 @@ function MeuBarPage() {
         .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
     [avaliados],
   );
+  const totalGasto = useMemo(
+    () => (estoque ?? []).reduce((soma, i) => soma + (i.preco_garrafa ?? 0), 0),
+    [estoque],
+  );
+  const comPreco = useMemo(
+    () => (estoque ?? []).filter((i) => (i.preco_garrafa ?? 0) > 0).length,
+    [estoque],
+  );
+
   const quaseLa = useMemo(
     () =>
       avaliados
