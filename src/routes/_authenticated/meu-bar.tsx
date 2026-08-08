@@ -120,10 +120,19 @@ function MeuBarPage() {
   });
 
   const salvarPreco = useMutation({
-    mutationFn: async (v: { id: string; preco: number | null; volume: number | null }) => {
+    mutationFn: async (v: {
+      id: string;
+      preco: number | null;
+      volume: number | null;
+      observacoes: string | null;
+    }) => {
       const { error } = await supabase
         .from("meu_bar")
-        .update({ preco_garrafa: v.preco, volume_garrafa_ml: v.volume })
+        .update({
+          preco_garrafa: v.preco,
+          volume_garrafa_ml: v.volume,
+          observacoes: v.observacoes,
+        })
         .eq("id", v.id);
       if (error) throw error;
     },
@@ -133,6 +142,7 @@ function MeuBarPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
 
   const remover = useMutation({
     mutationFn: async (id: string) => {
