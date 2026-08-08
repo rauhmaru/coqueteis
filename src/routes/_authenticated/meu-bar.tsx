@@ -359,11 +359,13 @@ function MeuBarPage() {
                   key={item.id}
                   item={item}
                   doseMl={doseMl}
-
                   salvando={salvarPreco.isPending}
-                  onSalvar={(preco, volume) => salvarPreco.mutate({ id: item.id, preco, volume })}
+                  onSalvar={(preco, volume, observacoes) =>
+                    salvarPreco.mutate({ id: item.id, preco, volume, observacoes })
+                  }
                   onRemover={() => remover.mutate(item.id)}
                 />
+
               ))}
             </ul>
           )}
