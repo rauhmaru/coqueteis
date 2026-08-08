@@ -406,6 +406,47 @@ function MeuBarPage() {
   );
 }
 
+function SecaoRecolhivel({
+  id,
+  titulo,
+  total,
+  open,
+  onToggle,
+  icone,
+  children,
+}: {
+  id: string;
+  titulo: string;
+  total: number;
+  open: boolean;
+  onToggle: () => void;
+  icone?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section aria-label={titulo} className="space-y-4">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        aria-controls={id}
+        className="flex min-h-11 w-full items-center gap-2 text-left font-serif text-2xl text-foreground transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        {icone}
+        <span>{titulo}</span>
+        <span className="text-base text-muted-foreground">({total})</span>
+        <ChevronDown
+          className={`ml-auto h-5 w-5 shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+      <div id={id} hidden={!open}>
+        {children}
+      </div>
+    </section>
+  );
+}
+
 function ItemEstoque({
   item,
   doseMl,
