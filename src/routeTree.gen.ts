@@ -35,6 +35,7 @@ import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authent
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
 const MixologiaRoute = MixologiaRouteImport.update({
@@ -167,6 +168,11 @@ const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   path: '/drinks/novo',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedDrinksIdEditarRoute =
   AuthenticatedDrinksIdEditarRouteImport.update({
     id: '/drinks/$id/editar',
@@ -198,6 +204,7 @@ export interface FileRoutesByFullPath {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -223,6 +230,7 @@ export interface FileRoutesByTo {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks': typeof DrinksIndexRoute
   '/mixologia': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
+    | '/.lovable/oauth/consent'
     | '/drinks/novo'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
@@ -308,6 +318,7 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks'
     | '/mixologia'
+    | '/.lovable/oauth/consent'
     | '/drinks/novo'
     | '/drinks/$id'
     | '/drinks/$id/editar'
@@ -337,6 +348,7 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/drinks/novo'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
@@ -353,6 +365,7 @@ export interface RootRouteChildren {
   DrinksRoute: typeof DrinksRouteWithChildren
   MixologiaRoute: typeof MixologiaRouteWithChildren
   CartaVerRoute: typeof CartaVerRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -539,6 +552,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/drinks/$id/editar': {
       id: '/_authenticated/drinks/$id/editar'
       path: '/drinks/$id/editar'
@@ -632,6 +652,7 @@ const rootRouteChildren: RootRouteChildren = {
   DrinksRoute: DrinksRouteWithChildren,
   MixologiaRoute: MixologiaRouteWithChildren,
   CartaVerRoute: CartaVerRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
