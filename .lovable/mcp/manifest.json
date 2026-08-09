@@ -1,0 +1,202 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://mnjjckmfxapdabulfvet.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "cocktail-craft-manager",
+      "version": "0.1.0",
+      "title": "Cocktail Craft Manager"
+    },
+    "tools": [
+      {
+        "name": "buscar_drinks",
+        "title": "Buscar drinks",
+        "description": "Busca receitas do catálogo por nome, ingrediente, categoria (ex.: Clássicos, Xaropes, Não alcoólicos) ou dificuldade.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "termo": {
+              "type": "string",
+              "description": "Texto livre: nome do drink ou ingrediente."
+            },
+            "categoria": {
+              "type": "string",
+              "description": "Nome da categoria do drink."
+            },
+            "dificuldade": {
+              "type": "string",
+              "description": "Fácil, Médio ou Difícil."
+            },
+            "limite": {
+              "type": "number",
+              "description": "Máximo de receitas retornadas (padrão 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "obter_receita",
+        "title": "Obter receita completa",
+        "description": "Retorna a receita completa de um drink (ingredientes, modo de preparo, dificuldade e história) pelo id ou pelo nome.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Identificador do drink."
+            },
+            "nome": {
+              "type": "string",
+              "description": "Nome do drink, caso não saiba o id."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "listar_favoritos",
+        "title": "Listar meus favoritos",
+        "description": "Lista os drinks que o usuário autenticado marcou como favoritos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "favoritar_drink",
+        "title": "Favoritar ou desfavoritar drink",
+        "description": "Adiciona ou remove um drink da lista de favoritos do usuário autenticado, pelo id ou nome do drink.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "nome": {
+              "type": "string",
+              "description": "Nome do drink."
+            },
+            "id": {
+              "type": "string",
+              "description": "Identificador do drink."
+            },
+            "remover": {
+              "type": "boolean",
+              "description": "Use true para remover dos favoritos."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "listar_meu_bar",
+        "title": "Listar meu bar",
+        "description": "Lista as bebidas e ingredientes que o usuário autenticado cadastrou em Meu Bar, com preço, volume, observações e total gasto.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {}
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "adicionar_ao_meu_bar",
+        "title": "Adicionar ingrediente ao meu bar",
+        "description": "Adiciona um ingrediente já cadastrado no catálogo ao estoque Meu Bar do usuário autenticado, com preço e volume opcionais.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "ingrediente": {
+              "type": "string",
+              "description": "Nome do ingrediente do catálogo (ex.: Gin, Rum branco)."
+            },
+            "preco_garrafa": {
+              "type": "number",
+              "description": "Preço pago pela garrafa, em reais."
+            },
+            "volume_garrafa_ml": {
+              "type": "number",
+              "description": "Volume da garrafa em ml."
+            },
+            "observacoes": {
+              "type": "string",
+              "description": "Observações livres sobre a bebida."
+            }
+          },
+          "required": [
+            "ingrediente"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "drinks_possiveis",
+        "title": "Drinks possíveis com meu bar",
+        "description": "Cruza o estoque de Meu Bar do usuário autenticado com o catálogo e retorna os drinks que já dá para preparar e os que faltam apenas 1 ingrediente (quase lá).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "limite": {
+              "type": "number",
+              "description": "Máximo de receitas por lista (padrão 20)."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

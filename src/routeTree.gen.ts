@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as MixologiaRouteImport } from './routes/mixologia'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
@@ -33,13 +34,22 @@ import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
 const MixologiaRoute = MixologiaRouteImport.update({
   id: '/mixologia',
   path: '/mixologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DrinksRoute = DrinksRouteImport.update({
@@ -157,6 +167,18 @@ const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
   path: '/favoritos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -166,6 +188,17 @@ const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   id: '/drinks/novo',
   path: '/drinks/novo',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedDrinksIdEditarRoute =
   AuthenticatedDrinksIdEditarRouteImport.update({
@@ -182,7 +215,10 @@ export interface FileRoutesByFullPath {
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/mcp': typeof McpRoute
   '/mixologia': typeof MixologiaRouteWithChildren
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
@@ -198,6 +234,8 @@ export interface FileRoutesByFullPath {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -209,6 +247,9 @@ export interface FileRoutesByTo {
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
+  '/mcp': typeof McpRoute
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
@@ -223,6 +264,8 @@ export interface FileRoutesByTo {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks': typeof DrinksIndexRoute
   '/mixologia': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -237,7 +280,10 @@ export interface FileRoutesById {
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
+  '/mcp': typeof McpRoute
   '/mixologia': typeof MixologiaRouteWithChildren
+  '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
@@ -253,6 +299,8 @@ export interface FileRoutesById {
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -267,7 +315,10 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/consumo-responsavel'
     | '/drinks'
+    | '/mcp'
     | '/mixologia'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/favoritos'
     | '/ingredientes'
     | '/meu-bar'
@@ -283,6 +334,8 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
@@ -294,6 +347,9 @@ export interface FileRouteTypes {
     | '/carta'
     | '/confianca'
     | '/consumo-responsavel'
+    | '/mcp'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/favoritos'
     | '/ingredientes'
     | '/meu-bar'
@@ -308,6 +364,8 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks'
     | '/mixologia'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
     | '/drinks/$id'
     | '/drinks/$id/editar'
@@ -321,7 +379,10 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/consumo-responsavel'
     | '/drinks'
+    | '/mcp'
     | '/mixologia'
+    | '/.mcp/list-tools'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/favoritos'
     | '/_authenticated/ingredientes'
     | '/_authenticated/meu-bar'
@@ -337,6 +398,8 @@ export interface FileRouteTypes {
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
+    | '/.lovable/oauth/consent'
+    | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/drinks/novo'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
@@ -351,8 +414,13 @@ export interface RootRouteChildren {
   ConfiancaRoute: typeof ConfiancaRoute
   ConsumoResponsavelRoute: typeof ConsumoResponsavelRoute
   DrinksRoute: typeof DrinksRouteWithChildren
+  McpRoute: typeof McpRoute
   MixologiaRoute: typeof MixologiaRouteWithChildren
+  Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CartaVerRoute: typeof CartaVerRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
+  Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -362,6 +430,13 @@ declare module '@tanstack/react-router' {
       path: '/mixologia'
       fullPath: '/mixologia'
       preLoaderRoute: typeof MixologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/drinks': {
@@ -525,6 +600,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/drinks/$id/': {
       id: '/drinks/$id/'
       path: '/'
@@ -538,6 +627,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/drinks/novo'
       preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/drinks/$id/editar': {
       id: '/_authenticated/drinks/$id/editar'
@@ -630,9 +733,25 @@ const rootRouteChildren: RootRouteChildren = {
   ConfiancaRoute: ConfiancaRoute,
   ConsumoResponsavelRoute: ConsumoResponsavelRoute,
   DrinksRoute: DrinksRouteWithChildren,
+  McpRoute: McpRoute,
   MixologiaRoute: MixologiaRouteWithChildren,
+  Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
   CartaVerRoute: CartaVerRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
+  Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
