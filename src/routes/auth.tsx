@@ -28,14 +28,26 @@ function AuthPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const navigate = useNavigate();
+  const { next } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const irParaDestino = () => {
+    if (next) {
+      window.location.href = next;
+      return;
+    }
+    navigate({ to: "/", replace: true });
+  };
+
   useEffect(() => {
-    if (!loading && user) navigate({ to: "/", replace: true });
-  }, [user, loading, navigate]);
+    if (!loading && user) {
+      if (next) window.location.href = next;
+      else navigate({ to: "/", replace: true });
+    }
+  }, [user, loading, navigate, next]);
 
   const entrar = async (e: FormEvent) => {
     e.preventDefault();
@@ -48,7 +60,7 @@ function AuthPage() {
     }
     toast.success("Bem-vindo de volta!");
     router.invalidate();
-    navigate({ to: "/", replace: true });
+    irParaDestino();
   };
 
   const cadastrar = async (e: FormEvent) => {
@@ -58,7 +70,10 @@ function AuthPage() {
       email,
       password: senha,
       options: {
-        emailRedirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+        emailRedirectTo:
+          typeof window !== "undefined"
+            ? `${window.location.origin}${next ?? ""}`
+            : undefined,
         data: { display_name: nome || email },
       },
     });
@@ -73,7 +88,8 @@ function AuthPage() {
   const google = async () => {
     setBusy(true);
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: typeof window !== "undefined" ? window.location.origin : undefined,
+      redirect_uri:
+        typeof window !== "undefined" ? `${window.location.origin}${next ?? ""}` : undefined,
     });
     if (result.error) {
       setBusy(false);
@@ -82,7 +98,8 @@ function AuthPage() {
     }
     if (result.redirected) return;
     router.invalidate();
-    navigate({ to: "/", replace: true });
+    irParaDestino();
+
   };
 
   return (
