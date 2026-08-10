@@ -399,7 +399,11 @@ function MeuBarPage() {
           )}
         </SecaoRecolhivel>
 
+        {/* Ranking de impacto das compras */}
+        <ImpactoCompras itens={impacto} />
+
         {/* Quase lá */}
+
         <SecaoRecolhivel
           id="quase-lista"
           titulo="Quase lá"
