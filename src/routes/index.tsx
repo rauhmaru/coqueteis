@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Martini, Search, ArrowRight } from "lucide-react";
+import { Martini, Search, ArrowRight, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
