@@ -106,29 +106,7 @@ export function ImpactoCompras({ itens }: { itens: ImpactoIngrediente[] }) {
         </ul>
       )}
 
-      {unicos.length > 0 && (
-        <div className="rounded-xl border border-border bg-card/20 p-4">
-          <h3 className="font-serif text-lg text-foreground">
-            Impacto único{" "}
-            <span className="text-sm text-muted-foreground">
-              ({unicos.length} {plural(unicos.length, "ingrediente", "ingredientes")} liberam 1
-              receita cada)
-            </span>
-          </h3>
-          <ul className="mt-3 space-y-2">
-            {unicos.map((i) => (
-              <li
-                key={i.chave}
-                className="flex flex-wrap items-center gap-2 border-b border-border/50 pb-2 text-sm last:border-0 last:pb-0"
-              >
-                <span className="text-foreground">{i.nome}</span>
-                <span className="text-xs text-muted-foreground">libera</span>
-                <Chips drinks={i.drinks} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      {unicos.length > 0 && <ImpactoUnico itens={unicos} />}
 
       <div className="rounded-xl border border-primary/40 bg-primary/5 p-4 text-center">
         <p className="font-serif text-xl text-foreground">
