@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { ShoppingBasket, Sparkles, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { ChevronDown, ShoppingBasket, Sparkles, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { brl } from "@/lib/meu-bar";
 import type { ImpactoIngrediente } from "@/lib/impacto";
