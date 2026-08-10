@@ -121,3 +121,60 @@ export function ImpactoCompras({ itens }: { itens: ImpactoIngrediente[] }) {
     </section>
   );
 }
+
+const PAGINA = 8;
+
+/** Lista paginada dos ingredientes que liberam apenas 1 receita. */
+function ImpactoUnico({ itens }: { itens: ImpactoIngrediente[] }) {
+  const [visiveis, setVisiveis] = useState(PAGINA);
+  const mostrados = itens.slice(0, visiveis);
+  const restantes = itens.length - mostrados.length;
+
+  return (
+    <div className="rounded-xl border border-border bg-card/20 p-4">
+      <h3 className="font-serif text-lg text-foreground">
+        Impacto único{" "}
+        <span className="text-sm text-muted-foreground">
+          ({itens.length} {plural(itens.length, "ingrediente", "ingredientes")} liberam 1 receita
+          cada)
+        </span>
+      </h3>
+      <ul className="mt-3 space-y-2">
+        {mostrados.map((i) => (
+          <li
+            key={i.chave}
+            className="flex flex-wrap items-center gap-2 border-b border-border/50 pb-2 text-sm last:border-0 last:pb-0"
+          >
+            <span className="text-foreground">{i.nome}</span>
+            <span className="text-xs text-muted-foreground">libera</span>
+            <Chips drinks={i.drinks} />
+          </li>
+        ))}
+      </ul>
+
+      {itens.length > PAGINA && (
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <p aria-live="polite" className="text-xs text-muted-foreground">
+            Mostrando {mostrados.length} de {itens.length}
+          </p>
+          {restantes > 0 && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setVisiveis((v) => v + PAGINA)}
+            >
+              Mostrar mais {Math.min(PAGINA, restantes)}
+              <ChevronDown className="ml-1 h-4 w-4" aria-hidden="true" />
+            </Button>
+          )}
+          {visiveis > PAGINA && (
+            <Button type="button" variant="ghost" size="sm" onClick={() => setVisiveis(PAGINA)}>
+              Mostrar menos
+            </Button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
