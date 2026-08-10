@@ -187,6 +187,9 @@ function MeuBarPage() {
     [avaliados],
   );
 
+  const impacto = useMemo(() => agruparPorImpacto(quaseLa, estoque ?? []), [quaseLa, estoque]);
+
+
   return (
     <div className="min-h-dvh">
       <SiteHeader />
