@@ -182,15 +182,25 @@ function MeuBarPage() {
     [estoque],
   );
 
-  const quaseLa = useMemo(
-    () =>
-      avaliados
-        .filter((a) => a.faltando.length === 1)
-        .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
+  const quaseBase = useMemo(
+    () => avaliados.filter((a) => a.faltando.length === 1),
     [avaliados],
   );
 
-  const impacto = useMemo(() => agruparPorImpacto(quaseLa, estoque ?? []), [quaseLa, estoque]);
+  const impacto = useMemo(() => agruparPorImpacto(quaseBase, estoque ?? []), [quaseBase, estoque]);
+
+  /** Ordenado por impacto: primeiro os que faltam o ingrediente que desbloqueia mais receitas. */
+  const quaseLa = useMemo(() => {
+    const peso = new Map(impacto.map((i) => [i.chave, i.drinks.length]));
+    return [...quaseBase].sort(
+      (a, b) =>
+        (peso.get(normalizar(b.faltando[0] ?? "")) ?? 0) -
+          (peso.get(normalizar(a.faltando[0] ?? "")) ?? 0) ||
+        (a.faltando[0] ?? "").localeCompare(b.faltando[0] ?? "", "pt-BR") ||
+        a.drink.nome.localeCompare(b.drink.nome, "pt-BR"),
+    );
+  }, [quaseBase, impacto]);
+
 
 
   return (
