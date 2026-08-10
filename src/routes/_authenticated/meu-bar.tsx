@@ -12,6 +12,9 @@ import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
 
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
+import { agruparPorImpacto } from "@/lib/impacto";
+import { ImpactoCompras } from "@/components/impacto-compras";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -179,13 +182,26 @@ function MeuBarPage() {
     [estoque],
   );
 
-  const quaseLa = useMemo(
-    () =>
-      avaliados
-        .filter((a) => a.faltando.length === 1)
-        .sort((a, b) => a.drink.nome.localeCompare(b.drink.nome, "pt-BR")),
+  const quaseBase = useMemo(
+    () => avaliados.filter((a) => a.faltando.length === 1),
     [avaliados],
   );
+
+  const impacto = useMemo(() => agruparPorImpacto(quaseBase, estoque ?? []), [quaseBase, estoque]);
+
+  /** Ordenado por impacto: primeiro os que faltam o ingrediente que desbloqueia mais receitas. */
+  const quaseLa = useMemo(() => {
+    const peso = new Map(impacto.map((i) => [i.chave, i.drinks.length]));
+    return [...quaseBase].sort(
+      (a, b) =>
+        (peso.get(normalizar(b.faltando[0] ?? "")) ?? 0) -
+          (peso.get(normalizar(a.faltando[0] ?? "")) ?? 0) ||
+        (a.faltando[0] ?? "").localeCompare(b.faltando[0] ?? "", "pt-BR") ||
+        a.drink.nome.localeCompare(b.drink.nome, "pt-BR"),
+    );
+  }, [quaseBase, impacto]);
+
+
 
   return (
     <div className="min-h-dvh">
@@ -399,7 +415,11 @@ function MeuBarPage() {
           )}
         </SecaoRecolhivel>
 
+        {/* Ranking de impacto das compras */}
+        <ImpactoCompras itens={impacto} />
+
         {/* Quase lá */}
+
         <SecaoRecolhivel
           id="quase-lista"
           titulo="Quase lá"
