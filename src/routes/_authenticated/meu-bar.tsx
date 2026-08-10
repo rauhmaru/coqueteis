@@ -12,6 +12,9 @@ import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
 
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
+import { agruparPorImpacto } from "@/lib/impacto";
+import { ImpactoCompras } from "@/components/impacto-compras";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
