@@ -143,6 +143,48 @@ function HomePage() {
           </div>
         </section>
 
+        <section
+          aria-labelledby="meu-bar-titulo"
+          className="mx-auto max-w-2xl rounded-xl border border-primary/40 bg-primary/5 p-5 sm:p-6"
+        >
+          <p className="text-xs uppercase tracking-[0.3em] text-primary">Meu Bar</p>
+          <h2 id="meu-bar-titulo" className="mt-2 font-serif text-2xl text-foreground sm:text-3xl">
+            Cadastre seu bar e descubra o que já pode preparar hoje
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Informe as garrafas e ingredientes que você tem em casa. Mostramos na hora todos os
+            drinks que <span className="text-foreground">dá para fazer agora</span>, os que estão{" "}
+            <span className="text-foreground">quase lá</span> (falta só 1 ingrediente) e um ranking
+            de compras: qual ingrediente desbloqueia mais receitas de uma vez. Ainda calculamos o
+            custo por dose com o preço que você pagou.
+          </p>
+          <ul className="mt-4 grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-3">
+            <li className="flex items-center gap-2">
+              <Wine className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" /> Estoque pessoal
+            </li>
+            <li className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" /> Tag “quase
+              lá”
+            </li>
+            <li className="flex items-center gap-2">
+              <Wallet className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" /> Custo por dose
+            </li>
+          </ul>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            <Link
+              to="/meu-bar"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+            >
+              Cadastrar meu bar <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+            {!user && (
+              <span className="text-xs text-muted-foreground">
+                É preciso entrar na conta — leva menos de 1 minuto.
+              </span>
+            )}
+          </div>
+        </section>
+
         <section className="max-w-2xl mx-auto">
           <StatCard
             icon={<Martini className="h-6 w-6" />}
@@ -151,6 +193,7 @@ function HomePage() {
             to="/drinks"
           />
         </section>
+
 
         {sugestao && (
           <section className="max-w-2xl mx-auto space-y-4">
