@@ -17,12 +17,14 @@ import { canManageItem } from "@/lib/permissions";
 export const Route = createFileRoute("/drinks/$id/")({
   head: ({ params, loaderData }) => {
     const url = `https://coqueteis.lovable.app/drinks/${params.id}`;
-    if (!loaderData) {
+    const drink = loaderData as unknown as DrinkComIngredientes | undefined;
+    if (!drink) {
       return { meta: [{ title: "Drink — Destilados & Coquetéis" }], links: [{ rel: "canonical", href: url }] };
     }
-    const ingredientes = loaderData.drink_ingredientes
+    const ingredientes = drink.drink_ingredientes
       .map((di) => di.ingredientes?.nome)
       .filter((n): n is string => Boolean(n));
+
     const titulo = `${loaderData.nome} — receita do drink`;
     const descricao =
       `Receita de ${loaderData.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
