@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as DrinksRouteImport } from './routes/drinks'
@@ -42,6 +43,11 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MixologiaRoute = MixologiaRouteImport.update({
   id: '/mixologia',
   path: '/mixologia',
@@ -217,6 +223,7 @@ export interface FileRoutesByFullPath {
   '/drinks': typeof DrinksRouteWithChildren
   '/mcp': typeof McpRoute
   '/mixologia': typeof MixologiaRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/mcp': typeof McpRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
@@ -282,6 +290,7 @@ export interface FileRoutesById {
   '/drinks': typeof DrinksRouteWithChildren
   '/mcp': typeof McpRoute
   '/mixologia': typeof MixologiaRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/drinks'
     | '/mcp'
     | '/mixologia'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/favoritos'
@@ -348,6 +358,7 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/consumo-responsavel'
     | '/mcp'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/favoritos'
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/drinks'
     | '/mcp'
     | '/mixologia'
+    | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/favoritos'
@@ -416,6 +428,7 @@ export interface RootRouteChildren {
   DrinksRoute: typeof DrinksRouteWithChildren
   McpRoute: typeof McpRoute
   MixologiaRoute: typeof MixologiaRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
   Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   CartaVerRoute: typeof CartaVerRoute
@@ -425,6 +438,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mixologia': {
       id: '/mixologia'
       path: '/mixologia'
@@ -735,6 +755,7 @@ const rootRouteChildren: RootRouteChildren = {
   DrinksRoute: DrinksRouteWithChildren,
   McpRoute: McpRoute,
   MixologiaRoute: MixologiaRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
   Char91DotwellKnownChar93OauthProtectedResourceRoute:
     Char91DotwellKnownChar93OauthProtectedResourceRoute,
