@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth
+Disallow: /favoritos
+Disallow: /meu-bar
+Disallow: /usuarios
+Disallow: /ingredientes
+Disallow: /.mcp/
+Disallow: /.lovable/
+
+Sitemap: https://coqueteis.lovable.app/sitemap.xml

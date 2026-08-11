@@ -11,6 +11,7 @@ const descricao =
 export const Route = createFileRoute("/consumo-responsavel")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/consumo-responsavel" },
       { title: titulo },
       { name: "description", content: descricao },
       { property: "og:title", content: titulo },
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/consumo-responsavel")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/consumo-responsavel" }],
   }),
   component: ConsumoResponsavelPage,
 });

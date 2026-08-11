@@ -9,12 +9,14 @@ import outrosCoposImg from "@/assets/mixologia/outros-copos.jpg";
 export const Route = createFileRoute("/mixologia/copos")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/copos" },
       { title: "Copos e taças — Mixologia" },
       {
         name: "description",
         content: "Highball, martini, old fashioned, canecas e demais copos usados na coquetelaria.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/copos" }],
   }),
   component: () => (
     <MixologiaPage

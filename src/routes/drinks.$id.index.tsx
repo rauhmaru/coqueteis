@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { drinkQuery } from "@/lib/queries";
+import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
@@ -15,9 +15,57 @@ import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/drinks/$id/")({
-  head: () => ({
-    meta: [{ title: "Drink — Destilados & Coquetéis" }],
-  }),
+  head: ({ params, loaderData }) => {
+    const url = `https://coqueteis.lovable.app/drinks/${params.id}`;
+    const drink = loaderData as unknown as DrinkComIngredientes | undefined;
+    if (!drink) {
+      return { meta: [{ title: "Drink — Destilados & Coquetéis" }], links: [{ rel: "canonical", href: url }] };
+    }
+    const ingredientes = drink.drink_ingredientes
+      .map((di) => di.ingredientes?.nome)
+      .filter((n): n is string => Boolean(n));
+
+    const titulo = `${drink.nome} — receita do drink`;
+    const descricao =
+      `Receita de ${drink.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
+        0,
+        158,
+      );
+    return {
+      meta: [
+        { title: titulo },
+        { name: "description", content: descricao },
+        { property: "og:title", content: titulo },
+        { property: "og:description", content: descricao },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:title", content: titulo },
+        { name: "twitter:description", content: descricao },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Recipe",
+            name: drink.nome,
+            url,
+            description: descricao,
+            recipeCategory: "Coquetel",
+            recipeCuisine: "Coquetelaria",
+            recipeIngredient: ingredientes,
+            recipeInstructions: drink.preparo
+              ? [{ "@type": "HowToStep", text: drink.preparo }]
+              : undefined,
+            inLanguage: "pt-BR",
+          }),
+        },
+      ],
+    };
+  },
+
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));
     if (!data) throw notFound();

@@ -6,12 +6,14 @@ import bittersImg from "@/assets/mixologia/bitters.jpg";
 export const Route = createFileRoute("/mixologia/xaropes")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/xaropes" },
       { title: "Xaropes e bitters — Mixologia" },
       {
         name: "description",
         content: "Xaropes trazem cor e doçura; bitters trazem complexidade — os temperos do bartender.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/xaropes" }],
   }),
   component: () => (
     <MixologiaPage

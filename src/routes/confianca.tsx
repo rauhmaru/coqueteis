@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/site-header";
 export const Route = createFileRoute("/confianca")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/confianca" },
       { title: "Confiança & Privacidade — Destilados & Coquetéis" },
       {
         name: "description",
@@ -18,6 +19,7 @@ export const Route = createFileRoute("/confianca")({
           "Como protegemos os dados do catálogo de coquetéis: autenticação, controle de acesso, armazenamento e privacidade.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/confianca" }],
   }),
   component: TrustPage,
 });

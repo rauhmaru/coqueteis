@@ -7,12 +7,14 @@ import infusionadasImg from "@/assets/mixologia/infusionadas.jpg";
 export const Route = createFileRoute("/mixologia/bebidas")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/bebidas" },
       { title: "Bebidas etílicas — Mixologia" },
       {
         name: "description",
         content: "Fermentadas, destiladas e infusionadas — as três grandes famílias do álcool.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/bebidas" }],
   }),
   component: () => (
     <MixologiaPage
