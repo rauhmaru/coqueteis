@@ -78,7 +78,6 @@ function MeuBarPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-
   const adicionar = useMutation({
     mutationFn: async () => {
       const limpo = nome.trim();
@@ -149,7 +148,6 @@ function MeuBarPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-
   const remover = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("meu_bar").delete().eq("id", id);
@@ -183,10 +181,7 @@ function MeuBarPage() {
     [estoque],
   );
 
-  const quaseBase = useMemo(
-    () => avaliados.filter((a) => a.faltando.length === 1),
-    [avaliados],
-  );
+  const quaseBase = useMemo(() => avaliados.filter((a) => a.faltando.length === 1), [avaliados]);
 
   const impacto = useMemo(() => agruparPorImpacto(quaseBase, estoque ?? []), [quaseBase, estoque]);
 
@@ -202,15 +197,14 @@ function MeuBarPage() {
     );
   }, [quaseBase, impacto]);
 
-
-
   return (
     <div className="min-h-dvh">
       <SiteHeader />
       <main id="conteudo" className="mx-auto max-w-6xl space-y-10 px-4 py-10">
         <header className="space-y-2">
           <h1 className="inline-flex items-center gap-3 font-serif text-3xl text-foreground sm:text-4xl">
-            <Wine className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" /> Meu Bar
+            <Wine className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" /> Meu
+            Bar
           </h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
             Cadastre as garrafas e ingredientes que você tem em casa. Mostramos os coquetéis
@@ -264,8 +258,10 @@ function MeuBarPage() {
         </section>
 
         {/* Cadastro */}
-        <section aria-labelledby="add-titulo" className="rounded-xl border border-border bg-card/40 p-4 sm:p-6">
-
+        <section
+          aria-labelledby="add-titulo"
+          className="rounded-xl border border-border bg-card/40 p-4 sm:p-6"
+        >
           <h2 id="add-titulo" className="mb-4 font-serif text-xl text-foreground">
             Adicionar ao meu bar
           </h2>
@@ -428,7 +424,6 @@ function MeuBarPage() {
           }))}
           icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
         >
-
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
@@ -520,8 +515,6 @@ function SecaoRecolhivel({
   );
 }
 
-
-
 function CardDrink({
   avaliado,
   quase = false,
@@ -569,9 +562,7 @@ function CardDrink({
             {custo > 0 ? (
               <>
                 {brl(custo)} por dose{" "}
-                {!custoCompleto && (
-                  <span className="text-xs text-muted-foreground">(parcial)</span>
-                )}
+                {!custoCompleto && <span className="text-xs text-muted-foreground">(parcial)</span>}
               </>
             ) : (
               <span className="text-xs text-muted-foreground">
