@@ -3,7 +3,7 @@ import { useState } from "react";
 import { ChevronDown, ShoppingBasket, Sparkles, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { brl } from "@/lib/meu-bar";
+
 import type { ImpactoIngrediente } from "@/lib/impacto";
 
 function plural(n: number, s: string, p: string) {
@@ -92,14 +92,6 @@ export function ImpactoCompras({ itens }: { itens: ImpactoIngrediente[] }) {
                   <Chips drinks={i.drinks} />
                 </div>
 
-                {i.precoEstimado !== null && i.valorDesbloqueado > 0 && (
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Estimativa: <span className="text-foreground">{brl(i.precoEstimado)}</span> na
-                    garrafa desbloqueiam{" "}
-                    <span className="text-foreground">{brl(i.valorDesbloqueado)}</span> em doses de
-                    novas receitas.
-                  </p>
-                )}
               </li>
             );
           })}
