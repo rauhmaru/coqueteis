@@ -14,6 +14,7 @@ import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
 import { agruparPorImpacto } from "@/lib/impacto";
 import { ImpactoCompras } from "@/components/impacto-compras";
+import { EstoqueLista } from "@/components/estoque-lista";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,7 +77,6 @@ function MeuBarPage() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
-
 
   const adicionar = useMutation({
     mutationFn: async () => {
@@ -148,7 +148,6 @@ function MeuBarPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
-
   const remover = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase.from("meu_bar").delete().eq("id", id);
@@ -182,10 +181,7 @@ function MeuBarPage() {
     [estoque],
   );
 
-  const quaseBase = useMemo(
-    () => avaliados.filter((a) => a.faltando.length === 1),
-    [avaliados],
-  );
+  const quaseBase = useMemo(() => avaliados.filter((a) => a.faltando.length === 1), [avaliados]);
 
   const impacto = useMemo(() => agruparPorImpacto(quaseBase, estoque ?? []), [quaseBase, estoque]);
 
@@ -201,15 +197,14 @@ function MeuBarPage() {
     );
   }, [quaseBase, impacto]);
 
-
-
   return (
     <div className="min-h-dvh">
       <SiteHeader />
       <main id="conteudo" className="mx-auto max-w-6xl space-y-10 px-4 py-10">
         <header className="space-y-2">
           <h1 className="inline-flex items-center gap-3 font-serif text-3xl text-foreground sm:text-4xl">
-            <Wine className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" /> Meu Bar
+            <Wine className="h-7 w-7 shrink-0 text-primary sm:h-8 sm:w-8" aria-hidden="true" /> Meu
+            Bar
           </h1>
           <p className="max-w-2xl text-sm text-muted-foreground">
             Cadastre as garrafas e ingredientes que você tem em casa. Mostramos os coquetéis
@@ -263,8 +258,10 @@ function MeuBarPage() {
         </section>
 
         {/* Cadastro */}
-        <section aria-labelledby="add-titulo" className="rounded-xl border border-border bg-card/40 p-4 sm:p-6">
-
+        <section
+          aria-labelledby="add-titulo"
+          className="rounded-xl border border-border bg-card/40 p-4 sm:p-6"
+        >
           <h2 id="add-titulo" className="mb-4 font-serif text-xl text-foreground">
             Adicionar ao meu bar
           </h2>
@@ -371,21 +368,15 @@ function MeuBarPage() {
               Seu bar está vazio. Adicione a primeira garrafa acima.
             </p>
           ) : (
-            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {(estoque ?? []).map((item) => (
-                <ItemEstoque
-                  key={item.id}
-                  item={item}
-                  doseMl={doseMl}
-                  salvando={salvarPreco.isPending}
-                  onSalvar={(preco, volume, observacoes) =>
-                    salvarPreco.mutate({ id: item.id, preco, volume, observacoes })
-                  }
-                  onRemover={() => remover.mutate(item.id)}
-                />
-
-              ))}
-            </ul>
+            <EstoqueLista
+              itens={estoque ?? []}
+              doseMl={doseMl}
+              salvando={salvarPreco.isPending}
+              onSalvar={(id, preco, volume, observacoes) =>
+                salvarPreco.mutate({ id, preco, volume, observacoes })
+              }
+              onRemover={(id) => remover.mutate(id)}
+            />
           )}
         </section>
 
@@ -433,7 +424,6 @@ function MeuBarPage() {
           }))}
           icone={<Sparkles className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />}
         >
-
           {quaseLa.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               Nada por aqui — receitas com apenas 1 ingrediente faltando aparecem nesta lista.
@@ -525,116 +515,6 @@ function SecaoRecolhivel({
   );
 }
 
-
-function ItemEstoque({
-  item,
-  doseMl,
-  salvando,
-  onSalvar,
-  onRemover,
-}: {
-  item: ItemBar;
-  doseMl: number;
-  salvando: boolean;
-  onSalvar: (preco: number | null, volume: number | null, observacoes: string | null) => void;
-  onRemover: () => void;
-}) {
-  const [preco, setPreco] = useState(item.preco_garrafa?.toString() ?? "");
-  const [volume, setVolume] = useState(item.volume_garrafa_ml?.toString() ?? "");
-  const [obs, setObs] = useState(item.observacoes ?? "");
-
-  const porMl = custoPorMl(item);
-  const nome = item.ingredientes?.nome ?? "Ingrediente";
-
-  const parse = (v: string) => {
-    const t = v.trim().replace(",", ".");
-    if (!t) return null;
-    const n = Number(t);
-    return Number.isFinite(n) && n >= 0 ? n : null;
-  };
-
-  return (
-    <li className="rounded-xl border border-border bg-card/40 p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <p className="truncate font-medium text-foreground">{nome}</p>
-          {item.ingredientes?.categorias?.nome && (
-            <p className="truncate text-xs text-muted-foreground">
-              {item.ingredientes.categorias.nome}
-            </p>
-          )}
-        </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="min-h-11 min-w-11 shrink-0 text-muted-foreground hover:text-destructive"
-          aria-label={`Remover ${nome} do meu bar`}
-          onClick={onRemover}
-        >
-          <Trash2 className="h-4 w-4" aria-hidden="true" />
-        </Button>
-      </div>
-
-      <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
-        <div className="space-y-1">
-          <Label htmlFor={`preco-${item.id}`} className="text-xs">
-            Preço (R$)
-          </Label>
-          <Input
-            id={`preco-${item.id}`}
-            inputMode="decimal"
-            value={preco}
-            onChange={(e) => setPreco(e.target.value)}
-          />
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor={`volume-${item.id}`} className="text-xs">
-            Volume (ml)
-          </Label>
-          <Input
-            id={`volume-${item.id}`}
-            inputMode="decimal"
-            value={volume}
-            onChange={(e) => setVolume(e.target.value)}
-          />
-        </div>
-        <Button
-          variant="outline"
-          className="min-h-11 sm:min-h-10"
-          disabled={salvando}
-          onClick={() => onSalvar(parse(preco), parse(volume), obs.trim() || null)}
-        >
-          Salvar
-        </Button>
-      </div>
-
-      <div className="mt-3 space-y-1">
-        <Label htmlFor={`obs-${item.id}`} className="text-xs">
-          Observações
-        </Label>
-        <Textarea
-          id={`obs-${item.id}`}
-          value={obs}
-          maxLength={500}
-          rows={2}
-          placeholder="Ex.: comprada no mercado X, sabor mais adocicado, guardar na geladeira..."
-          onChange={(e) => setObs(e.target.value)}
-        />
-        <p className="text-xs text-muted-foreground">
-          Clique em “Salvar” para gravar as observações.
-        </p>
-      </div>
-
-
-      <p className="mt-2 text-xs text-muted-foreground">
-        {porMl !== null
-          ? `Custo por ml: ${brl(porMl)} · dose de ${doseMl} ml: ${brl(porMl * doseMl)}`
-          : "Informe preço e volume para calcular o custo."}
-      </p>
-    </li>
-  );
-}
-
 function CardDrink({
   avaliado,
   quase = false,
@@ -682,9 +562,7 @@ function CardDrink({
             {custo > 0 ? (
               <>
                 {brl(custo)} por dose{" "}
-                {!custoCompleto && (
-                  <span className="text-xs text-muted-foreground">(parcial)</span>
-                )}
+                {!custoCompleto && <span className="text-xs text-muted-foreground">(parcial)</span>}
               </>
             ) : (
               <span className="text-xs text-muted-foreground">
