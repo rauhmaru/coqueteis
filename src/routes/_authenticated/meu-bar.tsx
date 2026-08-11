@@ -14,6 +14,7 @@ import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
 import { normalizar } from "@/lib/abv";
 import { agruparPorImpacto } from "@/lib/impacto";
 import { ImpactoCompras } from "@/components/impacto-compras";
+import { EstoqueLista } from "@/components/estoque-lista";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
