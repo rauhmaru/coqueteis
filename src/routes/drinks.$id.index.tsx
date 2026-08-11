@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { drinkQuery } from "@/lib/queries";
+import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
@@ -25,9 +25,9 @@ export const Route = createFileRoute("/drinks/$id/")({
       .map((di) => di.ingredientes?.nome)
       .filter((n): n is string => Boolean(n));
 
-    const titulo = `${loaderData.nome} — receita do drink`;
+    const titulo = `${drink.nome} — receita do drink`;
     const descricao =
-      `Receita de ${loaderData.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
+      `Receita de ${drink.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
         0,
         158,
       );
@@ -50,14 +50,14 @@ export const Route = createFileRoute("/drinks/$id/")({
           children: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Recipe",
-            name: loaderData.nome,
+            name: drink.nome,
             url,
             description: descricao,
             recipeCategory: "Coquetel",
             recipeCuisine: "Coquetelaria",
             recipeIngredient: ingredientes,
-            recipeInstructions: loaderData.preparo
-              ? [{ "@type": "HowToStep", text: loaderData.preparo }]
+            recipeInstructions: drink.preparo
+              ? [{ "@type": "HowToStep", text: drink.preparo }]
               : undefined,
             inLanguage: "pt-BR",
           }),
