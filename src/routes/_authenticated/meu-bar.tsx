@@ -371,21 +371,15 @@ function MeuBarPage() {
               Seu bar está vazio. Adicione a primeira garrafa acima.
             </p>
           ) : (
-            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {(estoque ?? []).map((item) => (
-                <ItemEstoque
-                  key={item.id}
-                  item={item}
-                  doseMl={doseMl}
-                  salvando={salvarPreco.isPending}
-                  onSalvar={(preco, volume, observacoes) =>
-                    salvarPreco.mutate({ id: item.id, preco, volume, observacoes })
-                  }
-                  onRemover={() => remover.mutate(item.id)}
-                />
-
-              ))}
-            </ul>
+            <EstoqueLista
+              itens={estoque ?? []}
+              doseMl={doseMl}
+              salvando={salvarPreco.isPending}
+              onSalvar={(id, preco, volume, observacoes) =>
+                salvarPreco.mutate({ id, preco, volume, observacoes })
+              }
+              onRemover={(id) => remover.mutate(id)}
+            />
           )}
         </section>
 
