@@ -15,9 +15,55 @@ import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
 export const Route = createFileRoute("/drinks/$id/")({
-  head: () => ({
-    meta: [{ title: "Drink — Destilados & Coquetéis" }],
-  }),
+  head: ({ params, loaderData }) => {
+    const url = `https://coqueteis.lovable.app/drinks/${params.id}`;
+    if (!loaderData) {
+      return { meta: [{ title: "Drink — Destilados & Coquetéis" }], links: [{ rel: "canonical", href: url }] };
+    }
+    const ingredientes = loaderData.drink_ingredientes
+      .map((di) => di.ingredientes?.nome)
+      .filter((n): n is string => Boolean(n));
+    const titulo = `${loaderData.nome} — receita do drink`;
+    const descricao =
+      `Receita de ${loaderData.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
+        0,
+        158,
+      );
+    return {
+      meta: [
+        { title: titulo },
+        { name: "description", content: descricao },
+        { property: "og:title", content: titulo },
+        { property: "og:description", content: descricao },
+        { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
+        { name: "twitter:card", content: "summary" },
+        { name: "twitter:title", content: titulo },
+        { name: "twitter:description", content: descricao },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Recipe",
+            name: loaderData.nome,
+            url,
+            description: descricao,
+            recipeCategory: "Coquetel",
+            recipeCuisine: "Coquetelaria",
+            recipeIngredient: ingredientes,
+            recipeInstructions: loaderData.preparo
+              ? [{ "@type": "HowToStep", text: loaderData.preparo }]
+              : undefined,
+            inLanguage: "pt-BR",
+          }),
+        },
+      ],
+    };
+  },
+
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));
     if (!data) throw notFound();
