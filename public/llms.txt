@@ -1,0 +1,28 @@
+# Destilados &amp; Coquetéis
+
+&gt; Catálogo brasileiro de receitas de coquetéis, xaropes e mocktails, com guia de mixologia, calculadora de teor alcoólico (ABV), calculadora de porções para festas e geração de carta de drinks em PDF.
+
+O conteúdo é em português do Brasil e voltado a amantes da coquetelaria: receitas com ingredientes, modo de preparo, história e nível de dificuldade.
+
+## Páginas
+
+- [Início](/): Visão geral do catálogo, busca de receitas e sugestão do bartender.
+- [Drinks](/drinks): Todas as receitas com filtros por ingredientes, categoria, dificuldade e quantidade de ingredientes.
+- [Mixologia](/mixologia): Guia de coquetelaria — origem, história, utensílios, copos, bebidas, xaropes e gelo.
+- [Calculadora de ABV](/calculadora-abv): Cálculo do teor alcoólico de uma receita, incentivando consumo moderado.
+- [Carta de drinks](/carta): Monte uma carta para eventos em PDF com QR Code e link público.
+- [Consumo responsável](/consumo-responsavel): Orientações sobre consumo responsável de álcool.
+
+## Mixologia
+
+- [Origem](/mixologia/origem): Origem da coquetelaria.
+- [História](/mixologia/tipos): Marcos históricos e estilos de drinks.
+- [Utensílios](/mixologia/materiais): Utensílios essenciais do bar.
+- [Copos](/mixologia/copos): Tipos de copos e taças.
+- [Bebidas](/mixologia/bebidas): Fermentadas, destiladas e infusionadas.
+- [Xaropes](/mixologia/xaropes): Xaropes e infusões caseiras.
+- [Gelo](/mixologia/gelo): Tipos de gelo e diluição.
+
+## Optional
+
+- [Confiança &amp; Privacidade](/confianca): Como os dados do catálogo são protegidos.
