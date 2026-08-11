@@ -25,9 +25,11 @@ import { useDrinkFilters } from "@/components/drink-filters";
 export const Route = createFileRoute("/drinks/")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/drinks" },
       { title: "Drinks — Destilados & Coquetéis" },
       { name: "description", content: "Lista de drinks com filtro por ingredientes disponíveis." },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/drinks" }],
   }),
   loader: ({ context }) =>
     Promise.all([

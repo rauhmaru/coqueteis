@@ -7,12 +7,14 @@ import highballImg from "@/assets/mixologia/highball.jpg";
 export const Route = createFileRoute("/mixologia/tipos")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/tipos" },
       { title: "Tipos de coquetéis — Mixologia" },
       {
         name: "description",
         content: "Classificação dos coquetéis por método de preparo, volume, tipo de bebida e finalidade.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/tipos" }],
   }),
   component: () => (
     <MixologiaPage

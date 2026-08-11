@@ -6,12 +6,14 @@ import tiposImg from "@/assets/mixologia/tipos.jpg";
 export const Route = createFileRoute("/mixologia/origem")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/origem" },
       { title: "Origem e história — Mixologia" },
       {
         name: "description",
         content: "Da Grécia Antiga aos speakeasies dos anos 1920 e à renascença dos drinks — a história do coquetel.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/origem" }],
   }),
   component: () => (
     <MixologiaPage

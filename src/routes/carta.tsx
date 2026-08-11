@@ -27,6 +27,7 @@ const MAX = 5;
 export const Route = createFileRoute("/carta")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/carta" },
       { title: "Carta de drinks para eventos — Destilados & Coquetéis" },
       {
         name: "description",
@@ -42,6 +43,7 @@ export const Route = createFileRoute("/carta")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/carta" }],
   }),
   loader: ({ context }) =>
     Promise.all([

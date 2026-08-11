@@ -33,6 +33,7 @@ export const Route = createFileRoute("/calculadora-abv")({
   }),
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/calculadora-abv" },
       { title: titulo },
       { name: "description", content: descricao },
       { property: "og:title", content: titulo },
@@ -40,6 +41,7 @@ export const Route = createFileRoute("/calculadora-abv")({
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/calculadora-abv" }],
   }),
   component: CalculadoraAbvPage,
 });

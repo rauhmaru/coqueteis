@@ -9,12 +9,14 @@ import zesterImg from "@/assets/mixologia/zester.jpg";
 export const Route = createFileRoute("/mixologia/materiais")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/materiais" },
       { title: "Materiais e utensílios — Mixologia" },
       {
         name: "description",
         content: "Coqueteleira, strainer, colher bailarina, jigger e demais utensílios do bartender.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/materiais" }],
   }),
   component: () => (
     <MixologiaPage

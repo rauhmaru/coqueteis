@@ -5,12 +5,14 @@ import geloImg from "@/assets/mixologia/gelo.jpg";
 export const Route = createFileRoute("/mixologia/gelo")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia/gelo" },
       { title: "Gelo: de coadjuvante a estrela — Mixologia" },
       {
         name: "description",
         content: "O gelo dilui, resfria e transforma um coquetel — muito mais do que um simples acessório.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia/gelo" }],
   }),
   component: () => (
     <MixologiaPage

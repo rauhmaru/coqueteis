@@ -21,12 +21,14 @@ const topicos = [
 export const Route = createFileRoute("/mixologia/")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/mixologia" },
       { title: "Mixologia — Destilados & Coquetéis" },
       {
         name: "description",
         content: "Guia completo de mixologia e coquetelaria: história, técnicas, utensílios e ingredientes.",
       },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia" }],
   }),
   component: MixologiaIndex,
 });

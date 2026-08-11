@@ -19,9 +19,11 @@ import {
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+      { property: "og:url", content: "https://coqueteis.lovable.app/" },
       { title: "Início — Destilados & Coquetéis" },
       { name: "description", content: "Painel principal com ingredientes e receitas cadastrados." },
     ],
+    links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
   loader: ({ context }) =>
     Promise.all([
