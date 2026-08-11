@@ -18,6 +18,7 @@ export const Route = createFileRoute("/auth")({
     meta: [
       { title: "Entrar — Destilados & Coquetéis" },
       { name: "description", content: "Acesse sua conta para gerenciar drinks, ingredientes e categorias." },
+      { name: "robots", content: "noindex, follow" },
     ],
   }),
   component: AuthPage,
@@ -109,6 +110,8 @@ function AuthPage() {
           <Martini className="h-7 w-7 text-primary group-hover:rotate-12 transition-transform" />
           <span className="font-serif text-2xl text-foreground">Destilados &amp; Coquetéis</span>
         </Link>
+
+        <h1 className="text-center font-serif text-2xl text-foreground">Acesse sua conta</h1>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
           <Tabs defaultValue="entrar" className="w-full">

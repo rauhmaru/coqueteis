@@ -94,6 +94,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2dad583b-8333-4c5a-bba0-75c940ac5a30/id-preview-c6dbbdc2--7906dbee-e812-49e7-9479-ec448cc59df1.lovable.app-1781808263150.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2dad583b-8333-4c5a-bba0-75c940ac5a30/id-preview-c6dbbdc2--7906dbee-e812-49e7-9479-ec448cc59df1.lovable.app-1781808263150.png" },
     ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify([
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Destilados & Coquetéis",
+            url: "https://coqueteis.lovable.app",
+            logo: "https://coqueteis.lovable.app/favicon.png",
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Destilados & Coquetéis",
+            url: "https://coqueteis.lovable.app",
+            inLanguage: "pt-BR",
+          },
+        ]),
+      },
+    ],
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },

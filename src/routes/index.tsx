@@ -20,8 +20,19 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { property: "og:url", content: "https://coqueteis.lovable.app/" },
-      { title: "Início — Destilados & Coquetéis" },
-      { name: "description", content: "Painel principal com ingredientes e receitas cadastrados." },
+      { title: "Receitas de drinks e coquetéis — Destilados & Coquetéis" },
+      {
+        name: "description",
+        content:
+          "Catálogo de receitas de coquetéis, xaropes e drinks sem álcool: ingredientes, preparo, dificuldade e ferramentas de bar.",
+      },
+      { property: "og:title", content: "Receitas de drinks e coquetéis — Destilados & Coquetéis" },
+      {
+        property: "og:description",
+        content:
+          "Catálogo de receitas de coquetéis, xaropes e drinks sem álcool: ingredientes, preparo, dificuldade e ferramentas de bar.",
+      },
+      { property: "og:type", content: "website" },
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
