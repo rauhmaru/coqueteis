@@ -15,6 +15,10 @@ export type Drink = {
   id: string;
   nome: string;
   preparo: string;
+  passos: unknown;
+  copo: string | null;
+  metodo_preparo: string | null;
+  guarnicao: string | null;
   historia: string | null;
   imagem_url: string | null;
   dificuldade: string;

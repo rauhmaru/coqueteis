@@ -1,8 +1,9 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
@@ -11,6 +12,8 @@ import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
 import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
+import { FichaTecnica } from "@/components/ficha-tecnica";
+import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
@@ -56,9 +59,14 @@ export const Route = createFileRoute("/drinks/$id/")({
             recipeCategory: "Coquetel",
             recipeCuisine: "Coquetelaria",
             recipeIngredient: ingredientes,
-            recipeInstructions: drink.preparo
-              ? [{ "@type": "HowToStep", text: drink.preparo }]
-              : undefined,
+            recipeInstructions: (() => {
+              const passos = normalizarPassos(drink.passos, drink.preparo);
+              return passos.length > 0
+                ? passos.map((p) => ({ "@type": "HowToStep", position: p.ordem, text: p.texto }))
+                : undefined;
+            })(),
+            tool: drink.copo ? [{ "@type": "HowToTool", name: drink.copo }] : undefined,
+            cookingMethod: metodoLabel(drink.metodo_preparo) ?? undefined,
             inLanguage: "pt-BR",
           }),
         },
@@ -68,7 +76,18 @@ export const Route = createFileRoute("/drinks/$id/")({
 
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));
-    if (!data) throw notFound();
+    if (!data) {
+      // Receita unificada: redireciona o link antigo para a entrada mantida.
+      const { data: red } = await supabase
+        .from("drink_redirects")
+        .select("new_id")
+        .eq("old_id", params.id)
+        .maybeSingle();
+      if (red?.new_id) {
+        throw redirect({ to: "/drinks/$id", params: { id: red.new_id }, replace: true });
+      }
+      throw notFound();
+    }
     return data;
   },
   component: DrinkDetail,
@@ -89,6 +108,7 @@ function DrinkDetail() {
   const { canEdit, user, isAdmin } = useAuth();
   const canManage = canManageItem({ user, isAdmin, canEdit }, drink);
   if (!drink) return null;
+  const passos = normalizarPassos(drink.passos, drink.preparo);
 
   return (
     <div className="min-h-dvh">
@@ -114,6 +134,17 @@ function DrinkDetail() {
                 ))}
               </div>
             </div>
+
+            <section aria-label="Ficha técnica">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Ficha técnica</h2>
+              <FichaTecnica
+                dificuldade={drink.dificuldade}
+                copo={drink.copo}
+                metodoPreparo={drink.metodo_preparo}
+                guarnicao={drink.guarnicao}
+              />
+            </section>
+
             {drink.historia && (
               <div>
                 <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">História</h2>
@@ -131,10 +162,26 @@ function DrinkDetail() {
               </div>
             </div>
             <div>
-              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Preparo</h2>
-              <p className="text-foreground whitespace-pre-wrap leading-relaxed">
-                {drink.preparo || <span className="text-muted-foreground italic">Sem instruções de preparo.</span>}
-              </p>
+              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">
+                Preparo passo a passo
+              </h2>
+              {passos.length > 0 ? (
+                <ol className="space-y-3">
+                  {passos.map((p) => (
+                    <li key={p.ordem} className="flex gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-xs font-medium text-primary"
+                      >
+                        {p.ordem}
+                      </span>
+                      <p className="text-foreground leading-relaxed">{p.texto}</p>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="text-muted-foreground italic">Sem instruções de preparo.</p>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {canManage && (

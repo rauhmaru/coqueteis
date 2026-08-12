@@ -229,35 +229,73 @@ export type Database = {
           },
         ]
       }
-      drinks: {
+      drink_redirects: {
         Row: {
           created_at: string
-          created_by: string | null
-          dificuldade: string
-          historia: string | null
-          id: string
-          imagem_url: string | null
-          nome: string
-          preparo: string
+          new_id: string
+          old_id: string
         }
         Insert: {
           created_at?: string
-          created_by?: string | null
-          dificuldade?: string
-          historia?: string | null
-          id?: string
-          imagem_url?: string | null
-          nome: string
-          preparo?: string
+          new_id: string
+          old_id: string
         }
         Update: {
           created_at?: string
+          new_id?: string
+          old_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drink_redirects_new_id_fkey"
+            columns: ["new_id"]
+            isOneToOne: false
+            referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drinks: {
+        Row: {
+          copo: string | null
+          created_at: string
+          created_by: string | null
+          dificuldade: string
+          guarnicao: string | null
+          historia: string | null
+          id: string
+          imagem_url: string | null
+          metodo_preparo: string | null
+          nome: string
+          passos: Json
+          preparo: string
+        }
+        Insert: {
+          copo?: string | null
+          created_at?: string
           created_by?: string | null
           dificuldade?: string
+          guarnicao?: string | null
           historia?: string | null
           id?: string
           imagem_url?: string | null
+          metodo_preparo?: string | null
+          nome: string
+          passos?: Json
+          preparo?: string
+        }
+        Update: {
+          copo?: string | null
+          created_at?: string
+          created_by?: string | null
+          dificuldade?: string
+          guarnicao?: string | null
+          historia?: string | null
+          id?: string
+          imagem_url?: string | null
+          metodo_preparo?: string | null
           nome?: string
+          passos?: Json
           preparo?: string
         }
         Relationships: []
