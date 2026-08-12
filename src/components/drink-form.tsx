@@ -94,11 +94,25 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
         finalPath = path;
       }
 
+      const passos = textoParaPassos(passosTexto);
+      const preparo = passos.map((p) => p.texto).join(" ");
+      const campos = {
+        nome,
+        preparo,
+        passos,
+        copo: copo.trim() || null,
+        metodo_preparo: metodo,
+        guarnicao: guarnicao.trim() || "Sem guarnição",
+        historia: historia.trim() || null,
+        dificuldade,
+        imagem_url: finalPath,
+      };
+
       let drinkId = existing?.id;
       if (existing) {
         const { error } = await supabase
           .from("drinks")
-          .update({ nome, preparo, historia: historia.trim() || null, dificuldade, imagem_url: finalPath })
+          .update(campos)
           .eq("id", existing.id);
         if (error) throw error;
         await supabase.from("drink_ingredientes").delete().eq("drink_id", existing.id);
@@ -106,7 +120,7 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       } else {
         const { data, error } = await supabase
           .from("drinks")
-          .insert({ nome, preparo, historia: historia.trim() || null, dificuldade, imagem_url: finalPath, created_by: user?.id ?? null })
+          .insert({ ...campos, created_by: user?.id ?? null })
           .select("id")
           .single();
         if (error) throw error;
