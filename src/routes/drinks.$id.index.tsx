@@ -108,6 +108,7 @@ function DrinkDetail() {
   const { canEdit, user, isAdmin } = useAuth();
   const canManage = canManageItem({ user, isAdmin, canEdit }, drink);
   if (!drink) return null;
+  const passos = normalizarPassos(drink.passos, drink.preparo);
 
   return (
     <div className="min-h-dvh">
@@ -133,6 +134,17 @@ function DrinkDetail() {
                 ))}
               </div>
             </div>
+
+            <section aria-label="Ficha técnica">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Ficha técnica</h2>
+              <FichaTecnica
+                dificuldade={drink.dificuldade}
+                copo={drink.copo}
+                metodoPreparo={drink.metodo_preparo}
+                guarnicao={drink.guarnicao}
+              />
+            </section>
+
             {drink.historia && (
               <div>
                 <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">História</h2>
@@ -150,10 +162,26 @@ function DrinkDetail() {
               </div>
             </div>
             <div>
-              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Preparo</h2>
-              <p className="text-foreground whitespace-pre-wrap leading-relaxed">
-                {drink.preparo || <span className="text-muted-foreground italic">Sem instruções de preparo.</span>}
-              </p>
+              <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">
+                Preparo passo a passo
+              </h2>
+              {passos.length > 0 ? (
+                <ol className="space-y-3">
+                  {passos.map((p) => (
+                    <li key={p.ordem} className="flex gap-3">
+                      <span
+                        aria-hidden="true"
+                        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-xs font-medium text-primary"
+                      >
+                        {p.ordem}
+                      </span>
+                      <p className="text-foreground leading-relaxed">{p.texto}</p>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="text-muted-foreground italic">Sem instruções de preparo.</p>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
               {canManage && (
