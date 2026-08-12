@@ -265,15 +265,55 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
             </div>
           </div>
 
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="copo">Copo / taça recomendada</Label>
+              <Input
+                id="copo"
+                value={copo}
+                onChange={(e) => setCopo(e.target.value)}
+                placeholder="Ex.: Copo old fashioned"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="metodo">Método de preparo</Label>
+              <select
+                id="metodo"
+                value={metodo}
+                onChange={(e) => setMetodo(e.target.value)}
+                className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                {METODOS_PREPARO.map((m) => (
+                  <option key={m} value={m}>
+                    {METODO_LABEL[m as MetodoPreparo]}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="preparo">Preparo</Label>
+            <Label htmlFor="guarnicao">Guarnição</Label>
+            <Input
+              id="guarnicao"
+              value={guarnicao}
+              onChange={(e) => setGuarnicao(e.target.value)}
+              placeholder="Ex.: Casca de laranja (vazio = Sem guarnição)"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="preparo">Preparo — um passo por linha</Label>
             <Textarea
               id="preparo"
-              value={preparo}
-              onChange={(e) => setPreparo(e.target.value)}
-              rows={6}
-              placeholder="Descreva o modo de preparo passo a passo…"
+              value={passosTexto}
+              onChange={(e) => setPassosTexto(e.target.value)}
+              rows={7}
+              placeholder={"Meça 60ml de gin.\nAdicione gelo e mexa.\nCoe na taça.\nDecore com casca de limão."}
             />
+            <p className="text-xs text-muted-foreground">
+              Cada linha se torna um passo numerado na receita.
+            </p>
           </div>
 
           <div className="space-y-2">
