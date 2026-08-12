@@ -1,8 +1,9 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DrinkImage } from "@/components/drink-image";
@@ -11,6 +12,8 @@ import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
 import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
+import { FichaTecnica } from "@/components/ficha-tecnica";
+import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
