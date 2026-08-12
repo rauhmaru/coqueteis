@@ -59,9 +59,14 @@ export const Route = createFileRoute("/drinks/$id/")({
             recipeCategory: "Coquetel",
             recipeCuisine: "Coquetelaria",
             recipeIngredient: ingredientes,
-            recipeInstructions: drink.preparo
-              ? [{ "@type": "HowToStep", text: drink.preparo }]
-              : undefined,
+            recipeInstructions: (() => {
+              const passos = normalizarPassos(drink.passos, drink.preparo);
+              return passos.length > 0
+                ? passos.map((p) => ({ "@type": "HowToStep", position: p.ordem, text: p.texto }))
+                : undefined;
+            })(),
+            tool: drink.copo ? [{ "@type": "HowToTool", name: drink.copo }] : undefined,
+            cookingMethod: metodoLabel(drink.metodo_preparo) ?? undefined,
             inLanguage: "pt-BR",
           }),
         },
@@ -71,7 +76,18 @@ export const Route = createFileRoute("/drinks/$id/")({
 
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));
-    if (!data) throw notFound();
+    if (!data) {
+      // Receita unificada: redireciona o link antigo para a entrada mantida.
+      const { data: red } = await supabase
+        .from("drink_redirects")
+        .select("new_id")
+        .eq("old_id", params.id)
+        .maybeSingle();
+      if (red?.new_id) {
+        throw redirect({ to: "/drinks/$id", params: { id: red.new_id }, replace: true });
+      }
+      throw notFound();
+    }
     return data;
   },
   component: DrinkDetail,
