@@ -16,6 +16,14 @@ import { DrinkImage } from "@/components/drink-image";
 import { DIFICULDADES, type Dificuldade } from "@/components/difficulty-badge";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
 import { useAuth } from "@/hooks/use-auth";
+import {
+  METODOS_PREPARO,
+  METODO_LABEL,
+  normalizarPassos,
+  passosParaTexto,
+  textoParaPassos,
+  type MetodoPreparo,
+} from "@/lib/ficha-tecnica";
 
 export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null }) {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
@@ -26,7 +34,12 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   const { user } = useAuth();
 
   const [nome, setNome] = useState(existing?.nome ?? "");
-  const [preparo, setPreparo] = useState(existing?.preparo ?? "");
+  const [passosTexto, setPassosTexto] = useState(() =>
+    passosParaTexto(normalizarPassos(existing?.passos, existing?.preparo)),
+  );
+  const [copo, setCopo] = useState(existing?.copo ?? "");
+  const [metodo, setMetodo] = useState<string>(existing?.metodo_preparo ?? "build");
+  const [guarnicao, setGuarnicao] = useState(existing?.guarnicao ?? "");
   const [historia, setHistoria] = useState(existing?.historia ?? "");
   const [dificuldade, setDificuldade] = useState<Dificuldade>(
     (existing?.dificuldade as Dificuldade) ?? "Fácil",
