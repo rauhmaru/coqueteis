@@ -48,7 +48,27 @@ export default defineTool({
       else if (faltando.length === 1) quaseLa.push({ id: d.id, nome: d.nome, falta: faltando[0]! });
     }
 
-    const resultado = { possiveis: possiveis.slice(0, max), quase_la: quaseLa.slice(0, max) };
+    // Ordena "quase lá" por impacto: o ingrediente faltante que desbloqueia mais receitas vem antes.
+    const impacto = new Map<string, number>();
+    for (const q of quaseLa) {
+      const k = normalizar(q.falta);
+      impacto.set(k, (impacto.get(k) ?? 0) + 1);
+    }
+    quaseLa.sort(
+      (a, b) =>
+        (impacto.get(normalizar(b.falta)) ?? 0) - (impacto.get(normalizar(a.falta)) ?? 0) ||
+        a.falta.localeCompare(b.falta, "pt-BR") ||
+        a.nome.localeCompare(b.nome, "pt-BR"),
+    );
+
+    const resultado = {
+      possiveis: possiveis.slice(0, max),
+      quase_la: quaseLa.slice(0, max).map((q) => ({
+        ...q,
+        desbloqueia_com_a_compra: impacto.get(normalizar(q.falta)) ?? 1,
+      })),
+    };
+
     return {
       content: [{ type: "text", text: JSON.stringify(resultado, null, 2) }],
       structuredContent: resultado,

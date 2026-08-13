@@ -28,12 +28,15 @@ export const Route = createFileRoute("/drinks/$id/")({
       .map((di) => di.ingredientes?.nome)
       .filter((n): n is string => Boolean(n));
 
-    const titulo = `${drink.nome} — receita do drink`;
+    const chave = ingredientes.slice(0, 2).join(" e ");
+    const titulo = (chave ? `${drink.nome} — receita com ${chave}` : `${drink.nome} — receita`)
+      .slice(0, 59);
     const descricao =
-      `Receita de ${drink.nome}: ingredientes (${ingredientes.slice(0, 6).join(", ")}) e modo de preparo passo a passo.`.slice(
+      `Como fazer ${drink.nome}${ingredientes.length > 0 ? ` com ${ingredientes.slice(0, 4).join(", ")}` : ""}: ficha técnica, copo, método e passo a passo para acertar de primeira em casa.`.slice(
         0,
         158,
       );
+
     return {
       meta: [
         { title: titulo },
