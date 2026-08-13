@@ -85,6 +85,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Destilados & Coquetéis — Sistema de gestão" },
       { name: "description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
+      { name: "google-site-verification", content: "ewfn-Ehh0dtJpS3nrZr0IB4UKwh28X0Lvb78TLou6kY" },
       { property: "og:title", content: "Destilados & Coquetéis — Sistema de gestão" },
       { property: "og:description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
       { property: "og:type", content: "website" },
