@@ -70,19 +70,22 @@ export const drinksQuery = queryOptions({
   },
 });
 
-export const drinkQuery = (id: string) =>
+/** Aceita o slug (URL amigável) ou o UUID antigo do drink. */
+export const drinkQuery = (idOrSlug: string) =>
   queryOptions({
-    queryKey: ["drinks", id],
+    queryKey: ["drinks", idOrSlug],
     queryFn: async (): Promise<DrinkComIngredientes | null> => {
+      const coluna = isUuid(idOrSlug) ? "id" : "slug";
       const { data, error } = await supabase
         .from("drinks")
         .select(DRINK_SELECT)
-        .eq("id", id)
+        .eq(coluna, idOrSlug)
         .maybeSingle();
       if (error) throw error;
       return data as unknown as DrinkComIngredientes | null;
     },
   });
+
 
 export const drinkCategoriasQuery = queryOptions({
   queryKey: ["drink_categorias"],
