@@ -1,5 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { isUuid } from "@/lib/slug";
+
 
 export type Categoria = { id: string; nome: string };
 export type Ingrediente = {
@@ -13,6 +15,7 @@ export type Ingrediente = {
 export type DrinkCategoria = { id: string; nome: string };
 export type Drink = {
   id: string;
+  slug: string | null;
   nome: string;
   preparo: string;
   passos: unknown;
@@ -24,6 +27,7 @@ export type Drink = {
   dificuldade: string;
   created_by: string | null;
 };
+
 export type DrinkComIngredientes = Drink & {
   drink_ingredientes: { ingrediente_id: string; ingredientes: Ingrediente | null }[];
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
@@ -68,19 +72,22 @@ export const drinksQuery = queryOptions({
   },
 });
 
-export const drinkQuery = (id: string) =>
+/** Aceita o slug (URL amigável) ou o UUID antigo do drink. */
+export const drinkQuery = (idOrSlug: string) =>
   queryOptions({
-    queryKey: ["drinks", id],
+    queryKey: ["drinks", idOrSlug],
     queryFn: async (): Promise<DrinkComIngredientes | null> => {
+      const coluna = isUuid(idOrSlug) ? "id" : "slug";
       const { data, error } = await supabase
         .from("drinks")
         .select(DRINK_SELECT)
-        .eq("id", id)
+        .eq(coluna, idOrSlug)
         .maybeSingle();
       if (error) throw error;
       return data as unknown as DrinkComIngredientes | null;
     },
   });
+
 
 export const drinkCategoriasQuery = queryOptions({
   queryKey: ["drink_categorias"],

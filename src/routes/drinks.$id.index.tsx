@@ -2,7 +2,12 @@ import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-route
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
-import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
+import { isUuid, drinkParam } from "@/lib/slug";
+import { CustoEstoque } from "@/components/custo-estoque";
+import { DrinksRelacionados } from "@/components/drinks-relacionados";
+import { MixologiaRelacionada } from "@/components/mixologia-relacionada";
+
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,10 +22,20 @@ import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 
+type LoaderData = { drink: DrinkComIngredientes; imagem: string | null };
+
+/** Tempo estimado de preparo (ISO 8601) a partir da dificuldade. */
+const TEMPO_POR_DIFICULDADE: Record<string, string> = {
+  Fácil: "PT3M",
+  Médio: "PT5M",
+  Difícil: "PT10M",
+};
+
 export const Route = createFileRoute("/drinks/$id/")({
   head: ({ params, loaderData }) => {
-    const url = `https://coqueteis.lovable.app/drinks/${params.id}`;
-    const drink = loaderData as unknown as DrinkComIngredientes | undefined;
+    const dados = loaderData as unknown as LoaderData | undefined;
+    const drink = dados?.drink;
+    const url = `https://coqueteis.lovable.app/drinks/${drink?.slug ?? params.id}`;
     if (!drink) {
       return { meta: [{ title: "Drink — Destilados & Coquetéis" }], links: [{ rel: "canonical", href: url }] };
     }
@@ -36,6 +51,7 @@ export const Route = createFileRoute("/drinks/$id/")({
         0,
         158,
       );
+    const imagem = dados?.imagem ?? null;
 
     return {
       meta: [
@@ -45,9 +61,15 @@ export const Route = createFileRoute("/drinks/$id/")({
         { property: "og:description", content: descricao },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { name: "twitter:card", content: "summary" },
+        { name: "twitter:card", content: imagem ? "summary_large_image" : "summary" },
         { name: "twitter:title", content: titulo },
         { name: "twitter:description", content: descricao },
+        ...(imagem
+          ? [
+              { property: "og:image", content: imagem },
+              { name: "twitter:image", content: imagem },
+            ]
+          : []),
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -59,8 +81,17 @@ export const Route = createFileRoute("/drinks/$id/")({
             name: drink.nome,
             url,
             description: descricao,
-            recipeCategory: "Coquetel",
+            image: imagem ?? undefined,
+            recipeCategory:
+              drink.drink_drink_categorias
+                .map((c) => c.drink_categorias?.nome)
+                .filter(Boolean)
+                .join(", ") || "Coquetel",
             recipeCuisine: "Coquetelaria",
+            recipeYield: "1 drink",
+            totalTime: TEMPO_POR_DIFICULDADE[drink.dificuldade] ?? "PT5M",
+            prepTime: TEMPO_POR_DIFICULDADE[drink.dificuldade] ?? "PT5M",
+            keywords: [drink.nome, `dificuldade ${drink.dificuldade}`, ...ingredientes.slice(0, 6)].join(", "),
             recipeIngredient: ingredientes,
             recipeInstructions: (() => {
               const passos = normalizarPassos(drink.passos, drink.preparo);
@@ -77,21 +108,38 @@ export const Route = createFileRoute("/drinks/$id/")({
     };
   },
 
-  loader: async ({ context, params }) => {
+  loader: async ({ context, params }): Promise<LoaderData> => {
     const data = await context.queryClient.ensureQueryData(drinkQuery(params.id));
     if (!data) {
       // Receita unificada: redireciona o link antigo para a entrada mantida.
       const { data: red } = await supabase
         .from("drink_redirects")
-        .select("new_id")
+        .select("new_id, drinks:new_id(slug)")
         .eq("old_id", params.id)
         .maybeSingle();
       if (red?.new_id) {
-        throw redirect({ to: "/drinks/$id", params: { id: red.new_id }, replace: true });
+        const destino =
+          (red as unknown as { drinks?: { slug: string | null } | null }).drinks?.slug ?? red.new_id;
+        throw redirect({
+          to: "/drinks/$id",
+          params: { id: destino },
+          replace: true,
+          statusCode: 301,
+        });
       }
       throw notFound();
     }
-    return data;
+    // URL amigável: UUID antigo redireciona permanentemente para o slug.
+    if (isUuid(params.id) && data.slug) {
+      throw redirect({
+        to: "/drinks/$id",
+        params: { id: data.slug },
+        replace: true,
+        statusCode: 301,
+      });
+    }
+    const imagem = data.imagem_url ? await getSignedImageUrl(data.imagem_url) : null;
+    return { drink: data, imagem };
   },
   component: DrinkDetail,
   errorComponent: ({ error }) => (
@@ -104,6 +152,7 @@ export const Route = createFileRoute("/drinks/$id/")({
     </div>
   ),
 });
+
 
 function DrinkDetail() {
   const { id } = Route.useParams();
@@ -132,9 +181,18 @@ function DrinkDetail() {
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground">{drink.nome}</h1>
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
                 <DifficultyBadge value={drink.dificuldade} />
-                {drink.drink_drink_categorias.map((c) => (
-                  <Badge key={c.categoria_id}>{c.drink_categorias?.nome ?? "?"}</Badge>
-                ))}
+                {drink.drink_drink_categorias.map((c) =>
+                  c.drink_categorias ? (
+                    <Link
+                      key={c.categoria_id}
+                      to="/drinks/categoria/$categoria"
+                      params={{ categoria: slugify(c.drink_categorias.nome) }}
+                    >
+                      <Badge className="hover:opacity-90">{c.drink_categorias.nome}</Badge>
+                    </Link>
+                  ) : null,
+                )}
+
               </div>
             </div>
 
