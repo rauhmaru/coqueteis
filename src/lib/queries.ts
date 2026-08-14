@@ -1,5 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { isUuid } from "@/lib/slug";
+
 
 export type Categoria = { id: string; nome: string };
 export type Ingrediente = {
