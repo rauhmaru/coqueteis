@@ -13,6 +13,7 @@ export type Ingrediente = {
 export type DrinkCategoria = { id: string; nome: string };
 export type Drink = {
   id: string;
+  slug: string | null;
   nome: string;
   preparo: string;
   passos: unknown;
@@ -24,6 +25,7 @@ export type Drink = {
   dificuldade: string;
   created_by: string | null;
 };
+
 export type DrinkComIngredientes = Drink & {
   drink_ingredientes: { ingrediente_id: string; ingredientes: Ingrediente | null }[];
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
