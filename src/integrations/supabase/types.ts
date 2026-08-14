@@ -269,6 +269,7 @@ export type Database = {
           nome: string
           passos: Json
           preparo: string
+          slug: string | null
         }
         Insert: {
           copo?: string | null
@@ -283,6 +284,7 @@ export type Database = {
           nome: string
           passos?: Json
           preparo?: string
+          slug?: string | null
         }
         Update: {
           copo?: string | null
@@ -297,6 +299,7 @@ export type Database = {
           nome?: string
           passos?: Json
           preparo?: string
+          slug?: string | null
         }
         Relationships: []
       }
@@ -437,6 +440,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      slugify: { Args: { _txt: string }; Returns: string }
+      unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "editor"
