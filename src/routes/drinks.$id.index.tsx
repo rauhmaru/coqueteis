@@ -181,9 +181,18 @@ function DrinkDetail() {
               <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl text-foreground">{drink.nome}</h1>
               <div className="flex flex-wrap items-center gap-1.5 mt-3">
                 <DifficultyBadge value={drink.dificuldade} />
-                {drink.drink_drink_categorias.map((c) => (
-                  <Badge key={c.categoria_id}>{c.drink_categorias?.nome ?? "?"}</Badge>
-                ))}
+                {drink.drink_drink_categorias.map((c) =>
+                  c.drink_categorias ? (
+                    <Link
+                      key={c.categoria_id}
+                      to="/drinks/categoria/$categoria"
+                      params={{ categoria: slugify(c.drink_categorias.nome) }}
+                    >
+                      <Badge className="hover:opacity-90">{c.drink_categorias.nome}</Badge>
+                    </Link>
+                  ) : null,
+                )}
+
               </div>
             </div>
 
