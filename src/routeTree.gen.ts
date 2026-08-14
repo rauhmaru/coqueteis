@@ -38,6 +38,7 @@ import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authentica
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
+import { Route as DrinksCategoriaCategoriaRouteImport } from './routes/drinks.categoria.$categoria'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -190,6 +191,12 @@ const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DrinksIdRoute,
 } as any)
+const DrinksCategoriaCategoriaRoute =
+  DrinksCategoriaCategoriaRouteImport.update({
+    id: '/categoria/$categoria',
+    path: '/categoria/$categoria',
+    getParentRoute: () => DrinksRoute,
+  } as any)
 const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   id: '/drinks/novo',
   path: '/drinks/novo',
@@ -244,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
@@ -275,6 +283,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
@@ -311,6 +320,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
 }
@@ -347,6 +357,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
+    | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
   fileRoutesByTo: FileRoutesByTo
@@ -378,6 +389,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
+    | '/drinks/categoria/$categoria'
     | '/drinks/$id'
     | '/drinks/$id/editar'
   id:
@@ -413,6 +425,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/drinks/novo'
+    | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
   fileRoutesById: FileRoutesById
@@ -641,6 +654,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksIdIndexRouteImport
       parentRoute: typeof DrinksIdRoute
     }
+    '/drinks/categoria/$categoria': {
+      id: '/drinks/categoria/$categoria'
+      path: '/categoria/$categoria'
+      fullPath: '/drinks/categoria/$categoria'
+      preLoaderRoute: typeof DrinksCategoriaCategoriaRouteImport
+      parentRoute: typeof DrinksRoute
+    }
     '/_authenticated/drinks/novo': {
       id: '/_authenticated/drinks/novo'
       path: '/drinks/novo'
@@ -708,11 +728,13 @@ const DrinksIdRouteWithChildren = DrinksIdRoute._addFileChildren(
 interface DrinksRouteChildren {
   DrinksIdRoute: typeof DrinksIdRouteWithChildren
   DrinksIndexRoute: typeof DrinksIndexRoute
+  DrinksCategoriaCategoriaRoute: typeof DrinksCategoriaCategoriaRoute
 }
 
 const DrinksRouteChildren: DrinksRouteChildren = {
   DrinksIdRoute: DrinksIdRouteWithChildren,
   DrinksIndexRoute: DrinksIndexRoute,
+  DrinksCategoriaCategoriaRoute: DrinksCategoriaCategoriaRoute,
 }
 
 const DrinksRouteWithChildren =
