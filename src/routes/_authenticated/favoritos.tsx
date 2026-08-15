@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Heart, ArrowLeft, Search, X } from "lucide-react";
@@ -13,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import {
-import { drinkParam } from "@/lib/slug";
   Select,
   SelectContent,
   SelectItem,

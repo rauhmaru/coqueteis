@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { useMemo } from "react";
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -8,7 +9,6 @@ import { drinksQuery } from "@/lib/queries";
 import { decodificarCarta } from "@/lib/carta-link";
 import { templatePorId } from "@/lib/carta-templates";
 import { calcularListaCompras, formatarVolume } from "@/lib/porcoes";
-import { drinkParam } from "@/lib/slug";
 
 export const Route = createFileRoute("/carta_/ver")({
   validateSearch: (search: Record<string, unknown>) => ({

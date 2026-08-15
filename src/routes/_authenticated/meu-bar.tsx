@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
@@ -24,7 +25,6 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { DrinkImage } from "@/components/drink-image";
 import { DifficultyBadge } from "@/components/difficulty-badge";
-import { drinkParam } from "@/lib/slug";
 
 export const Route = createFileRoute("/_authenticated/meu-bar")({
   head: () => ({

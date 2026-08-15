@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -13,7 +14,6 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { drinkQuery } from "@/lib/queries";
 import {
-import { drinkParam } from "@/lib/slug";
   MAX_ABV,
   MAX_ML,
   calcularAbv,

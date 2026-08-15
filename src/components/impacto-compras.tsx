@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronDown, ShoppingBasket, Sparkles, TrendingUp } from "lucide-react";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 import type { ImpactoIngrediente } from "@/lib/impacto";
-import { drinkParam } from "@/lib/slug";
 
 function plural(n: number, s: string, p: string) {
   return n === 1 ? s : p;

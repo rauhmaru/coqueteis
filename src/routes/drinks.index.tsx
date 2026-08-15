@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -20,7 +21,6 @@ import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useDrinkFilters } from "@/components/drink-filters";
-import { drinkParam } from "@/lib/slug";
 
 
 export const Route = createFileRoute("/drinks/")({
