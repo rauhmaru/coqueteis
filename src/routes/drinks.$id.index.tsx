@@ -250,7 +250,7 @@ function DrinkDetail() {
             <div className="flex flex-wrap gap-2">
               {canManage && (
                 <Button asChild className="min-h-11 sm:min-h-9">
-                  <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
+                  <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
                     <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
                   </Link>
                 </Button>
