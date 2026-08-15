@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
-import { isUuid, drinkParam } from "@/lib/slug";
+import { isUuid, drinkParam, slugify } from "@/lib/slug";
 import { CustoEstoque } from "@/components/custo-estoque";
 import { DrinksRelacionados } from "@/components/drinks-relacionados";
 import { MixologiaRelacionada } from "@/components/mixologia-relacionada";
