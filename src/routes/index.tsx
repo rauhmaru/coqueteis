@@ -42,6 +42,7 @@ export const Route = createFileRoute("/")({
     Promise.all([
       context.queryClient.ensureQueryData(countsQuery),
       context.queryClient.ensureQueryData(drinksQuery),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
     ]),
   component: HomePage,
   errorComponent: ({ error }) => (
@@ -53,9 +54,27 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   const { data: counts } = useSuspenseQuery(countsQuery);
   const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const { user } = useAuth();
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
+
+  // Atalhos para as categorias com mais receitas.
+  const categoriasPopulares = useMemo(
+    () =>
+      categorias
+        .map((c) => ({
+          ...c,
+          total: drinks.filter((d) =>
+            d.drink_drink_categorias.some((x) => x.categoria_id === c.id),
+          ).length,
+        }))
+        .filter((c) => c.total > 0)
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 6),
+    [categorias, drinks],
+  );
+
 
   const filtered = useMemo(() => {
     if (!query.trim()) return [];
