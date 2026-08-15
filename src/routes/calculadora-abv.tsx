@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { useMemo, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -181,7 +182,7 @@ function CalculadoraAbvPage() {
               <p className="font-serif text-xl text-foreground truncate">{drink.nome}</p>
               <Link
                 to="/drinks/$id"
-                params={{ id: drink.id }}
+                params={{ id: drinkParam(drink) }}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
                 Ver receita completa

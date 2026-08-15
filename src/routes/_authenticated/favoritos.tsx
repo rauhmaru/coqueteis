@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Heart, ArrowLeft, Search, X } from "lucide-react";
@@ -208,7 +209,7 @@ function FavoritosPage() {
                 <Link
                   key={d.id}
                   to="/drinks/$id"
-                  params={{ id: d.id }}
+                  params={{ id: drinkParam(d) }}
                   className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors"
                 >
                   <DrinkImage
@@ -236,7 +237,7 @@ function FavoritosPage() {
                 <Link
                   key={d.id}
                   to="/drinks/$id"
-                  params={{ id: d.id }}
+                  params={{ id: drinkParam(d) }}
                   className="group flex items-center gap-4 p-3 rounded-xl border border-border bg-card hover:border-primary/60 transition-colors"
                 >
                   <DrinkImage

@@ -3,7 +3,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
-import { isUuid, drinkParam } from "@/lib/slug";
+import { isUuid, drinkParam, slugify } from "@/lib/slug";
 import { CustoEstoque } from "@/components/custo-estoque";
 import { DrinksRelacionados } from "@/components/drinks-relacionados";
 import { MixologiaRelacionada } from "@/components/mixologia-relacionada";
@@ -206,6 +206,9 @@ function DrinkDetail() {
               />
             </section>
 
+            <CustoEstoque drink={drink} />
+            <MixologiaRelacionada drink={drink} />
+
             {drink.historia && (
               <div>
                 <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">História</h2>
@@ -247,7 +250,7 @@ function DrinkDetail() {
             <div className="flex flex-wrap gap-2">
               {canManage && (
                 <Button asChild className="min-h-11 sm:min-h-9">
-                  <Link to="/drinks/$id/editar" params={{ id: drink.id }}>
+                  <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
                     <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
                   </Link>
                 </Button>
@@ -272,7 +275,7 @@ function DrinkDetail() {
               </Button>
 
               <FavoriteButton drinkId={drink.id} />
-              <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
+              <ShareDrink nome={drink.nome} drinkId={drinkParam(drink)} imagemPath={drink.imagem_url} />
             </div>
           </div>
         </div>
@@ -281,6 +284,10 @@ function DrinkDetail() {
           nome={drink.nome}
           ingredientes={drink.drink_ingredientes.map((di) => di.ingredientes?.nome ?? "Ingrediente")}
         />
+
+        <DrinksRelacionados drink={drink} />
+
+
 
         <DrinkSocial drinkId={drink.id} />
       </main>

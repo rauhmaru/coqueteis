@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -137,7 +138,7 @@ function DrinksList() {
                       <FavoriteIconButton drinkId={d.id} />
                     </div>
                   )}
-                  <Link to="/drinks/$id" params={{ id: d.id }} className="block">
+                  <Link to="/drinks/$id" params={{ id: drinkParam(d) }} className="block">
                     <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="aspect-[4/3] w-full object-cover bg-secondary/40" />
                     <div className="p-4">
                       <h3 className="font-serif text-xl text-foreground">{d.nome}</h3>
@@ -165,7 +166,7 @@ function DrinksList() {
                     <div className="flex border-t border-border">
                       <Link
                         to="/drinks/$id/editar"
-                        params={{ id: d.id }}
+                        params={{ id: drinkParam(d) }}
                         className="flex-1 min-h-11 px-3 py-2 text-xs text-muted-foreground hover:text-primary hover:bg-secondary/40 inline-flex items-center justify-center gap-1"
                         aria-label={`Editar ${d.nome}`}
                       >
@@ -185,7 +186,7 @@ function DrinksList() {
               ) : (
                 <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
                   <div className="flex items-stretch">
-                    <Link to="/drinks/$id" params={{ id: d.id }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
+                    <Link to="/drinks/$id" params={{ id: drinkParam(d) }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
                       <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
                       <div className="min-w-0 flex-1">
                         <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
@@ -215,7 +216,7 @@ function DrinksList() {
                         <div className="flex gap-1">
                           <Link
                             to="/drinks/$id/editar"
-                            params={{ id: d.id }}
+                            params={{ id: drinkParam(d) }}
                             className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-md text-muted-foreground hover:text-primary sm:min-h-9 sm:min-w-9"
                             aria-label={`Editar ${d.nome}`}
                           >

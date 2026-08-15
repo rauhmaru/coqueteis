@@ -1,3 +1,4 @@
+import { drinkParam } from "@/lib/slug";
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ChevronDown, ShoppingBasket, Sparkles, TrendingUp } from "lucide-react";
@@ -17,7 +18,7 @@ function Chips({ drinks }: { drinks: { id: string; nome: string }[] }) {
         <li key={d.id}>
           <Link
             to="/drinks/$id"
-            params={{ id: d.id }}
+            params={{ id: drinkParam(d) }}
             className="inline-flex min-h-8 items-center rounded-full border border-border bg-secondary px-3 text-xs text-secondary-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {d.nome}
