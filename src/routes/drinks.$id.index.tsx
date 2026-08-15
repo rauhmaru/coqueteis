@@ -275,7 +275,7 @@ function DrinkDetail() {
               </Button>
 
               <FavoriteButton drinkId={drink.id} />
-              <ShareDrink nome={drink.nome} drinkId={drink.id} imagemPath={drink.imagem_url} />
+              <ShareDrink nome={drink.nome} drinkId={drinkParam(drink)} imagemPath={drink.imagem_url} />
             </div>
           </div>
         </div>
@@ -284,6 +284,10 @@ function DrinkDetail() {
           nome={drink.nome}
           ingredientes={drink.drink_ingredientes.map((di) => di.ingredientes?.nome ?? "Ingrediente")}
         />
+
+        <DrinksRelacionados drink={drink} />
+
+
 
         <DrinkSocial drinkId={drink.id} />
       </main>
