@@ -206,6 +206,9 @@ function DrinkDetail() {
               />
             </section>
 
+            <CustoEstoque drink={drink} />
+            <MixologiaRelacionada drink={drink} />
+
             {drink.historia && (
               <div>
                 <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">História</h2>
