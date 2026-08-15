@@ -6,9 +6,9 @@ import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
-import { countsQuery, drinksQuery } from "@/lib/queries";
+import { countsQuery, drinksQuery, drinkCategoriasQuery } from "@/lib/queries";
+import { drinkParam, slugify } from "@/lib/slug";
 import {
-import { drinkParam } from "@/lib/slug";
   Command,
   CommandEmpty,
   CommandGroup,
@@ -16,6 +16,7 @@ import { drinkParam } from "@/lib/slug";
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
