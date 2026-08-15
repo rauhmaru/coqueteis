@@ -209,6 +209,37 @@ function HomePage() {
           />
         </section>
 
+        {categoriasPopulares.length > 0 && (
+          <section aria-labelledby="categorias-titulo" className="mx-auto max-w-2xl space-y-4">
+            <h2
+              id="categorias-titulo"
+              className="text-center text-xs uppercase tracking-[0.3em] text-primary"
+            >
+              Categorias populares
+            </h2>
+            <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {categoriasPopulares.map((c) => (
+                <li key={c.id}>
+                  <Link
+                    to="/drinks/categoria/$categoria"
+                    params={{ categoria: slugify(c.nome) }}
+                    className="group flex min-h-16 flex-col justify-center rounded-xl border border-border bg-card px-4 py-3 transition-colors hover:border-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  >
+                    <span className="font-serif text-lg text-foreground transition-colors group-hover:text-primary">
+                      {c.nome}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {c.total} {c.total === 1 ? "receita" : "receitas"}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+
+
 
         {sugestao && (
           <section className="max-w-2xl mx-auto space-y-4">
