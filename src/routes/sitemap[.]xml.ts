@@ -27,6 +27,15 @@ const STATIC_ENTRIES: SitemapEntry[] = [
   { path: "/confianca", changefreq: "yearly", priority: "0.3" },
 ];
 
+function slugifyNome(texto: string): string {
+  return texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 async function drinkEntries(): Promise<SitemapEntry[]> {
   const url = process.env["VITE_SUPABASE_URL"];
   const key = process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
@@ -35,17 +44,27 @@ async function drinkEntries(): Promise<SitemapEntry[]> {
     const supabase = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    const { data, error } = await supabase.from("drinks").select("id").order("nome");
+    const [{ data, error }, { data: categorias }] = await Promise.all([
+      supabase.from("drinks").select("id, slug").order("nome"),
+      supabase.from("drink_categorias").select("nome").order("nome"),
+    ]);
     if (error || !data) return [];
-    return data.map((d) => ({
-      path: `/drinks/${d.id}`,
+    const drinks: SitemapEntry[] = data.map((d) => ({
+      path: `/drinks/${d.slug || d.id}`,
       changefreq: "monthly" as const,
       priority: "0.8",
     }));
+    const cats: SitemapEntry[] = (categorias ?? []).map((c) => ({
+      path: `/drinks/categoria/${slugifyNome(c.nome)}`,
+      changefreq: "weekly" as const,
+      priority: "0.7",
+    }));
+    return [...cats, ...drinks];
   } catch {
     return [];
   }
 }
+
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
