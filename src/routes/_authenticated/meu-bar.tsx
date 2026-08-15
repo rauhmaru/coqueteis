@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { DrinkImage } from "@/components/drink-image";
 import { DifficultyBadge } from "@/components/difficulty-badge";
+import { drinkParam } from "@/lib/slug";
 
 export const Route = createFileRoute("/_authenticated/meu-bar")({
   head: () => ({
@@ -527,7 +528,7 @@ function CardDrink({
     <li className="overflow-hidden rounded-xl border border-border bg-card/40 transition-colors hover:border-primary/50">
       <Link
         to="/drinks/$id"
-        params={{ id: drink.id }}
+        params={{ id: drinkParam(drink) }}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
       >
         <DrinkImage

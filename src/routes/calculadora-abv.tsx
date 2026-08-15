@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { drinkQuery } from "@/lib/queries";
 import {
+import { drinkParam } from "@/lib/slug";
   MAX_ABV,
   MAX_ML,
   calcularAbv,
@@ -181,7 +182,7 @@ function CalculadoraAbvPage() {
               <p className="font-serif text-xl text-foreground truncate">{drink.nome}</p>
               <Link
                 to="/drinks/$id"
-                params={{ id: drink.id }}
+                params={{ id: drinkParam(drink) }}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
                 Ver receita completa

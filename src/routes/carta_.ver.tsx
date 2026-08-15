@@ -8,6 +8,7 @@ import { drinksQuery } from "@/lib/queries";
 import { decodificarCarta } from "@/lib/carta-link";
 import { templatePorId } from "@/lib/carta-templates";
 import { calcularListaCompras, formatarVolume } from "@/lib/porcoes";
+import { drinkParam } from "@/lib/slug";
 
 export const Route = createFileRoute("/carta_/ver")({
   validateSearch: (search: Record<string, unknown>) => ({
@@ -113,7 +114,7 @@ function CartaPublicaPage() {
             <li key={d!.id}>
               <Link
                 to="/drinks/$id"
-                params={{ id: d!.id }}
+                params={{ id: drinkParam(d!) }}
                 className="flex items-center gap-4 rounded-xl border border-border bg-card/40 p-3 transition-colors hover:bg-secondary/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               >
                 <DrinkImage

@@ -8,6 +8,7 @@ import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { countsQuery, drinksQuery } from "@/lib/queries";
 import {
+import { drinkParam } from "@/lib/slug";
   Command,
   CommandEmpty,
   CommandGroup,
@@ -215,7 +216,7 @@ function HomePage() {
             </h2>
             <Link
               to="/drinks/$id"
-              params={{ id: sugestao.id }}
+              params={{ id: drinkParam(sugestao) }}
               className="group block rounded-xl border border-border bg-card overflow-hidden hover:border-primary transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
               <DrinkImage

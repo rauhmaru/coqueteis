@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import {
+import { drinkParam } from "@/lib/slug";
   Select,
   SelectContent,
   SelectItem,
@@ -208,7 +209,7 @@ function FavoritosPage() {
                 <Link
                   key={d.id}
                   to="/drinks/$id"
-                  params={{ id: d.id }}
+                  params={{ id: drinkParam(d) }}
                   className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors"
                 >
                   <DrinkImage
@@ -236,7 +237,7 @@ function FavoritosPage() {
                 <Link
                   key={d.id}
                   to="/drinks/$id"
-                  params={{ id: d.id }}
+                  params={{ id: drinkParam(d) }}
                   className="group flex items-center gap-4 p-3 rounded-xl border border-border bg-card hover:border-primary/60 transition-colors"
                 >
                   <DrinkImage
