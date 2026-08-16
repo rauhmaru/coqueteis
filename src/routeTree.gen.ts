@@ -34,6 +34,7 @@ import { Route as CartaVerRouteImport } from './routes/carta_.ver'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
+import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -169,6 +170,11 @@ const AuthenticatedIngredientesRoute =
     path: '/ingredientes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedIndexacaoRoute = AuthenticatedIndexacaoRouteImport.update({
+  id: '/indexacao',
+  path: '/indexacao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
   id: '/favoritos',
   path: '/favoritos',
@@ -234,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
+  '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -267,6 +274,7 @@ export interface FileRoutesByTo {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
+  '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -303,6 +311,7 @@ export interface FileRoutesById {
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
+  '/_authenticated/indexacao': typeof AuthenticatedIndexacaoRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
@@ -340,6 +349,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/favoritos'
+    | '/indexacao'
     | '/ingredientes'
     | '/meu-bar'
     | '/usuarios'
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/favoritos'
+    | '/indexacao'
     | '/ingredientes'
     | '/meu-bar'
     | '/usuarios'
@@ -408,6 +419,7 @@ export interface FileRouteTypes {
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
     | '/_authenticated/favoritos'
+    | '/_authenticated/indexacao'
     | '/_authenticated/ingredientes'
     | '/_authenticated/meu-bar'
     | '/_authenticated/usuarios'
@@ -626,6 +638,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/indexacao': {
+      id: '/_authenticated/indexacao'
+      path: '/indexacao'
+      fullPath: '/indexacao'
+      preLoaderRoute: typeof AuthenticatedIndexacaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/favoritos': {
       id: '/_authenticated/favoritos'
       path: '/favoritos'
@@ -694,6 +713,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
+  AuthenticatedIndexacaoRoute: typeof AuthenticatedIndexacaoRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
   AuthenticatedMeuBarRoute: typeof AuthenticatedMeuBarRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
@@ -703,6 +723,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
+  AuthenticatedIndexacaoRoute: AuthenticatedIndexacaoRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
   AuthenticatedMeuBarRoute: AuthenticatedMeuBarRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
