@@ -144,3 +144,13 @@ export async function submeterSitemapGsc(siteUrl: string): Promise<void> {
     throw new Error(`Envio do sitemap falhou [${resp.status}]: ${corpo.slice(0, 300)}`);
   }
 }
+
+/** Garante que o chamador é administrador (usa o client com RLS do próprio usuário). */
+export async function ensureAdmin(
+  supabase: { rpc: (fn: "has_role", args: { _user_id: string; _role: "admin" }) => PromiseLike<{ data: unknown; error: { message: string } | null }> },
+  userId: string,
+) {
+  const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
+  if (error) throw new Error(error.message);
+  if (!data) throw new Error("Acesso restrito a administradores");
+}
