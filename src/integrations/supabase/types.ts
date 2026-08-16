@@ -406,6 +406,105 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_indexacao_log: {
+        Row: {
+          consultado_em: string
+          consultado_por: string | null
+          coverage_state: string | null
+          erro: string | null
+          google_canonical: string | null
+          id: string
+          indexing_state: string | null
+          inspection_link: string | null
+          last_crawl_time: string | null
+          page_fetch_state: string | null
+          robots_txt_state: string | null
+          tipo: string
+          url: string
+          user_canonical: string | null
+          verdict: string | null
+        }
+        Insert: {
+          consultado_em?: string
+          consultado_por?: string | null
+          coverage_state?: string | null
+          erro?: string | null
+          google_canonical?: string | null
+          id?: string
+          indexing_state?: string | null
+          inspection_link?: string | null
+          last_crawl_time?: string | null
+          page_fetch_state?: string | null
+          robots_txt_state?: string | null
+          tipo?: string
+          url: string
+          user_canonical?: string | null
+          verdict?: string | null
+        }
+        Update: {
+          consultado_em?: string
+          consultado_por?: string | null
+          coverage_state?: string | null
+          erro?: string | null
+          google_canonical?: string | null
+          id?: string
+          indexing_state?: string | null
+          inspection_link?: string | null
+          last_crawl_time?: string | null
+          page_fetch_state?: string | null
+          robots_txt_state?: string | null
+          tipo?: string
+          url?: string
+          user_canonical?: string | null
+          verdict?: string | null
+        }
+        Relationships: []
+      }
+      seo_sitemap_log: {
+        Row: {
+          acao: string
+          criado_em: string
+          criado_por: string | null
+          erro: string | null
+          errors: number | null
+          id: string
+          is_pending: boolean | null
+          last_downloaded: string | null
+          last_submitted: string | null
+          sitemap_url: string
+          total_urls: number | null
+          warnings: number | null
+        }
+        Insert: {
+          acao?: string
+          criado_em?: string
+          criado_por?: string | null
+          erro?: string | null
+          errors?: number | null
+          id?: string
+          is_pending?: boolean | null
+          last_downloaded?: string | null
+          last_submitted?: string | null
+          sitemap_url: string
+          total_urls?: number | null
+          warnings?: number | null
+        }
+        Update: {
+          acao?: string
+          criado_em?: string
+          criado_por?: string | null
+          erro?: string | null
+          errors?: number | null
+          id?: string
+          is_pending?: boolean | null
+          last_downloaded?: string | null
+          last_submitted?: string | null
+          sitemap_url?: string
+          total_urls?: number | null
+          warnings?: number | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
