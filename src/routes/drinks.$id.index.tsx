@@ -1,6 +1,13 @@
-import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
+import { createFileRoute, Link, notFound, redirect, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
 import { isUuid, drinkParam, slugify } from "@/lib/slug";
