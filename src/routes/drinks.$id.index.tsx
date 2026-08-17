@@ -159,8 +159,28 @@ function DrinkDetail() {
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
   const { canEdit, user, isAdmin } = useAuth();
   const canManage = canManageItem({ user, isAdmin, canEdit }, drink);
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [confirmar, setConfirmar] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
+
+  const remover = async () => {
+    const { error } = await supabase.from("drinks").delete().eq("id", drink.id);
+    if (error) {
+      toast.error("Erro ao remover: " + error.message);
+      return;
+    }
+    if (drink.imagem_url) {
+      await supabase.storage.from("drink-images").remove([drink.imagem_url]);
+    }
+    toast.success("Drink removido.");
+    qc.invalidateQueries({ queryKey: ["drinks"] });
+    qc.invalidateQueries({ queryKey: ["counts"] });
+    setConfirmar(false);
+    navigate({ to: "/drinks", replace: true });
+  };
+
 
   return (
     <div className="min-h-dvh">
