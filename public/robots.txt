@@ -5,6 +5,7 @@ Disallow: /auth
 Disallow: /favoritos
 Disallow: /meu-bar
 Disallow: /usuarios
+Disallow: /indexacao
 Disallow: /ingredientes
 Disallow: /.mcp/
 Disallow: /.lovable/

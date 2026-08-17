@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Heart, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
+import { BarChart3, Heart, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
@@ -164,6 +164,13 @@ export function SiteHeader() {
                     </Link>
                   </DropdownMenuItem>
                 )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/indexacao" className="cursor-pointer">
+                      <BarChart3 className="mr-2 h-4 w-4" aria-hidden="true" /> Indexação (SEO)
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Sair
                 </DropdownMenuItem>
@@ -241,6 +248,11 @@ export function SiteHeader() {
                 {isAdmin && (
                   <Link to="/usuarios" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
                     <Shield className="h-4 w-4" aria-hidden="true" /> Usuários
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link to="/indexacao" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
+                    <BarChart3 className="h-4 w-4" aria-hidden="true" /> Indexação (SEO)
                   </Link>
                 )}
               </nav>
