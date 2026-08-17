@@ -1,6 +1,13 @@
-import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { ArrowLeft, Calculator, Pencil, Youtube } from "lucide-react";
+import { createFileRoute, Link, notFound, redirect, useNavigate } from "@tanstack/react-router";
+import { useSuspenseQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { toast } from "sonner";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
 import { isUuid, drinkParam, slugify } from "@/lib/slug";
@@ -159,8 +166,28 @@ function DrinkDetail() {
   const { data: drink } = useSuspenseQuery(drinkQuery(id));
   const { canEdit, user, isAdmin } = useAuth();
   const canManage = canManageItem({ user, isAdmin, canEdit }, drink);
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [confirmar, setConfirmar] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
+
+  const remover = async () => {
+    const { error } = await supabase.from("drinks").delete().eq("id", drink.id);
+    if (error) {
+      toast.error("Erro ao remover: " + error.message);
+      return;
+    }
+    if (drink.imagem_url) {
+      await supabase.storage.from("drink-images").remove([drink.imagem_url]);
+    }
+    toast.success("Drink removido.");
+    qc.invalidateQueries({ queryKey: ["drinks"] });
+    qc.invalidateQueries({ queryKey: ["counts"] });
+    setConfirmar(false);
+    navigate({ to: "/drinks", replace: true });
+  };
+
 
   return (
     <div className="min-h-dvh">
@@ -249,12 +276,23 @@ function DrinkDetail() {
             </div>
             <div className="flex flex-wrap gap-2">
               {canManage && (
-                <Button asChild className="min-h-11 sm:min-h-9">
-                  <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
-                    <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
-                  </Link>
-                </Button>
+                <>
+                  <Button asChild className="min-h-11 sm:min-h-9">
+                    <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
+                      <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="min-h-11 sm:min-h-9"
+                    onClick={() => setConfirmar(true)}
+                    aria-label={`Remover ${drink.nome}`}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" aria-hidden="true" /> Remover
+                  </Button>
+                </>
               )}
+
               <Button
                 variant="outline"
                 className="min-h-11 sm:min-h-9"
@@ -291,6 +329,20 @@ function DrinkDetail() {
 
         <DrinkSocial drinkId={drink.id} />
       </main>
+
+      <AlertDialog open={confirmar} onOpenChange={setConfirmar}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Remover drink?</AlertDialogTitle>
+            <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={remover}>Remover</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
     </div>
   );
 }
