@@ -164,6 +164,13 @@ export function SiteHeader() {
                     </Link>
                   </DropdownMenuItem>
                 )}
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/indexacao" className="cursor-pointer">
+                      <BarChart3 className="mr-2 h-4 w-4" aria-hidden="true" /> Indexação (SEO)
+                    </Link>
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" aria-hidden="true" /> Sair
                 </DropdownMenuItem>
