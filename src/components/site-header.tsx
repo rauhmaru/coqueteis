@@ -250,6 +250,11 @@ export function SiteHeader() {
                     <Shield className="h-4 w-4" aria-hidden="true" /> Usuários
                   </Link>
                 )}
+                {isAdmin && (
+                  <Link to="/indexacao" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
+                    <BarChart3 className="h-4 w-4" aria-hidden="true" /> Indexação (SEO)
+                  </Link>
+                )}
               </nav>
             </SheetContent>
           </Sheet>
