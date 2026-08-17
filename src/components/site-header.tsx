@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { Heart, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
+import { BarChart3, Heart, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
