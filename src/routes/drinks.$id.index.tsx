@@ -276,12 +276,23 @@ function DrinkDetail() {
             </div>
             <div className="flex flex-wrap gap-2">
               {canManage && (
-                <Button asChild className="min-h-11 sm:min-h-9">
-                  <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
-                    <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
-                  </Link>
-                </Button>
+                <>
+                  <Button asChild className="min-h-11 sm:min-h-9">
+                    <Link to="/drinks/$id/editar" params={{ id: drinkParam(drink) }}>
+                      <Pencil className="h-4 w-4 mr-2" aria-hidden="true" /> Editar
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    className="min-h-11 sm:min-h-9"
+                    onClick={() => setConfirmar(true)}
+                    aria-label={`Remover ${drink.nome}`}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" aria-hidden="true" /> Remover
+                  </Button>
+                </>
               )}
+
               <Button
                 variant="outline"
                 className="min-h-11 sm:min-h-9"
