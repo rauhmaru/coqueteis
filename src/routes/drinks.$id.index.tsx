@@ -7,6 +7,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
