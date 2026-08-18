@@ -15,7 +15,6 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider, useTheme } from "@/hooks/use-theme";
 import { A11yProvider } from "@/hooks/use-a11y";
-import { AgeGate } from "@/components/age-gate";
 
 function NotFoundComponent() {
   return (
@@ -163,7 +162,6 @@ function RootComponent() {
               Pular para o conteúdo principal
             </a>
             <Outlet />
-            <AgeGate />
             <ThemedToaster />
           </AuthProvider>
         </A11yProvider>
