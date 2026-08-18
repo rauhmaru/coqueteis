@@ -171,12 +171,30 @@ function DrinkDetail() {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [confirmar, setConfirmar] = useState(false);
+  const [motivo, setMotivo] = useState("");
+  const [removendo, setRemovendo] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
 
   const remover = async () => {
+    if (!user || motivo.trim().length < 3) return;
+    setRemovendo(true);
+    const { error: logError } = await supabase.from("drink_remocoes_log").insert({
+      drink_id: drink.id,
+      drink_nome: drink.nome,
+      drink_slug: drink.slug ?? null,
+      motivo: motivo.trim(),
+      removido_por: user.id,
+      removido_por_email: user.email ?? null,
+    });
+    if (logError) {
+      setRemovendo(false);
+      toast.error("Erro ao registrar o motivo: " + logError.message);
+      return;
+    }
     const { error } = await supabase.from("drinks").delete().eq("id", drink.id);
     if (error) {
+      setRemovendo(false);
       toast.error("Erro ao remover: " + error.message);
       return;
     }
@@ -186,8 +204,10 @@ function DrinkDetail() {
     toast.success("Drink removido.");
     qc.invalidateQueries({ queryKey: ["drinks"] });
     qc.invalidateQueries({ queryKey: ["counts"] });
+    qc.invalidateQueries({ queryKey: ["remocoes-log"] });
+    setRemovendo(false);
     setConfirmar(false);
-    navigate({ to: "/drinks", replace: true });
+    navigate({ to: isAdmin ? "/remocoes" : "/drinks", replace: true });
   };
 
 
