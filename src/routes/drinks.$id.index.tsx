@@ -334,11 +334,32 @@ function DrinkDetail() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remover drink?</AlertDialogTitle>
-            <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Informe o motivo — ele fica registrado no log de
+              remoções.
+            </AlertDialogDescription>
           </AlertDialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="motivo-remocao">Motivo da remoção</Label>
+            <Textarea
+              id="motivo-remocao"
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Ex.: receita duplicada, informações incorretas…"
+              rows={3}
+            />
+          </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={remover}>Remover</AlertDialogAction>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void remover();
+              }}
+              disabled={motivo.trim().length < 3 || removendo}
+            >
+              Remover
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
