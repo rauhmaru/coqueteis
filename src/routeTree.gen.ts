@@ -32,6 +32,7 @@ import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as CartaVerRouteImport } from './routes/carta_.ver'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
 import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
@@ -159,6 +160,11 @@ const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRemocoesRoute = AuthenticatedRemocoesRouteImport.update({
+  id: '/remocoes',
+  path: '/remocoes',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedMeuBarRoute = AuthenticatedMeuBarRouteImport.update({
   id: '/meu-bar',
   path: '/meu-bar',
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
+  '/remocoes': typeof AuthenticatedRemocoesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/carta/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
+  '/remocoes': typeof AuthenticatedRemocoesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/carta/ver': typeof CartaVerRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -314,6 +322,7 @@ export interface FileRoutesById {
   '/_authenticated/indexacao': typeof AuthenticatedIndexacaoRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
+  '/_authenticated/remocoes': typeof AuthenticatedRemocoesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/carta_/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
@@ -352,6 +361,7 @@ export interface FileRouteTypes {
     | '/indexacao'
     | '/ingredientes'
     | '/meu-bar'
+    | '/remocoes'
     | '/usuarios'
     | '/carta/ver'
     | '/drinks/$id'
@@ -386,6 +396,7 @@ export interface FileRouteTypes {
     | '/indexacao'
     | '/ingredientes'
     | '/meu-bar'
+    | '/remocoes'
     | '/usuarios'
     | '/carta/ver'
     | '/mixologia/bebidas'
@@ -422,6 +433,7 @@ export interface FileRouteTypes {
     | '/_authenticated/indexacao'
     | '/_authenticated/ingredientes'
     | '/_authenticated/meu-bar'
+    | '/_authenticated/remocoes'
     | '/_authenticated/usuarios'
     | '/carta_/ver'
     | '/drinks/$id'
@@ -624,6 +636,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/remocoes': {
+      id: '/_authenticated/remocoes'
+      path: '/remocoes'
+      fullPath: '/remocoes'
+      preLoaderRoute: typeof AuthenticatedRemocoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/meu-bar': {
       id: '/_authenticated/meu-bar'
       path: '/meu-bar'
@@ -716,6 +735,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIndexacaoRoute: typeof AuthenticatedIndexacaoRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
   AuthenticatedMeuBarRoute: typeof AuthenticatedMeuBarRoute
+  AuthenticatedRemocoesRoute: typeof AuthenticatedRemocoesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
   AuthenticatedDrinksIdEditarRoute: typeof AuthenticatedDrinksIdEditarRoute
@@ -726,6 +746,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIndexacaoRoute: AuthenticatedIndexacaoRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
   AuthenticatedMeuBarRoute: AuthenticatedMeuBarRoute,
+  AuthenticatedRemocoesRoute: AuthenticatedRemocoesRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
   AuthenticatedDrinksIdEditarRoute: AuthenticatedDrinksIdEditarRoute,

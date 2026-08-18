@@ -255,6 +255,39 @@ export type Database = {
           },
         ]
       }
+      drink_remocoes_log: {
+        Row: {
+          created_at: string
+          drink_id: string | null
+          drink_nome: string
+          drink_slug: string | null
+          id: string
+          motivo: string
+          removido_por: string
+          removido_por_email: string | null
+        }
+        Insert: {
+          created_at?: string
+          drink_id?: string | null
+          drink_nome: string
+          drink_slug?: string | null
+          id?: string
+          motivo: string
+          removido_por: string
+          removido_por_email?: string | null
+        }
+        Update: {
+          created_at?: string
+          drink_id?: string | null
+          drink_nome?: string
+          drink_slug?: string | null
+          id?: string
+          motivo?: string
+          removido_por?: string
+          removido_por_email?: string | null
+        }
+        Relationships: []
+      }
       drinks: {
         Row: {
           copo: string | null

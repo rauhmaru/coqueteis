@@ -7,6 +7,8 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 import { SiteHeader } from "@/components/site-header";
 import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
@@ -169,12 +171,30 @@ function DrinkDetail() {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [confirmar, setConfirmar] = useState(false);
+  const [motivo, setMotivo] = useState("");
+  const [removendo, setRemovendo] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
 
   const remover = async () => {
+    if (!user || motivo.trim().length < 3) return;
+    setRemovendo(true);
+    const { error: logError } = await supabase.from("drink_remocoes_log").insert({
+      drink_id: drink.id,
+      drink_nome: drink.nome,
+      drink_slug: drink.slug ?? null,
+      motivo: motivo.trim(),
+      removido_por: user.id,
+      removido_por_email: user.email ?? null,
+    });
+    if (logError) {
+      setRemovendo(false);
+      toast.error("Erro ao registrar o motivo: " + logError.message);
+      return;
+    }
     const { error } = await supabase.from("drinks").delete().eq("id", drink.id);
     if (error) {
+      setRemovendo(false);
       toast.error("Erro ao remover: " + error.message);
       return;
     }
@@ -184,8 +204,10 @@ function DrinkDetail() {
     toast.success("Drink removido.");
     qc.invalidateQueries({ queryKey: ["drinks"] });
     qc.invalidateQueries({ queryKey: ["counts"] });
+    qc.invalidateQueries({ queryKey: ["remocoes-log"] });
+    setRemovendo(false);
     setConfirmar(false);
-    navigate({ to: "/drinks", replace: true });
+    navigate({ to: isAdmin ? "/remocoes" : "/drinks", replace: true });
   };
 
 
@@ -334,11 +356,32 @@ function DrinkDetail() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Remover drink?</AlertDialogTitle>
-            <AlertDialogDescription>Esta ação não pode ser desfeita.</AlertDialogDescription>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Informe o motivo — ele fica registrado no log de
+              remoções.
+            </AlertDialogDescription>
           </AlertDialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="motivo-remocao">Motivo da remoção</Label>
+            <Textarea
+              id="motivo-remocao"
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+              placeholder="Ex.: receita duplicada, informações incorretas…"
+              rows={3}
+            />
+          </div>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={remover}>Remover</AlertDialogAction>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                void remover();
+              }}
+              disabled={motivo.trim().length < 3 || removendo}
+            >
+              Remover
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
