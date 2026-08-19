@@ -7,6 +7,8 @@ import highballImg from "@/assets/mixologia/highball.jpg";
 import destiladasImg from "@/assets/mixologia/destiladas.jpg";
 import xaropesImg from "@/assets/mixologia/xaropes.jpg";
 import geloImg from "@/assets/mixologia/gelo.jpg";
+import tecnicasImg from "@/assets/mixologia/tecnicas.jpg";
+import saboresImg from "@/assets/mixologia/sabores.jpg";
 
 const topicos = [
   { to: "/mixologia/origem", label: "Origem e história", desc: "Do vinho grego aos speakeasies e à renascença dos drinks.", img: origemImg },
@@ -16,6 +18,8 @@ const topicos = [
   { to: "/mixologia/bebidas", label: "Bebidas etílicas", desc: "Fermentadas, destiladas e infusionadas.", img: destiladasImg },
   { to: "/mixologia/xaropes", label: "Xaropes e bitters", desc: "Cor, doçura e complexidade para os coquetéis.", img: xaropesImg },
   { to: "/mixologia/gelo", label: "Gelo: de coadjuvante a estrela", desc: "O ingrediente mais subestimado do bar.", img: geloImg },
+  { to: "/mixologia/tecnicas", label: "Técnicas de bartending", desc: "Shake, dry shake, stir, swizzle, throw e roll.", img: tecnicasImg },
+  { to: "/mixologia/sabores", label: "Balanço de sabores", desc: "Doce, azedo, amargo e o equilíbrio do coquetel.", img: saboresImg },
 ] as const;
 
 export const Route = createFileRoute("/mixologia/")({

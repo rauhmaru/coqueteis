@@ -22,6 +22,8 @@ O conteúdo é em português do Brasil e voltado a amantes da coquetelaria: rece
 - [Bebidas](/mixologia/bebidas): Fermentadas, destiladas e infusionadas.
 - [Xaropes](/mixologia/xaropes): Xaropes e infusões caseiras.
 - [Gelo](/mixologia/gelo): Tipos de gelo e diluição.
+- [Técnicas de bartending](/mixologia/tecnicas): Shake, dry shake, stir, swizzle, throw e roll.
+- [Balanço de sabores](/mixologia/sabores): Receptores gustativos e equilíbrio doce/azedo/amargo.
 
 ## Optional
 

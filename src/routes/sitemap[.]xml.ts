@@ -21,6 +21,8 @@ const STATIC_ENTRIES: SitemapEntry[] = [
   { path: "/mixologia/bebidas", changefreq: "yearly", priority: "0.6" },
   { path: "/mixologia/xaropes", changefreq: "yearly", priority: "0.6" },
   { path: "/mixologia/gelo", changefreq: "yearly", priority: "0.6" },
+  { path: "/mixologia/tecnicas", changefreq: "yearly", priority: "0.6" },
+  { path: "/mixologia/sabores", changefreq: "yearly", priority: "0.6" },
   { path: "/calculadora-abv", changefreq: "monthly", priority: "0.7" },
   { path: "/carta", changefreq: "monthly", priority: "0.7" },
   { path: "/consumo-responsavel", changefreq: "yearly", priority: "0.5" },
