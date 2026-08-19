@@ -24,6 +24,8 @@ import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
 import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
 import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
+import { Route as MixologiaTecnicasRouteImport } from './routes/mixologia.tecnicas'
+import { Route as MixologiaSaboresRouteImport } from './routes/mixologia.sabores'
 import { Route as MixologiaOrigemRouteImport } from './routes/mixologia.origem'
 import { Route as MixologiaMateriaisRouteImport } from './routes/mixologia.materiais'
 import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
@@ -118,6 +120,16 @@ const MixologiaXaropesRoute = MixologiaXaropesRouteImport.update({
 const MixologiaTiposRoute = MixologiaTiposRouteImport.update({
   id: '/tipos',
   path: '/tipos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaTecnicasRoute = MixologiaTecnicasRouteImport.update({
+  id: '/tecnicas',
+  path: '/tecnicas',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaSaboresRoute = MixologiaSaboresRouteImport.update({
+  id: '/sabores',
+  path: '/sabores',
   getParentRoute: () => MixologiaRoute,
 } as any)
 const MixologiaOrigemRoute = MixologiaOrigemRouteImport.update({
@@ -258,6 +270,8 @@ export interface FileRoutesByFullPath {
   '/mixologia/gelo': typeof MixologiaGeloRoute
   '/mixologia/materiais': typeof MixologiaMateriaisRoute
   '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/sabores': typeof MixologiaSaboresRoute
+  '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
@@ -292,6 +306,8 @@ export interface FileRoutesByTo {
   '/mixologia/gelo': typeof MixologiaGeloRoute
   '/mixologia/materiais': typeof MixologiaMateriaisRoute
   '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/sabores': typeof MixologiaSaboresRoute
+  '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks': typeof DrinksIndexRoute
@@ -331,6 +347,8 @@ export interface FileRoutesById {
   '/mixologia/gelo': typeof MixologiaGeloRoute
   '/mixologia/materiais': typeof MixologiaMateriaisRoute
   '/mixologia/origem': typeof MixologiaOrigemRoute
+  '/mixologia/sabores': typeof MixologiaSaboresRoute
+  '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
@@ -370,6 +388,8 @@ export interface FileRouteTypes {
     | '/mixologia/gelo'
     | '/mixologia/materiais'
     | '/mixologia/origem'
+    | '/mixologia/sabores'
+    | '/mixologia/tecnicas'
     | '/mixologia/tipos'
     | '/mixologia/xaropes'
     | '/drinks/'
@@ -404,6 +424,8 @@ export interface FileRouteTypes {
     | '/mixologia/gelo'
     | '/mixologia/materiais'
     | '/mixologia/origem'
+    | '/mixologia/sabores'
+    | '/mixologia/tecnicas'
     | '/mixologia/tipos'
     | '/mixologia/xaropes'
     | '/drinks'
@@ -442,6 +464,8 @@ export interface FileRouteTypes {
     | '/mixologia/gelo'
     | '/mixologia/materiais'
     | '/mixologia/origem'
+    | '/mixologia/sabores'
+    | '/mixologia/tecnicas'
     | '/mixologia/tipos'
     | '/mixologia/xaropes'
     | '/drinks/'
@@ -578,6 +602,20 @@ declare module '@tanstack/react-router' {
       path: '/tipos'
       fullPath: '/mixologia/tipos'
       preLoaderRoute: typeof MixologiaTiposRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/tecnicas': {
+      id: '/mixologia/tecnicas'
+      path: '/tecnicas'
+      fullPath: '/mixologia/tecnicas'
+      preLoaderRoute: typeof MixologiaTecnicasRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/sabores': {
+      id: '/mixologia/sabores'
+      path: '/sabores'
+      fullPath: '/mixologia/sabores'
+      preLoaderRoute: typeof MixologiaSaboresRouteImport
       parentRoute: typeof MixologiaRoute
     }
     '/mixologia/origem': {
@@ -788,6 +826,8 @@ interface MixologiaRouteChildren {
   MixologiaGeloRoute: typeof MixologiaGeloRoute
   MixologiaMateriaisRoute: typeof MixologiaMateriaisRoute
   MixologiaOrigemRoute: typeof MixologiaOrigemRoute
+  MixologiaSaboresRoute: typeof MixologiaSaboresRoute
+  MixologiaTecnicasRoute: typeof MixologiaTecnicasRoute
   MixologiaTiposRoute: typeof MixologiaTiposRoute
   MixologiaXaropesRoute: typeof MixologiaXaropesRoute
   MixologiaIndexRoute: typeof MixologiaIndexRoute
@@ -799,6 +839,8 @@ const MixologiaRouteChildren: MixologiaRouteChildren = {
   MixologiaGeloRoute: MixologiaGeloRoute,
   MixologiaMateriaisRoute: MixologiaMateriaisRoute,
   MixologiaOrigemRoute: MixologiaOrigemRoute,
+  MixologiaSaboresRoute: MixologiaSaboresRoute,
+  MixologiaTecnicasRoute: MixologiaTecnicasRoute,
   MixologiaTiposRoute: MixologiaTiposRoute,
   MixologiaXaropesRoute: MixologiaXaropesRoute,
   MixologiaIndexRoute: MixologiaIndexRoute,
