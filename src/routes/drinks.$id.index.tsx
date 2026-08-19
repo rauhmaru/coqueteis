@@ -26,6 +26,7 @@ import { DrinkSocial } from "@/components/drink-social";
 import { ShareDrink } from "@/components/share-drink";
 import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
+import { WakeLockButton } from "@/components/wake-lock-button";
 import { FichaTecnica } from "@/components/ficha-tecnica";
 import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
@@ -334,6 +335,7 @@ function DrinkDetail() {
                 </Link>
               </Button>
 
+              <WakeLockButton />
               <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drinkParam(drink)} imagemPath={drink.imagem_url} />
             </div>
