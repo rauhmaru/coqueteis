@@ -3,7 +3,6 @@ import {
   MixImg,
   MixImgRow,
   MixSection,
-  MixologiaNav,
   MixologiaPage,
 } from "@/components/mixologia-layout";
 import tecnicasImg from "@/assets/mixologia/tecnicas.jpg";
@@ -157,12 +156,6 @@ function TecnicasPage() {
         </p>
       </MixSection>
 
-      <MixologiaNav
-        next={{
-          to: "/mixologia/sabores",
-          label: "Balanço de sabores",
-        }}
-      />
     </MixologiaPage>
   );
 }
