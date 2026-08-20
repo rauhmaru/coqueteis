@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MixImg, MixImgRow, MixSection, MixologiaPage } from "@/components/mixologia-layout";
+import {
+  MixImg,
+  MixImgRow,
+  MixSection,
+  MixologiaNav,
+  MixologiaPage,
+} from "@/components/mixologia-layout";
 import tecnicasImg from "@/assets/mixologia/tecnicas.jpg";
+
 
 export const Route = createFileRoute("/mixologia/tecnicas")({
   head: () => ({
