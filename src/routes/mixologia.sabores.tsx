@@ -3,7 +3,6 @@ import {
   MixImg,
   MixImgRow,
   MixSection,
-  MixologiaNav,
   MixologiaPage,
 } from "@/components/mixologia-layout";
 import saboresImg from "@/assets/mixologia/sabores.jpg";
@@ -132,12 +131,6 @@ function SaboresPage() {
         </p>
       </MixSection>
 
-      <MixologiaNav
-        prev={{
-          to: "/mixologia/tecnicas",
-          label: "Técnicas de bartending",
-        }}
-      />
     </MixologiaPage>
   );
 }
