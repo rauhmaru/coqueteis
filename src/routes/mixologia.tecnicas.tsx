@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MixImg, MixImgRow, MixSection, MixologiaPage } from "@/components/mixologia-layout";
+import {
+  MixImg,
+  MixImgRow,
+  MixSection,
+  MixologiaNav,
+  MixologiaPage,
+} from "@/components/mixologia-layout";
 import tecnicasImg from "@/assets/mixologia/tecnicas.jpg";
+
 
 export const Route = createFileRoute("/mixologia/tecnicas")({
   head: () => ({
@@ -149,6 +156,14 @@ function TecnicasPage() {
           coquetel enquanto ele é resfriado e diluído ao mesmo tempo.
         </p>
       </MixSection>
+
+      <MixologiaNav
+        next={{
+          to: "/mixologia/sabores",
+          label: "Balanço de sabores",
+        }}
+      />
     </MixologiaPage>
   );
 }
+
