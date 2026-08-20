@@ -156,6 +156,14 @@ function TecnicasPage() {
           coquetel enquanto ele é resfriado e diluído ao mesmo tempo.
         </p>
       </MixSection>
+
+      <MixologiaNav
+        next={{
+          to: "/mixologia/sabores",
+          label: "Balanço de sabores",
+        }}
+      />
     </MixologiaPage>
   );
 }
+
