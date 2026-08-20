@@ -34,10 +34,11 @@ function ProgressoLeitura({ alvo }: { alvo: React.RefObject<HTMLElement | null> 
     const calcular = () => {
       const el = alvo.current;
       if (!el) return;
-      const inicio = el.offsetTop;
-      const total = el.offsetHeight - window.innerHeight * 0.35;
-      const atual = window.scrollY - inicio;
-      const pct = total > 0 ? (atual / total) * 100 : 100;
+      const rect = el.getBoundingClientRect();
+      const inicio = rect.top + window.scrollY;
+      const total = el.offsetHeight;
+      const lido = window.scrollY + window.innerHeight - inicio;
+      const pct = total > 0 ? (lido / total) * 100 : 100;
       setProgresso(Math.min(100, Math.max(0, pct)));
     };
     calcular();
