@@ -131,6 +131,14 @@ function SaboresPage() {
           até o ponto de equilíbrio.
         </p>
       </MixSection>
+
+      <MixologiaNav
+        prev={{
+          to: "/mixologia/tecnicas",
+          label: "Técnicas de bartending",
+        }}
+      />
     </MixologiaPage>
   );
 }
+
