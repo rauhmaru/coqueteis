@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { getSignedImageUrl } from "@/lib/queries";
+import { getImageUrl } from "@/lib/image-urls";
 
 type Props = { nome: string; drinkId: string; imagemPath?: string | null };
 
@@ -46,7 +46,7 @@ export function ShareDrink({ nome, drinkId, imagemPath }: Props) {
     if (!imagemPath) return;
     setSharingImage(true);
     try {
-      const signed = await getSignedImageUrl(imagemPath);
+      const signed = await getImageUrl(imagemPath);
       if (!signed) throw new Error("Imagem indisponível.");
       const res = await fetch(signed);
       const blob = await res.blob();

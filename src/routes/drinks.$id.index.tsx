@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 import { SiteHeader } from "@/components/site-header";
-import { drinkQuery, getSignedImageUrl, type DrinkComIngredientes } from "@/lib/queries";
+import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { getStableImageUrl } from "@/lib/image-urls";
 import { isUuid, drinkParam, slugify } from "@/lib/slug";
 import { CustoEstoque } from "@/components/custo-estoque";
 import { DrinksRelacionados } from "@/components/drinks-relacionados";
@@ -148,7 +149,7 @@ export const Route = createFileRoute("/drinks/$id/")({
         statusCode: 301,
       });
     }
-    const imagem = data.imagem_url ? await getSignedImageUrl(data.imagem_url) : null;
+    const imagem = data.imagem_url ? getStableImageUrl(data.imagem_url) : null;
     return { drink: data, imagem };
   },
   component: DrinkDetail,
