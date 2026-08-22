@@ -147,3 +147,28 @@ export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number)
       return { total: r.total ?? 0, drinks: r.drinks ?? [] };
     },
   });
+
+export type DrinkIndice = {
+  id: string;
+  dificuldade: string;
+  ingredientes: string[];
+  categorias: string[];
+};
+
+/** Índice leve (sem textos/imagens) usado para contar receitas por ingrediente nos filtros. */
+export const drinksIndiceQuery = queryOptions({
+  queryKey: ["drinks", "indice"],
+  staleTime: 5 * 60 * 1000,
+  queryFn: async (): Promise<DrinkIndice[]> => {
+    const { data, error } = await supabase
+      .from("drinks")
+      .select("id, dificuldade, drink_ingredientes(ingrediente_id), drink_drink_categorias(categoria_id)");
+    if (error) throw error;
+    return (data ?? []).map((d: any) => ({
+      id: d.id as string,
+      dificuldade: d.dificuldade as string,
+      ingredientes: (d.drink_ingredientes ?? []).map((x: any) => x.ingrediente_id as string),
+      categorias: (d.drink_drink_categorias ?? []).map((x: any) => x.categoria_id as string),
+    }));
+  },
+});
