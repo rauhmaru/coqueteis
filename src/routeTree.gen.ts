@@ -46,6 +46,7 @@ import { Route as DrinksCategoriaCategoriaRouteImport } from './routes/drinks.ca
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as ApiPublicDrinkImageSplatRouteImport } from './routes/api/public/drink-image.$'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -237,6 +238,12 @@ const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
   path: '/.lovable/oauth/consent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDrinkImageSplatRoute =
+  ApiPublicDrinkImageSplatRouteImport.update({
+    id: '/api/public/drink-image/$',
+    path: '/api/public/drink-image/$',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedDrinksIdEditarRoute =
   AuthenticatedDrinksIdEditarRouteImport.update({
     id: '/drinks/$id/editar',
@@ -282,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
+  '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -318,6 +326,7 @@ export interface FileRoutesByTo {
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
+  '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -359,6 +368,7 @@ export interface FileRoutesById {
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
+  '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
+    | '/api/public/drink-image/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/drinks/categoria/$categoria'
     | '/drinks/$id'
     | '/drinks/$id/editar'
+    | '/api/public/drink-image/$'
   id:
     | '__root__'
     | '/'
@@ -476,6 +488,7 @@ export interface FileRouteTypes {
     | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
+    | '/api/public/drink-image/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -495,6 +508,7 @@ export interface RootRouteChildren {
   CartaVerRoute: typeof CartaVerRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiPublicDrinkImageSplatRoute: typeof ApiPublicDrinkImageSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -758,6 +772,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/drink-image/$': {
+      id: '/api/public/drink-image/$'
+      path: '/api/public/drink-image/$'
+      fullPath: '/api/public/drink-image/$'
+      preLoaderRoute: typeof ApiPublicDrinkImageSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/drinks/$id/editar': {
       id: '/_authenticated/drinks/$id/editar'
       path: '/drinks/$id/editar'
@@ -868,6 +889,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartaVerRoute: CartaVerRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiPublicDrinkImageSplatRoute: ApiPublicDrinkImageSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
