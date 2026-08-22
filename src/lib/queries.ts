@@ -137,7 +137,7 @@ export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number)
         _ingredientes: filtros.ingredientes,
         _categorias: filtros.categorias,
         _dificuldades: filtros.dificuldades,
-        _qtd: filtros.qtd,
+        _qtd: filtros.qtd ?? undefined,
         _comparador: filtros.comparador,
         _limite: limite,
         _offset: 0,
