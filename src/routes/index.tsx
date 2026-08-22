@@ -1,21 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
-import { Martini, Search, ArrowRight, Wine, Sparkles, Wallet } from "lucide-react";
+import { ArrowRight, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
+import { AutocompleteDrinks } from "@/components/drink-search";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { countsQuery, drinksQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { drinkParam, slugify } from "@/lib/slug";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 
 
 export const Route = createFileRoute("/")({
@@ -57,7 +50,6 @@ function HomePage() {
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [query, setQuery] = useState("");
 
   // Atalhos para as categorias com mais receitas.
   const categoriasPopulares = useMemo(
@@ -76,36 +68,6 @@ function HomePage() {
   );
 
 
-  const filtered = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    const norm = (s: string) =>
-      s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    const scored = drinks
-      .map((d) => {
-        const nome = norm(d.nome);
-        const cats = d.drink_drink_categorias
-          .map((c) => norm(c.drink_categorias?.nome ?? ""))
-          .join(" ");
-        const ings = d.drink_ingredientes
-          .map((i) => norm(i.ingredientes?.nome ?? ""))
-          .join(" ");
-        let score = 0;
-        if (nome.startsWith(q)) score = 4;
-        else if (nome.includes(q)) score = 3;
-        else if (cats.includes(q)) score = 2;
-        else if (ings.includes(q)) score = 1;
-        return { d, score };
-      })
-      .filter((x) => x.score > 0)
-      .sort((a, b) => b.score - a.score || a.d.nome.localeCompare(b.d.nome))
-      .slice(0, 8)
-      .map((x) => x.d);
-    return scored;
-  }, [query, drinks]);
 
   const sugestao = useMemo(
     () => (drinks.length ? drinks[Math.floor(Math.random() * drinks.length)] : null),
@@ -132,49 +94,7 @@ function HomePage() {
           <h2 id="busca-titulo" className="sr-only">
             Buscar drinks
           </h2>
-          <div className="rounded-xl border border-border bg-card overflow-hidden shadow-2xl">
-            <Command shouldFilter={false} className="bg-transparent">
-              <div className="flex items-center px-4 border-b border-border">
-                <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-                <CommandInput
-                  value={query}
-                  onValueChange={setQuery}
-                  placeholder="Buscar um drink pelo nome…"
-                  className="border-0 focus:ring-0 text-base"
-                />
-              </div>
-              <CommandList className={query.trim() ? "max-h-64" : "hidden"}>
-                {query.trim() && (
-                  <CommandEmpty>Nenhum drink encontrado.</CommandEmpty>
-                )}
-                {query.trim() && (
-                  <CommandGroup>
-                    {filtered.map((d) => (
-                      <CommandItem
-                        key={d.id}
-                        value={d.id}
-                        onSelect={() => navigate({ to: "/drinks/$id", params: { id: d.id } })}
-                        className="cursor-pointer"
-                      >
-                        <Martini className="h-4 w-4 mr-2 text-primary shrink-0" aria-hidden="true" />
-                        <span className="flex-1 truncate">{d.nome}</span>
-                        {d.drink_drink_categorias[0]?.drink_categorias?.nome && (
-                          <span className="ml-2 text-xs text-muted-foreground truncate">
-                            {d.drink_drink_categorias[0].drink_categorias.nome}
-                          </span>
-                        )}
-                        {user && (
-                          <span className="ml-2 shrink-0">
-                            <FavoriteIconButton drinkId={d.id} />
-                          </span>
-                        )}
-                      </CommandItem>
-                    ))}
-                  </CommandGroup>
-                )}
-              </CommandList>
-            </Command>
-          </div>
+          <AutocompleteDrinks className="shadow-2xl" />
         </section>
 
         <section
