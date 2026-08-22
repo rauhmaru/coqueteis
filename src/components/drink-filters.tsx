@@ -86,7 +86,8 @@ export function useDrinkFilters({
   categorias,
   idPrefix = "filtro",
 }: {
-  drinks: DrinkComIngredientes[];
+  /** Opcional: quando informado, o hook também filtra no cliente (`filtered`). */
+  drinks?: DrinkComIngredientes[];
   ingredientes: Ingrediente[];
   categorias: DrinkCategoria[];
   idPrefix?: string;
@@ -112,7 +113,7 @@ export function useDrinkFilters({
   const qtdErro = qtd.trim() && qtdNum === null ? "Informe um número inteiro maior que 0." : null;
 
   const filtered = useMemo(() => {
-    return drinks.filter((d) => {
+    return (drinks ?? []).filter((d) => {
       if (selected.size > 0) {
         const ids = new Set(d.drink_ingredientes.map((di) => di.ingrediente_id));
         for (const sel of selected) if (!ids.has(sel)) return false;
@@ -285,5 +286,23 @@ export function useDrinkFilters({
     </div>
   );
 
-  return { filtered, element, ativos, limparTudo, temFiltro: ativos > 0 };
+  const filtrosServidor = useMemo(
+    () => ({
+      ingredientes: [...selected],
+      categorias: [...selectedCats],
+      dificuldades: [...selectedDifs],
+      qtd: qtdNum,
+      comparador,
+    }),
+    [selected, selectedCats, selectedDifs, qtdNum, comparador],
+  );
+
+  return {
+    filtered,
+    element,
+    ativos,
+    limparTudo,
+    temFiltro: ativos > 0,
+    filtrosServidor,
+  };
 }

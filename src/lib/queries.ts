@@ -117,3 +117,33 @@ export const countsQuery = queryOptions({
 
 // URLs de imagem: ver src/lib/image-urls.ts (assinaturas em lote + cache).
 export { getImageUrl, getCachedImageUrl, getStableImageUrl } from "@/lib/image-urls";
+
+export type DrinkFiltrosServidor = {
+  ingredientes: string[];
+  categorias: string[];
+  dificuldades: string[];
+  qtd: number | null;
+  comparador: string;
+};
+
+export type DrinksPagina = { total: number; drinks: DrinkComIngredientes[] };
+
+/** Busca paginada no banco: os filtros são aplicados no servidor e só a página pedida é trazida. */
+export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number) =>
+  queryOptions({
+    queryKey: ["drinks", "pagina", filtros, limite],
+    queryFn: async (): Promise<DrinksPagina> => {
+      const { data, error } = await supabase.rpc("buscar_drinks", {
+        _ingredientes: filtros.ingredientes,
+        _categorias: filtros.categorias,
+        _dificuldades: filtros.dificuldades,
+        _qtd: filtros.qtd ?? undefined,
+        _comparador: filtros.comparador,
+        _limite: limite,
+        _offset: 0,
+      });
+      if (error) throw error;
+      const r = (data ?? { total: 0, drinks: [] }) as unknown as DrinksPagina;
+      return { total: r.total ?? 0, drinks: r.drinks ?? [] };
+    },
+  });

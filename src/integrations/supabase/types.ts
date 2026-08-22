@@ -564,6 +564,18 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      buscar_drinks: {
+        Args: {
+          _categorias?: string[]
+          _comparador?: string
+          _dificuldades?: string[]
+          _ingredientes?: string[]
+          _limite?: number
+          _offset?: number
+          _qtd?: number
+        }
+        Returns: Json
+      }
       can_edit: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {
