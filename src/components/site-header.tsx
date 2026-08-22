@@ -6,6 +6,7 @@ import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccessibilityPanel } from "@/components/accessibility-panel";
+import { AutocompleteDrinks, BuscaOverlay } from "@/components/drink-search";
 import {
   Sheet,
   SheetContent,
@@ -130,6 +131,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2">
+          <BuscaOverlay />
           <AccessibilityPanel />
           <ThemeToggle />
 
@@ -201,7 +203,10 @@ export function SiteHeader() {
               <SheetHeader>
                 <SheetTitle className="font-serif">Navegação</SheetTitle>
               </SheetHeader>
-              <nav aria-label="Navegação principal" className="mt-6 flex flex-col gap-1">
+              <div className="mt-6">
+                <AutocompleteDrinks onNavegar={fechar} />
+              </div>
+              <nav aria-label="Navegação principal" className="mt-4 flex flex-col gap-1">
                 {publicNav.map((item) => (
                   <Link
                     key={item.to}

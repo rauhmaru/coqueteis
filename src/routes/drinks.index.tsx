@@ -26,6 +26,8 @@ import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useDrinkFilters } from "@/components/drink-filters";
+import { CampoBuscaDrinks } from "@/components/drink-search";
+import { combina } from "@/lib/busca";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 const POR_PAGINA = 24;
@@ -131,6 +133,7 @@ function DrinksList() {
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
+  const [busca, setBusca] = useState("");
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
@@ -154,15 +157,19 @@ function DrinksList() {
     navigate({ search: { pagina: 1 }, replace: true });
   }, [chaveFiltros, navigate]);
 
-  const limite = pagina * POR_PAGINA;
+  const buscando = busca.trim().length > 0;
+  // Com termo de busca, carregamos o conjunto filtrado inteiro e casamos o
+  // termo no cliente (nome, categoria ou ingrediente) com a mesma normalização.
+  const limite = buscando ? 500 : pagina * POR_PAGINA;
   const { data, isPending, isFetching } = useQuery({
     ...drinksPaginaQuery(filtrosServidor, limite),
     placeholderData: keepPreviousData,
   });
 
-  const drinks = data?.drinks ?? [];
-  const total = data?.total ?? 0;
-  const temMais = drinks.length < total;
+  const todos = data?.drinks ?? [];
+  const drinks = buscando ? todos.filter((d) => combina(d, busca)) : todos;
+  const total = buscando ? drinks.length : data?.total ?? 0;
+  const temMais = !buscando && drinks.length < total;
   const carregandoMais = isFetching && drinks.length < limite && drinks.length < total;
 
   const canManage = (d: DrinkComIngredientes) => canManageItem({ user, isAdmin, canEdit }, d);
@@ -208,6 +215,13 @@ function DrinksList() {
             )}
           </div>
         </div>
+
+        <CampoBuscaDrinks
+          id="drinks-busca"
+          value={busca}
+          onChange={setBusca}
+          className="max-w-xl"
+        />
 
         <div className="lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8 lg:items-start">
           {/* Filtros: coluna lateral fixa no desktop, bottom sheet no mobile */}
@@ -274,7 +288,9 @@ function DrinksList() {
           <div className="rounded-xl border border-dashed border-border p-12 text-center">
             <Martini className="h-10 w-10 mx-auto text-muted-foreground mb-3" aria-hidden="true" />
             <p className="text-muted-foreground">
-              {temFiltro
+              {buscando
+                ? `Nenhum drink encontrado para “${busca.trim()}”.`
+                : temFiltro
                 ? "Nenhum drink combina com esses filtros."
                 : "Nenhum drink cadastrado ainda."}
             </p>

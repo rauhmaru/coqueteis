@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Check, FileDown, Link2, Loader2, QrCode, Search, X } from "lucide-react";
+import { Check, FileDown, Link2, Loader2, QrCode, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { drinksQuery, ingredientesQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { useDrinkFilters } from "@/components/drink-filters";
+import { CampoBuscaDrinks } from "@/components/drink-search";
+import { combina } from "@/lib/busca";
 
 import { gerarCartaPdf } from "@/lib/carta-pdf";
 import { CARTA_TEMPLATES, QR_TAMANHOS, qrMm, type QrTamanhoId } from "@/lib/carta-templates";
@@ -55,11 +57,6 @@ export const Route = createFileRoute("/carta")({
   component: CartaPage,
 });
 
-const norm = (s: string) =>
-  s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
 
 function parseNum(valor: string, max: number): { n: number | null; erro: string | null } {
   const t = valor.trim();
@@ -95,14 +92,7 @@ function CartaPage() {
   });
 
   const filtrados = useMemo(() => {
-    const q = norm(busca.trim());
-    const base = q
-      ? porFiltros.filter(
-          (d) =>
-            norm(d.nome).includes(q) ||
-            d.drink_ingredientes.some((di) => norm(di.ingredientes?.nome ?? "").includes(q)),
-        )
-      : porFiltros;
+    const base = busca.trim() ? porFiltros.filter((d) => combina(d, busca)) : porFiltros;
     return base.slice(0, 60);
   }, [porFiltros, busca]);
 
@@ -227,22 +217,7 @@ function CartaPage() {
                 </span>
               </h2>
 
-              <div className="relative">
-                <Search
-                  className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <Label htmlFor="carta-busca" className="sr-only">
-                  Buscar drink por nome ou ingrediente
-                </Label>
-                <Input
-                  id="carta-busca"
-                  value={busca}
-                  onChange={(e) => setBusca(e.target.value)}
-                  placeholder="Buscar por nome ou ingrediente…"
-                  className="min-h-11 pl-9"
-                />
-              </div>
+              <CampoBuscaDrinks id="carta-busca" value={busca} onChange={setBusca} />
 
               {filtrosUI}
 
