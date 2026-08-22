@@ -2,7 +2,7 @@ import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { Plus, Pencil, Trash2, Martini, ArrowUp, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Martini, ArrowUp, Loader2, SlidersHorizontal } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import {
   ingredientesQuery,
@@ -26,6 +26,7 @@ import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useDrinkFilters } from "@/components/drink-filters";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 const POR_PAGINA = 24;
 
@@ -129,7 +130,16 @@ function DrinksList() {
   const { canEdit, user, isAdmin } = useAuth();
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [confirmId, setConfirmId] = useState<string | null>(null);
-  const { element: filtrosUI, temFiltro, filtrosServidor } = useDrinkFilters({
+  const [filtrosAbertos, setFiltrosAbertos] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setIsDesktop(mql.matches);
+    sync();
+    mql.addEventListener("change", sync);
+    return () => mql.removeEventListener("change", sync);
+  }, []);
+  const { element: filtrosUI, temFiltro, filtrosServidor, ativos, limparTudo } = useDrinkFilters({
     ingredientes,
     categorias,
     idPrefix: "drinks-filtro",
