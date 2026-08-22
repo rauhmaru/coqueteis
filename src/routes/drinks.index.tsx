@@ -181,7 +181,7 @@ function DrinksList() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main id="conteudo" className="mx-auto max-w-6xl px-4 py-10 space-y-8">
+      <main id="conteudo" className="mx-auto max-w-7xl px-4 py-10 space-y-8">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
             <h1 className="font-serif text-3xl sm:text-4xl text-foreground">Drinks</h1>
@@ -199,13 +199,61 @@ function DrinksList() {
           </div>
         </div>
 
-        {filtrosUI}
+        <div className="lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          {/* Filtros: coluna lateral fixa no desktop, bottom sheet no mobile */}
+          {isDesktop ? (
+            <aside
+              aria-label="Filtros"
+              className="lg:sticky lg:top-6 lg:max-h-[calc(100dvh-3rem)] lg:overflow-y-auto lg:pr-1"
+            >
+              {filtrosUI}
+            </aside>
+          ) : (
+            <div className="mb-6 flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="flex-1 min-h-11"
+                onClick={() => setFiltrosAbertos(true)}
+              >
+                <SlidersHorizontal className="h-4 w-4 mr-2" aria-hidden="true" />
+                Filtrar{ativos > 0 ? ` (${ativos})` : ""}
+              </Button>
+              {ativos > 0 && (
+                <Button variant="ghost" className="min-h-11" onClick={limparTudo}>
+                  Limpar
+                </Button>
+              )}
+            </div>
+          )}
 
+          {!isDesktop && (
+            <Sheet open={filtrosAbertos} onOpenChange={setFiltrosAbertos}>
+              <SheetContent side="bottom" className="max-h-[85dvh] flex flex-col p-0">
+                <SheetHeader className="px-4 pt-4 pb-2 text-left">
+                  <SheetTitle>Filtrar receitas</SheetTitle>
+                </SheetHeader>
+                <div className="flex-1 overflow-y-auto px-4 pb-4">{filtrosUI}</div>
+                <div className="border-t border-border bg-card p-4 flex gap-2">
+                  {ativos > 0 && (
+                    <Button variant="outline" className="min-h-12" onClick={limparTudo}>
+                      Limpar
+                    </Button>
+                  )}
+                  <Button className="flex-1 min-h-12" onClick={() => setFiltrosAbertos(false)}>
+                    Ver {total} {total === 1 ? "resultado" : "resultados"}
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          )}
+
+          <div className="min-w-0 space-y-8">
         <p aria-live="polite" className="sr-only">
           {total} {total === 1 ? "drink encontrado" : "drinks encontrados"}
         </p>
 
         {/* Resultados */}
+
         {isPending ? (
           <ul className={gridClass}>
             {Array.from({ length: POR_PAGINA }).map((_, i) => (
