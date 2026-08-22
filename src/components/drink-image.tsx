@@ -36,7 +36,8 @@ export function DrinkImage({
     );
   }
 
-  const base = getStableImageUrl(path);
+  // URL relativa: serve do mesmo host (preview ou produção).
+  const base = getStableImageUrl(path, "");
   const srcSet = LARGURAS.map((w) => `${base}?w=${w} ${w}w`).join(", ");
 
   return (
