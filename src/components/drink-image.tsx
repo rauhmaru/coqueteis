@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
 import { Martini } from "lucide-react";
-import { getSignedImageUrl } from "@/lib/queries";
+import { getImageUrl, getCachedImageUrl } from "@/lib/image-urls";
 
 export function DrinkImage({
   path, alt, className,
 }: { path: string | null; alt: string; className?: string }) {
-  const [url, setUrl] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(() => getCachedImageUrl(path));
 
   useEffect(() => {
     let active = true;
     if (!path) { setUrl(null); return; }
-    getSignedImageUrl(path).then((u) => { if (active) setUrl(u); });
+    const cached = getCachedImageUrl(path);
+    if (cached) { setUrl(cached); return; }
+    getImageUrl(path).then((u) => { if (active) setUrl(u); });
     return () => { active = false; };
   }, [path]);
 
