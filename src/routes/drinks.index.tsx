@@ -38,7 +38,7 @@ const FILTROS_VAZIOS = {
 };
 
 export const Route = createFileRoute("/drinks/")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { pagina?: number } => {
     const n = Number(search["pagina"]);
     return { pagina: Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 100) : 1 };
   },
@@ -60,7 +60,7 @@ export const Route = createFileRoute("/drinks/")({
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/drinks" }],
   }),
-  loaderDeps: ({ search: { pagina } }) => ({ pagina }),
+  loaderDeps: ({ search: { pagina } }) => ({ pagina: pagina ?? 1 }),
   loader: ({ context, deps }) =>
     Promise.all([
       context.queryClient.ensureQueryData(
@@ -123,7 +123,7 @@ function VoltarAoTopo() {
 function DrinksList() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
-  const { pagina } = Route.useSearch();
+  const { pagina = 1 } = Route.useSearch();
   const navigate = useNavigate({ from: "/drinks" });
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
