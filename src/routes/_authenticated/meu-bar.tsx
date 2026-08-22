@@ -535,6 +535,7 @@ function CardDrink({
           path={drink.imagem_url}
           alt={`Foto do drink ${drink.nome}`}
           className="aspect-square w-full object-cover"
+          sizes="(min-width: 1024px) 300px, (min-width: 640px) 33vw, 50vw"
         />
         <div className="space-y-2 p-3">
           <div className="flex items-start justify-between gap-2">

@@ -51,6 +51,9 @@ export function DrinksRelacionados({ drink }: { drink: DrinkComIngredientes }) {
                 path={d.imagem_url}
                 alt={`Foto do drink ${d.nome}`}
                 className="aspect-square w-full bg-secondary/40 object-cover"
+                sizes="(min-width: 1024px) 180px, (min-width: 640px) 33vw, 50vw"
+                width={200}
+                height={200}
               />
               <div className="space-y-1.5 p-3">
                 <h3 className="font-serif text-base leading-tight text-foreground transition-colors group-hover:text-primary">

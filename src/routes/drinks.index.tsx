@@ -291,7 +291,7 @@ function DrinksList() {
                       </div>
                     )}
                     <Link to="/drinks/$id" params={{ id: drinkParam(d) }} className="block">
-                      <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="aspect-square sm:aspect-[4/3] w-full object-cover bg-secondary/40" />
+                      <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="aspect-square sm:aspect-[4/3] w-full object-cover bg-secondary/40" sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 50vw" />
                       <div className="p-3 sm:p-4">
                         <h3 className="font-serif text-base sm:text-xl text-foreground line-clamp-2">{d.nome}</h3>
                         <div className="flex flex-wrap items-center gap-1 mt-2">
@@ -344,7 +344,7 @@ function DrinksList() {
                   <li key={d.id} className="group rounded-xl border border-border bg-card overflow-hidden hover:border-primary/60 transition-colors relative">
                     <div className="flex items-stretch">
                       <Link to="/drinks/$id" params={{ id: drinkParam(d) }} className="flex flex-1 items-center gap-4 p-3 min-w-0">
-                        <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" />
+                        <DrinkImage path={d.imagem_url} alt={`Foto do drink ${d.nome}`} className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0" sizes="200px" width={200} height={200} />
                         <div className="min-w-0 flex-1">
                           <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
                           <div className="flex flex-wrap items-center gap-1 mt-1">
