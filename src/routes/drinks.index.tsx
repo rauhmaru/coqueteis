@@ -412,7 +412,10 @@ function DrinksList() {
             </div>
           </>
         )}
+          </div>
+        </div>
       </main>
+
 
       <VoltarAoTopo />
 
