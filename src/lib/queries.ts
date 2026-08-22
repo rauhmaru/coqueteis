@@ -115,11 +115,5 @@ export const countsQuery = queryOptions({
   },
 });
 
-// Gera URL assinada (1 ano) para imagem do bucket privado
-export async function getSignedImageUrl(path: string): Promise<string | null> {
-  const { data, error } = await supabase.storage
-    .from("drink-images")
-    .createSignedUrl(path, 60 * 60 * 24 * 365);
-  if (error) return null;
-  return data.signedUrl;
-}
+// URLs de imagem: ver src/lib/image-urls.ts (assinaturas em lote + cache).
+export { getImageUrl, getCachedImageUrl, getStableImageUrl } from "@/lib/image-urls";
