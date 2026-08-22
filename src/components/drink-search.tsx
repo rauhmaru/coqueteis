@@ -4,13 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import { Martini, Search } from "lucide-react";
 import {
   Command,
-  CommandDialog,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FavoriteIconButton } from "@/components/favorite-icon-button";
@@ -92,16 +92,13 @@ export function AutocompleteDrinks({
 
   const conteudo = (
     <Command shouldFilter={false} className="bg-transparent">
-      <div className="flex items-center border-b border-border px-4">
-        <Search className="h-4 w-4 shrink-0 text-muted-foreground" aria-hidden="true" />
-        <CommandInput
-          value={query}
-          onValueChange={setQuery}
-          autoFocus={autoFocus}
-          placeholder={`${PLACEHOLDER_BUSCA}…`}
-          className="border-0 text-base focus:ring-0"
-        />
-      </div>
+      <CommandInput
+        value={query}
+        onValueChange={setQuery}
+        autoFocus={autoFocus}
+        placeholder={`${PLACEHOLDER_BUSCA}…`}
+        className="text-base"
+      />
       <CommandList className={buscando ? "max-h-64" : "hidden"}>
         {buscando && <CommandEmpty>Nenhum drink encontrado.</CommandEmpty>}
         {buscando && (
@@ -170,9 +167,17 @@ export function BuscaOverlay() {
       >
         <Search className="h-4 w-4" aria-hidden="true" />
       </button>
-      <CommandDialog open={aberto} onOpenChange={setAberto}>
-        <AutocompleteDrinks emDialog autoFocus limite={10} onNavegar={() => setAberto(false)} />
-      </CommandDialog>
+      <Dialog open={aberto} onOpenChange={setAberto}>
+        <DialogContent className="overflow-hidden p-0 sm:max-w-lg">
+          <DialogTitle className="sr-only">Buscar drinks</DialogTitle>
+          <AutocompleteDrinks
+            emDialog
+            autoFocus
+            limite={10}
+            onNavegar={() => setAberto(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }
