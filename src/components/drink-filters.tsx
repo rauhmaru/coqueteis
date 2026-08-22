@@ -86,7 +86,8 @@ export function useDrinkFilters({
   categorias,
   idPrefix = "filtro",
 }: {
-  drinks: DrinkComIngredientes[];
+  /** Opcional: quando informado, o hook também filtra no cliente (`filtered`). */
+  drinks?: DrinkComIngredientes[];
   ingredientes: Ingrediente[];
   categorias: DrinkCategoria[];
   idPrefix?: string;
