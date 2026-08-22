@@ -226,6 +226,10 @@ function DrinkDetail() {
             path={drink.imagem_url}
             alt={`Foto do drink ${drink.nome}`}
             className="aspect-square w-full object-cover rounded-xl border border-border bg-secondary/40"
+            sizes="(min-width: 768px) 448px, 100vw"
+            width={800}
+            height={800}
+            priority
           />
           <div className="space-y-6">
             <div>

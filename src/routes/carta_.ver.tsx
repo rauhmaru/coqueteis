@@ -121,6 +121,9 @@ function CartaPublicaPage() {
                   path={d!.imagem_url}
                   alt={`Drink ${d!.nome}`}
                   className="h-20 w-20 shrink-0 rounded-lg object-cover"
+                  sizes="200px"
+                  width={200}
+                  height={200}
                 />
                 <span className="min-w-0 flex-1">
                   <span className="flex flex-wrap items-center gap-2">

@@ -274,6 +274,7 @@ function HomePage() {
                 path={sugestao.imagem_url}
                 alt={`Foto do drink ${sugestao.nome}`}
                 className="aspect-square w-full object-cover"
+                sizes="(min-width: 640px) 400px, 100vw"
               />
               <div className="p-4 text-center">
                 <h3 className="font-serif text-2xl text-foreground group-hover:text-primary transition-colors">

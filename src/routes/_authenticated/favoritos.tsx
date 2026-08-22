@@ -216,6 +216,7 @@ function FavoritosPage() {
                     path={d.imagem_url}
                     alt={`Foto do drink ${d.nome}`}
                     className="aspect-square w-full object-cover bg-secondary/40"
+                    sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 100vw"
                   />
                   <div className="p-4 space-y-2">
                     <h2 className="font-serif text-xl text-foreground group-hover:text-primary transition-colors">
@@ -244,6 +245,9 @@ function FavoritosPage() {
                     path={d.imagem_url}
                     alt={`Foto do drink ${d.nome}`}
                     className="h-20 w-20 sm:h-24 sm:w-24 rounded-lg object-cover bg-secondary/40 shrink-0"
+                    sizes="200px"
+                    width={200}
+                    height={200}
                   />
                   <div className="min-w-0 flex-1">
                     <h2 className="font-serif text-lg sm:text-xl text-foreground group-hover:text-primary transition-colors truncate">

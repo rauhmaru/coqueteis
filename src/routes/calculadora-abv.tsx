@@ -176,6 +176,9 @@ function CalculadoraAbvPage() {
               path={drink.imagem_url}
               alt={drink.nome}
               className="h-16 w-16 rounded-lg object-cover border border-border bg-secondary/40 shrink-0"
+              sizes="200px"
+              width={200}
+              height={200}
             />
             <div className="min-w-0">
               <p className="text-xs uppercase tracking-[0.2em] text-primary">Receita carregada</p>

@@ -114,6 +114,7 @@ function CategoriaPage() {
                     path={d.imagem_url}
                     alt={`Foto do drink ${d.nome}`}
                     className="aspect-[4/3] w-full bg-secondary/40 object-cover"
+                    sizes="(min-width: 1024px) 360px, (min-width: 640px) 33vw, 100vw"
                   />
                   <div className="p-4">
                     <h2 className="font-serif text-xl text-foreground transition-colors group-hover:text-primary">
