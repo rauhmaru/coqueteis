@@ -209,7 +209,7 @@ function HomePage() {
               to="/meu-bar"
               className="inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              Cadastrar meu bar <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              Montar meu bar <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
             {!user && (
               <span className="text-xs text-muted-foreground">
