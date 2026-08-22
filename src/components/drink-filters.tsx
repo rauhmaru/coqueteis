@@ -1,10 +1,16 @@
 import { useMemo, useState } from "react";
-import { Filter, X, ChevronDown } from "lucide-react";
+import { Filter, X, ChevronDown, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DIFICULDADES } from "@/components/difficulty-badge";
-import type { DrinkComIngredientes, Ingrediente, DrinkCategoria } from "@/lib/queries";
+import {
+  drinksIndiceQuery,
+  type DrinkComIngredientes,
+  type Ingrediente,
+  type DrinkCategoria,
+} from "@/lib/queries";
 
 export function FiltroSection({
   id,
@@ -79,6 +85,212 @@ export const QTD_COMPARADORES: { id: QtdComparador; nome: string }[] = [
   { id: "acima", nome: "A partir de" },
 ];
 
+/** Agrupamento amigável das categorias de ingredientes cadastradas. */
+const GRUPOS: { titulo: string; categorias: string[] }[] = [
+  { titulo: "Destilados", categorias: ["Destilados"] },
+  { titulo: "Licores e aperitivos", categorias: ["Licores", "Vermutes & Aperitivos"] },
+  { titulo: "Sucos e frutas", categorias: ["Cítricos", "Ervas & Frutas"] },
+  { titulo: "Xaropes e adoçantes", categorias: ["Adoçantes"] },
+  { titulo: "Refrigerantes e águas", categorias: ["Espumantes & Refrigerantes"] },
+  { titulo: "Laticínios", categorias: ["Laticínios"] },
+  {
+    titulo: "Especiarias e guarnições",
+    categorias: ["Especiarias & Guarnições", "Bitters"],
+  },
+];
+
+const norm = (s: string) =>
+  s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+function ChipIngrediente({
+  ing,
+  on,
+  total,
+  onToggle,
+}: {
+  ing: Ingrediente;
+  on: boolean;
+  total: number;
+  onToggle: () => void;
+}) {
+  const disabled = !on && total === 0;
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      disabled={disabled}
+      aria-pressed={on}
+      title={disabled ? "Nenhuma receita com os filtros atuais" : undefined}
+      className={`${chip(on)} gap-1.5 ${disabled ? "opacity-40 cursor-not-allowed hover:border-border" : ""}`}
+    >
+      <span>{ing.nome}</span>
+      <span
+        className={`rounded-full px-1.5 text-[10px] leading-4 ${
+          on ? "bg-primary-foreground/20" : "bg-secondary text-muted-foreground"
+        }`}
+      >
+        {total}
+      </span>
+    </button>
+  );
+}
+
+function FiltroIngredientes({
+  ingredientes,
+  selected,
+  contagens,
+  onToggle,
+  onClear,
+  idPrefix,
+}: {
+  ingredientes: Ingrediente[];
+  selected: Set<string>;
+  contagens: Map<string, number>;
+  onToggle: (id: string) => void;
+  onClear: () => void;
+  idPrefix: string;
+}) {
+  const [open, setOpen] = useState(false);
+  const [busca, setBusca] = useState("");
+
+  const visiveis = useMemo(() => {
+    const q = norm(busca.trim());
+    if (!q) return ingredientes;
+    return ingredientes.filter((i) => norm(i.nome).includes(q));
+  }, [ingredientes, busca]);
+
+  const maisUsados = useMemo(
+    () =>
+      [...visiveis]
+        .sort((a, b) => (contagens.get(b.id) ?? 0) - (contagens.get(a.id) ?? 0))
+        .filter((i) => (contagens.get(i.id) ?? 0) > 0)
+        .slice(0, 12),
+    [visiveis, contagens],
+  );
+
+  const grupos = useMemo(() => {
+    const usados = new Set<string>();
+    const out = GRUPOS.map((g) => {
+      const itens = visiveis.filter((i) => {
+        const cat = i.categorias?.nome ?? "";
+        if (!g.categorias.includes(cat)) return false;
+        usados.add(i.id);
+        return true;
+      });
+      return { titulo: g.titulo, itens };
+    }).filter((g) => g.itens.length > 0);
+    const resto = visiveis.filter((i) => !usados.has(i.id));
+    if (resto.length > 0) out.push({ titulo: "Outros", itens: resto });
+    return out;
+  }, [visiveis]);
+
+  return (
+    <FiltroSection
+      id={`${idPrefix}-ingredientes`}
+      titulo="Filtrar por ingredientes disponíveis"
+      ativos={selected.size}
+      open={open}
+      onToggle={() => setOpen((v) => !v)}
+      onClear={onClear}
+    >
+      {ingredientes.length === 0 ? (
+        <p className="text-sm text-muted-foreground">
+          Cadastre ingredientes em{" "}
+          <Link to="/ingredientes" className="text-primary underline">
+            Ingredientes
+          </Link>
+          .
+        </p>
+      ) : (
+        <>
+          <div className="space-y-1.5">
+            <Label htmlFor={`${idPrefix}-busca-ing`}>Buscar ingrediente</Label>
+            <div className="relative">
+              <Search
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                aria-hidden="true"
+              />
+              <Input
+                id={`${idPrefix}-busca-ing`}
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                placeholder="Ex.: gin, limão, hortelã"
+                className="min-h-11 pl-9"
+              />
+            </div>
+          </div>
+
+          {selected.size > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-foreground">Selecionados</p>
+              <div className="flex flex-wrap gap-2">
+                {ingredientes
+                  .filter((i) => selected.has(i.id))
+                  .map((ing) => (
+                    <ChipIngrediente
+                      key={ing.id}
+                      ing={ing}
+                      on
+                      total={contagens.get(ing.id) ?? 0}
+                      onToggle={() => onToggle(ing.id)}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
+
+          {!busca.trim() && maisUsados.length > 0 && (
+            <div className="space-y-2">
+              <p className="text-xs font-medium text-foreground">Mais usados</p>
+              <div className="flex flex-wrap gap-2">
+                {maisUsados.map((ing) => (
+                  <ChipIngrediente
+                    key={ing.id}
+                    ing={ing}
+                    on={selected.has(ing.id)}
+                    total={contagens.get(ing.id) ?? 0}
+                    onToggle={() => onToggle(ing.id)}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {grupos.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhum ingrediente encontrado.</p>
+          ) : (
+            grupos.map((g) => (
+              <div key={g.titulo} className="space-y-2">
+                <p className="text-xs font-medium text-foreground">
+                  {g.titulo}{" "}
+                  <span className="text-muted-foreground">({g.itens.length})</span>
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {g.itens.map((ing) => (
+                    <ChipIngrediente
+                      key={ing.id}
+                      ing={ing}
+                      on={selected.has(ing.id)}
+                      total={contagens.get(ing.id) ?? 0}
+                      onToggle={() => onToggle(ing.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))
+          )}
+        </>
+      )}
+      {selected.size > 0 && (
+        <p className="text-xs text-muted-foreground">
+          Mostrando drinks que contêm <strong>todos</strong> os {selected.size} ingredientes
+          selecionados.
+        </p>
+      )}
+    </FiltroSection>
+  );
+}
+
 /** Estado + UI compartilhados dos filtros de drinks. */
 export function useDrinkFilters({
   drinks,
@@ -99,8 +311,9 @@ export function useDrinkFilters({
   const [comparador, setComparador] = useState<QtdComparador>("igual");
   const [openDif, setOpenDif] = useState(false);
   const [openCat, setOpenCat] = useState(false);
-  const [openIng, setOpenIng] = useState(false);
   const [openQtd, setOpenQtd] = useState(false);
+
+  const { data: indice } = useQuery(drinksIndiceQuery);
 
   const qtdNum = useMemo(() => {
     const t = qtd.trim();
@@ -111,6 +324,32 @@ export function useDrinkFilters({
   }, [qtd]);
 
   const qtdErro = qtd.trim() && qtdNum === null ? "Informe um número inteiro maior que 0." : null;
+
+  /** Quantas receitas cada ingrediente traria, respeitando os outros filtros ativos. */
+  const contagens = useMemo(() => {
+    const mapa = new Map<string, number>();
+    for (const d of indice ?? []) {
+      if (selectedCats.size > 0) {
+        const cats = new Set(d.categorias);
+        let ok = true;
+        for (const c of selectedCats) if (!cats.has(c)) ok = false;
+        if (!ok) continue;
+      }
+      if (selectedDifs.size > 0 && !selectedDifs.has(d.dificuldade)) continue;
+      if (qtdNum !== null) {
+        const t = d.ingredientes.length;
+        if (comparador === "igual" && t !== qtdNum) continue;
+        if (comparador === "ate" && t > qtdNum) continue;
+        if (comparador === "acima" && t < qtdNum) continue;
+      }
+      const ids = new Set(d.ingredientes);
+      let combina = true;
+      for (const sel of selected) if (!ids.has(sel)) combina = false;
+      if (!combina) continue;
+      for (const id of ids) mapa.set(id, (mapa.get(id) ?? 0) + 1);
+    }
+    return mapa;
+  }, [indice, selected, selectedCats, selectedDifs, qtdNum, comparador]);
 
   const filtered = useMemo(() => {
     return (drinks ?? []).filter((d) => {
@@ -245,44 +484,14 @@ export function useDrinkFilters({
         </div>
       </FiltroSection>
 
-      <FiltroSection
-        id={`${idPrefix}-ingredientes`}
-        titulo="Filtrar por ingredientes disponíveis"
-        ativos={selected.size}
-        open={openIng}
-        onToggle={() => setOpenIng((v) => !v)}
+      <FiltroIngredientes
+        ingredientes={ingredientes}
+        selected={selected}
+        contagens={contagens}
+        onToggle={(id) => toggleIn(setSelected, id)}
         onClear={() => setSelected(new Set())}
-      >
-        {ingredientes.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Cadastre ingredientes em{" "}
-            <Link to="/ingredientes" className="text-primary underline">
-              Ingredientes
-            </Link>
-            .
-          </p>
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {ingredientes.map((ing) => (
-              <button
-                key={ing.id}
-                type="button"
-                onClick={() => toggleIn(setSelected, ing.id)}
-                aria-pressed={selected.has(ing.id)}
-                className={chip(selected.has(ing.id))}
-              >
-                {ing.nome}
-              </button>
-            ))}
-          </div>
-        )}
-        {selected.size > 0 && (
-          <p className="text-xs text-muted-foreground">
-            Mostrando drinks que contêm <strong>todos</strong> os {selected.size} ingredientes
-            selecionados.
-          </p>
-        )}
-      </FiltroSection>
+        idPrefix={idPrefix}
+      />
     </div>
   );
 
@@ -300,6 +509,8 @@ export function useDrinkFilters({
   return {
     filtered,
     element,
+    /** Mesmo conteúdo de `element`; use em colunas laterais ou bottom sheets. */
+    painel: element,
     ativos,
     limparTudo,
     temFiltro: ativos > 0,
