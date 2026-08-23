@@ -15,6 +15,7 @@ import { drinkQuery, type DrinkComIngredientes } from "@/lib/queries";
 import { getStableImageUrl } from "@/lib/image-urls";
 import { isUuid, drinkParam, slugify } from "@/lib/slug";
 import { CustoEstoque } from "@/components/custo-estoque";
+import { IngredientesEstoque } from "@/components/ingredientes-estoque";
 import { DrinksRelacionados } from "@/components/drinks-relacionados";
 import { MixologiaRelacionada } from "@/components/mixologia-relacionada";
 
@@ -272,13 +273,7 @@ function DrinkDetail() {
             )}
             <div>
               <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">Ingredientes</h2>
-              <div className="flex flex-wrap gap-2">
-                {drink.drink_ingredientes.map((di) => (
-                  <Badge key={di.ingrediente_id} variant="secondary">
-                    {di.ingredientes?.nome ?? "?"}
-                  </Badge>
-                ))}
-              </div>
+              <IngredientesEstoque drink={drink} />
             </div>
             <div>
               <h2 className="text-xs uppercase tracking-[0.2em] text-primary mb-2">
