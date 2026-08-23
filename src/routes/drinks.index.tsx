@@ -2,7 +2,7 @@ import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery, keepPreviousData } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
-import { Plus, Pencil, Trash2, Martini, ArrowUp, Loader2, SlidersHorizontal } from "lucide-react";
+import { Plus, Pencil, Trash2, Martini, ArrowUp, Loader2, SlidersHorizontal, Check, Wine } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import {
   ingredientesQuery,
@@ -28,6 +28,9 @@ import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useDrinkFilters } from "@/components/drink-filters";
 import { CampoBuscaDrinks } from "@/components/drink-search";
 import { combina } from "@/lib/busca";
+import { meuBarQuery } from "@/lib/meu-bar";
+import { coberturaDrink, idsDoEstoque } from "@/lib/estoque-cobertura";
+import { SeloEstoque } from "@/components/selo-estoque";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 
 const POR_PAGINA = 24;
@@ -41,9 +44,15 @@ const FILTROS_VAZIOS = {
 };
 
 export const Route = createFileRoute("/drinks/")({
-  validateSearch: (search: Record<string, unknown>): { pagina?: number } => {
+  validateSearch: (
+    search: Record<string, unknown>,
+  ): { pagina?: number; estoque?: boolean } => {
     const n = Number(search["pagina"]);
-    return { pagina: Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 100) : 1 };
+    const estoque = search["estoque"] === true || search["estoque"] === "1";
+    return {
+      pagina: Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 100) : 1,
+      ...(estoque ? { estoque: true } : {}),
+    };
   },
   head: () => ({
     meta: [
@@ -126,7 +135,7 @@ function VoltarAoTopo() {
 function DrinksList() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
-  const { pagina = 1 } = Route.useSearch();
+  const { pagina = 1, estoque: soPossiveis = false } = Route.useSearch();
   const navigate = useNavigate({ from: "/drinks" });
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
@@ -157,19 +166,29 @@ function DrinksList() {
     navigate({ search: { pagina: 1 }, replace: true });
   }, [chaveFiltros, navigate]);
 
+  const { data: estoque } = useQuery(meuBarQuery(user?.id));
+  const estoqueIds = idsDoEstoque(estoque);
+  const temEstoque = !!user && estoqueIds.size > 0;
+  const filtrandoEstoque = temEstoque && soPossiveis;
+
   const buscando = busca.trim().length > 0;
   // Com termo de busca, carregamos o conjunto filtrado inteiro e casamos o
   // termo no cliente (nome, categoria ou ingrediente) com a mesma normalização.
-  const limite = buscando ? 500 : pagina * POR_PAGINA;
+  const limite = buscando || filtrandoEstoque ? 500 : pagina * POR_PAGINA;
   const { data, isPending, isFetching } = useQuery({
     ...drinksPaginaQuery(filtrosServidor, limite),
     placeholderData: keepPreviousData,
   });
 
   const todos = data?.drinks ?? [];
-  const drinks = buscando ? todos.filter((d) => combina(d, busca)) : todos;
-  const total = buscando ? drinks.length : data?.total ?? 0;
-  const temMais = !buscando && drinks.length < total;
+  const porBusca = buscando ? todos.filter((d) => combina(d, busca)) : todos;
+  const drinks = filtrandoEstoque
+    ? porBusca.filter((d) => coberturaDrink(d, estoqueIds).completo)
+    : porBusca;
+  const total = buscando || filtrandoEstoque ? drinks.length : data?.total ?? 0;
+  const temMais = !buscando && !filtrandoEstoque && drinks.length < total;
+  const coberturaDe = (d: DrinkComIngredientes) =>
+    temEstoque ? coberturaDrink(d, estoqueIds) : null;
   const carregandoMais = isFetching && drinks.length < limite && drinks.length < total;
 
   const canManage = (d: DrinkComIngredientes) => canManageItem({ user, isAdmin, canEdit }, d);
@@ -222,6 +241,44 @@ function DrinksList() {
           onChange={setBusca}
           className="max-w-xl"
         />
+
+        {temEstoque ? (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-card p-4">
+            <button
+              type="button"
+              role="switch"
+              aria-checked={soPossiveis}
+              onClick={() =>
+                navigate({
+                  search: { pagina: 1, ...(soPossiveis ? {} : { estoque: true }) },
+                  replace: true,
+                })
+              }
+              className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                soPossiveis
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-secondary/40 text-muted-foreground hover:border-primary/60"
+              }`}
+            >
+              <Check className="h-4 w-4" aria-hidden="true" />
+              Só o que eu posso fazer
+            </button>
+            <p className="text-xs text-muted-foreground">
+              Considera as {estoqueIds.size} bebidas do seu bar; guarnições e gelo não contam como
+              falta.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-dashed border-border p-4">
+            <Wine className="h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+            <p className="text-sm text-muted-foreground">
+              Monte o seu bar e o catálogo mostra só o que dá para preparar em casa.
+            </p>
+            <Button asChild variant="outline" className="min-h-11 sm:min-h-9">
+              <Link to="/meu-bar">Montar meu bar</Link>
+            </Button>
+          </div>
+        )}
 
         <div className="lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8 lg:items-start">
           {/* Filtros: coluna lateral fixa no desktop, bottom sheet no mobile */}
@@ -290,6 +347,8 @@ function DrinksList() {
             <p className="text-muted-foreground">
               {buscando
                 ? `Nenhum drink encontrado para “${busca.trim()}”.`
+                : filtrandoEstoque
+                ? "Nenhuma receita completa com o seu estoque atual. Desative o filtro ou adicione bebidas ao Meu Bar."
                 : temFiltro
                 ? "Nenhum drink combina com esses filtros."
                 : "Nenhum drink cadastrado ainda."}
@@ -311,6 +370,7 @@ function DrinksList() {
                       <div className="p-3 sm:p-4">
                         <h3 className="font-serif text-base sm:text-xl text-foreground line-clamp-2">{d.nome}</h3>
                         <div className="flex flex-wrap items-center gap-1 mt-2">
+                          <SeloEstoque cobertura={coberturaDe(d)} />
                           <DifficultyBadge value={d.dificuldade} />
                           <span className="text-xs text-muted-foreground sm:hidden">
                             {d.drink_ingredientes.length} ingr.
@@ -364,6 +424,7 @@ function DrinksList() {
                         <div className="min-w-0 flex-1">
                           <h3 className="font-serif text-lg sm:text-xl text-foreground truncate">{d.nome}</h3>
                           <div className="flex flex-wrap items-center gap-1 mt-1">
+                            <SeloEstoque cobertura={coberturaDe(d)} />
                             <DifficultyBadge value={d.dificuldade} />
                             <span className="text-xs text-muted-foreground sm:hidden">
                               {d.drink_ingredientes.length} ingr.
