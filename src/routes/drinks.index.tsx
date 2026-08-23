@@ -163,7 +163,7 @@ function DrinksList() {
   useEffect(() => {
     if (chaveAnterior.current === chaveFiltros) return;
     chaveAnterior.current = chaveFiltros;
-    navigate({ search: { pagina: 1 }, replace: true });
+    navigate({ search: (prev) => ({ ...prev, pagina: 1 }), replace: true });
   }, [chaveFiltros, navigate]);
 
   const { data: estoque } = useQuery(meuBarQuery(user?.id));
