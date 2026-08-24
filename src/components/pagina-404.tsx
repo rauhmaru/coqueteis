@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { BookOpen, Calculator, Martini } from "lucide-react";
@@ -17,13 +17,18 @@ const ATALHOS = [
 /** Página 404 do site: busca, atalhos e receitas sugeridas. */
 export function Pagina404() {
   const { data: drinks } = useQuery(drinksQuery);
+  // Sorteio apenas após a hidratação, para o HTML do servidor e do cliente baterem.
+  const [inicio, setInicio] = useState(0);
+  useEffect(() => {
+    setInicio(Math.floor(Math.random() * 1000));
+  }, []);
 
   const sugestoes = useMemo(() => {
     const lista = drinks ?? [];
     if (lista.length === 0) return [];
-    const inicio = Math.floor(Math.random() * lista.length);
     return Array.from({ length: Math.min(3, lista.length) }, (_, i) => lista[(inicio + i) % lista.length]!);
-  }, [drinks]);
+  }, [drinks, inicio]);
+
 
   return (
     <div className="min-h-dvh bg-background">
