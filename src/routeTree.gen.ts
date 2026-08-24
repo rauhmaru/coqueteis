@@ -18,6 +18,7 @@ import { Route as ConfiancaRouteImport } from './routes/confianca'
 import { Route as CartaRouteImport } from './routes/carta'
 import { Route as CalculadoraAbvRouteImport } from './routes/calculadora-abv'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
@@ -92,6 +93,11 @@ const CalculadoraAbvRoute = CalculadoraAbvRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -253,6 +259,7 @@ const AuthenticatedDrinksIdEditarRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/auth': typeof AuthRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
@@ -293,6 +300,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/auth': typeof AuthRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
@@ -332,6 +340,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/$': typeof SplatRoute
   '/auth': typeof AuthRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
@@ -374,6 +383,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$'
     | '/auth'
     | '/calculadora-abv'
     | '/carta'
@@ -414,6 +424,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/$'
     | '/auth'
     | '/calculadora-abv'
     | '/carta'
@@ -452,6 +463,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/$'
     | '/auth'
     | '/calculadora-abv'
     | '/carta'
@@ -494,6 +506,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRoute
   CalculadoraAbvRoute: typeof CalculadoraAbvRoute
   CartaRoute: typeof CartaRoute
@@ -574,6 +587,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -874,6 +894,7 @@ const MixologiaRouteWithChildren = MixologiaRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  SplatRoute: SplatRoute,
   AuthRoute: AuthRoute,
   CalculadoraAbvRoute: CalculadoraAbvRoute,
   CartaRoute: CartaRoute,

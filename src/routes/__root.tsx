@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   Outlet,
-  Link,
   createRootRouteWithContext,
   useRouter,
   HeadContent,
@@ -15,28 +14,7 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider, useTheme } from "@/hooks/use-theme";
 import { A11yProvider } from "@/hooks/use-a11y";
-
-function NotFoundComponent() {
-  return (
-    <div className="flex min-h-dvh items-center justify-center bg-background px-4">
-      <main id="conteudo" className="max-w-md text-center">
-        <p className="text-7xl font-bold text-foreground">404</p>
-        <h1 className="mt-4 text-xl font-semibold text-foreground">Página não encontrada</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          A página que você procura não existe ou foi movida.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-          >
-            Voltar ao início
-          </Link>
-        </div>
-      </main>
-    </div>
-  );
-}
+import { Pagina404 } from "@/components/pagina-404";
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
@@ -82,14 +60,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Destilados & Coquetéis — Sistema de gestão" },
+      { title: "Destilados & Coquetéis — Receitas e mixologia" },
       { name: "description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
       { name: "google-site-verification", content: "ewfn-Ehh0dtJpS3nrZr0IB4UKwh28X0Lvb78TLou6kY" },
-      { property: "og:title", content: "Destilados & Coquetéis — Sistema de gestão" },
+      { property: "og:title", content: "Destilados & Coquetéis — Receitas e mixologia" },
       { property: "og:description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "Destilados & Coquetéis — Sistema de gestão" },
+      { name: "twitter:title", content: "Destilados & Coquetéis — Receitas e mixologia" },
       { name: "twitter:description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2dad583b-8333-4c5a-bba0-75c940ac5a30/id-preview-c6dbbdc2--7906dbee-e812-49e7-9479-ec448cc59df1.lovable.app-1781808263150.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/2dad583b-8333-4c5a-bba0-75c940ac5a30/id-preview-c6dbbdc2--7906dbee-e812-49e7-9479-ec448cc59df1.lovable.app-1781808263150.png" },
@@ -129,7 +107,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  notFoundComponent: NotFoundComponent,
+  notFoundComponent: Pagina404,
   errorComponent: ErrorComponent,
 });
 
