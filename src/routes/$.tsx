@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Pagina404 } from "@/components/pagina-404";
+import { drinksQuery } from "@/lib/queries";
+
 
 const TITULO = "Página não encontrada — Destilados & Coquetéis";
 const DESCRICAO =
