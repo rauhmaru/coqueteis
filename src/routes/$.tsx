@@ -20,6 +20,7 @@ export const Route = createFileRoute("/$")({
       { name: "twitter:description", content: DESCRICAO },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(drinksQuery),
   component: Pagina404,
   errorComponent: Pagina404,
   notFoundComponent: Pagina404,
