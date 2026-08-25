@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
@@ -11,10 +11,14 @@ export const Route = createFileRoute("/_authenticated")({
 function AuthenticatedLayout() {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const href = useRouterState({ select: (s) => s.location.href });
 
   useEffect(() => {
-    if (!loading && !user) navigate({ to: "/auth", replace: true });
-  }, [loading, user, navigate]);
+    if (!loading && !user) {
+      navigate({ to: "/auth", search: { redirect: href }, replace: true });
+    }
+  }, [loading, user, navigate, href]);
+
 
   if (loading || !user) {
     return (
