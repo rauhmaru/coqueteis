@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useAuthRedirectSearch } from "@/lib/auth-redirect";
 
 const favKey = (userId: string | undefined, drinkId: string) =>
   ["drink-favorito", userId ?? "anon", drinkId] as const;
@@ -12,6 +13,7 @@ const favKey = (userId: string | undefined, drinkId: string) =>
 export function FavoriteButton({ drinkId }: { drinkId: string }) {
   const { user, loading } = useAuth();
   const qc = useQueryClient();
+  const authSearch = useAuthRedirectSearch();
 
   const q = useQuery({
     queryKey: favKey(user?.id, drinkId),
