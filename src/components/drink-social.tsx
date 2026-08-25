@@ -323,7 +323,7 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
           </form>
         ) : (
           <p className="text-sm text-muted-foreground">
-            <Link to="/auth" className="text-primary underline">Faça login</Link> para comentar.
+            <Link to="/auth" search={authSearch} className="text-primary underline">Faça login</Link> para comentar.
           </p>
         )}
 
