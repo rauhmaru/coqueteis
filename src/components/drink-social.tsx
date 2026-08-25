@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { useAuthRedirectSearch } from "@/lib/auth-redirect";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -28,6 +29,7 @@ const commentLikesKey = (drinkId: string) => ["comentario-likes", drinkId] as co
 
 export function DrinkSocial({ drinkId }: { drinkId: string }) {
   const { user, loading } = useAuth();
+  const authSearch = useAuthRedirectSearch();
   const qc = useQueryClient();
   const [texto, setTexto] = useState("");
   const [ordem, setOrdem] = useState<Ordem>("recentes");
