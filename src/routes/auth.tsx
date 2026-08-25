@@ -119,6 +119,15 @@ function AuthPage() {
         <h1 className="text-center font-serif text-2xl text-foreground">Acesse sua conta</h1>
 
         <div className="rounded-xl border border-border bg-card p-6 space-y-5">
+          {next ? (
+            <p
+              role="status"
+              className="rounded-md border border-primary/30 bg-primary/10 px-3 py-2 text-sm text-foreground"
+            >
+              {mensagemRedirect(next)}
+            </p>
+          ) : null}
+
           <Tabs defaultValue="entrar" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="entrar">Entrar</TabsTrigger>
