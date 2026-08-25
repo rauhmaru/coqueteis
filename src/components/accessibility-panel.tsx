@@ -30,7 +30,7 @@ export function AccessibilityPanel() {
           aria-label="Abrir painel de acessibilidade"
           title="Acessibilidade"
           className={cn(
-            "relative min-h-11 min-w-11 md:min-h-9 md:min-w-9",
+            "relative h-11 min-h-11 w-11 min-w-11 md:h-9 md:w-9",
             ativo && "border-primary text-primary",
           )}
         >
