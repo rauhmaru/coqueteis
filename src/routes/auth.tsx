@@ -13,10 +13,11 @@ import { caminhoInternoSeguro, mensagemRedirect } from "@/lib/auth-redirect";
 
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (s: Record<string, unknown>): { next?: string } => {
+  validateSearch: (s: Record<string, unknown>): { redirect?: string } => {
     const destino = caminhoInternoSeguro(s.redirect) ?? caminhoInternoSeguro(s.next);
-    return destino ? { next: destino } : {};
+    return destino ? { redirect: destino } : {};
   },
+
 
 
   head: () => ({
