@@ -13,8 +13,10 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
       title={isDark ? "Ativar tema claro" : "Ativar tema escuro"}
+      className="h-11 min-h-11 w-11 min-w-11 md:h-9 md:w-9"
     >
-      {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+      {isDark ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+
     </Button>
   );
 }
