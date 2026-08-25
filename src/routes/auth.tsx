@@ -35,7 +35,7 @@ function AuthPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const navigate = useNavigate();
-  const { next } = Route.useSearch();
+  const { redirect: next } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [nome, setNome] = useState("");
