@@ -58,12 +58,13 @@ export function FavoriteButton({ drinkId }: { drinkId: string }) {
   if (!user && !loading) {
     return (
       <Button asChild variant="outline">
-        <Link to="/auth">
+        <Link to="/auth" search={authSearch}>
           <Bookmark className="h-4 w-4 mr-2" /> Favoritar
         </Link>
       </Button>
     );
   }
+
 
   return (
     <Button
