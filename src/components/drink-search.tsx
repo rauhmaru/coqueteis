@@ -96,9 +96,17 @@ export function AutocompleteDrinks({
         value={query}
         onValueChange={setQuery}
         autoFocus={autoFocus}
+        aria-label={PLACEHOLDER_BUSCA}
         placeholder={`${PLACEHOLDER_BUSCA}…`}
         className="text-base"
       />
+      <p aria-live="polite" role="status" className="sr-only">
+        {buscando
+          ? resultados.length === 0
+            ? "Nenhuma sugestão disponível"
+            : `${resultados.length} ${resultados.length === 1 ? "sugestão" : "sugestões"} disponíveis`
+          : ""}
+      </p>
       <CommandList className={buscando ? "max-h-64" : "hidden"}>
         {buscando && <CommandEmpty>Nenhum drink encontrado.</CommandEmpty>}
         {buscando && (
