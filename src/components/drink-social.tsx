@@ -236,27 +236,36 @@ export function DrinkSocial({ drinkId }: { drinkId: string }) {
     <section aria-label="Curtidas e comentários" className="space-y-6 border-t border-border pt-8">
       {/* Curtir drink */}
       <div className="flex flex-wrap items-center gap-3">
-        <Button
-          type="button"
-          variant={liked ? "default" : "outline"}
-          size="sm"
-          disabled={loading || toggleLike.isPending || !user}
-          onClick={() => toggleLike.mutate()}
-          aria-pressed={liked}
-          className="min-h-11 sm:min-h-9"
-        >
-          <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
-          {liked ? "Curtido" : "Curtir"}
-        </Button>
+        {!user && !loading ? (
+          <Button asChild variant="outline" size="sm" className="min-h-11 sm:min-h-9">
+            <Link to="/auth" search={authSearch}>
+              <Heart className="h-4 w-4 mr-2" aria-hidden="true" /> Curtir
+            </Link>
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            variant={liked ? "default" : "outline"}
+            size="sm"
+            disabled={loading || toggleLike.isPending}
+            onClick={() => toggleLike.mutate()}
+            aria-pressed={liked}
+            className="min-h-11 sm:min-h-9"
+          >
+            <Heart className={`h-4 w-4 mr-2 ${liked ? "fill-current" : ""}`} aria-hidden="true" />
+            {liked ? "Curtido" : "Curtir"}
+          </Button>
+        )}
         <span className="text-sm text-muted-foreground">
           {total} {total === 1 ? "curtida" : "curtidas"}
         </span>
         {!user && !loading && (
           <span className="text-xs text-muted-foreground ml-auto">
-            <Link to="/auth" className="text-primary underline">Entre</Link> para curtir e comentar
+            <Link to="/auth" search={authSearch} className="text-primary underline">Entre</Link> para curtir e comentar
           </span>
         )}
       </div>
+
 
       {/* Comentários */}
       <div className="space-y-4">
