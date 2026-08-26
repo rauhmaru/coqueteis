@@ -109,6 +109,13 @@ export type Database = {
             referencedRelation: "drinks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "drink_comentarios_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
+            referencedColumns: ["id"]
+          },
         ]
       }
       drink_drink_categorias: {
@@ -142,6 +149,13 @@ export type Database = {
             referencedRelation: "drinks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "drink_drink_categorias_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
+            referencedColumns: ["id"]
+          },
         ]
       }
       drink_favoritos: {
@@ -171,6 +185,13 @@ export type Database = {
             referencedRelation: "drinks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "drink_favoritos_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
+            referencedColumns: ["id"]
+          },
         ]
       }
       drink_ingredientes: {
@@ -192,6 +213,13 @@ export type Database = {
             columns: ["drink_id"]
             isOneToOne: false
             referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_ingredientes_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
             referencedColumns: ["id"]
           },
           {
@@ -227,6 +255,13 @@ export type Database = {
             referencedRelation: "drinks"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "drink_likes_drink_id_fkey"
+            columns: ["drink_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
+            referencedColumns: ["id"]
+          },
         ]
       }
       drink_redirects: {
@@ -251,6 +286,13 @@ export type Database = {
             columns: ["new_id"]
             isOneToOne: false
             referencedRelation: "drinks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "drink_redirects_new_id_fkey"
+            columns: ["new_id"]
+            isOneToOne: false
+            referencedRelation: "drinks_lista"
             referencedColumns: ["id"]
           },
         ]
@@ -561,10 +603,51 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      drinks_lista: {
+        Row: {
+          created_by: string | null
+          dificuldade: string | null
+          id: string | null
+          imagem_url: string | null
+          nome: string | null
+          slug: string | null
+          total_ingredientes: number | null
+        }
+        Insert: {
+          created_by?: string | null
+          dificuldade?: string | null
+          id?: string | null
+          imagem_url?: string | null
+          nome?: string | null
+          slug?: string | null
+          total_ingredientes?: never
+        }
+        Update: {
+          created_by?: string | null
+          dificuldade?: string | null
+          id?: string | null
+          imagem_url?: string | null
+          nome?: string | null
+          slug?: string | null
+          total_ingredientes?: never
+        }
+        Relationships: []
+      }
     }
     Functions: {
       buscar_drinks: {
+        Args: {
+          _categorias?: string[]
+          _comparador?: string
+          _dificuldades?: string[]
+          _ingredientes?: string[]
+          _limite?: number
+          _offset?: number
+          _qtd?: number
+        }
+        Returns: Json
+      }
+      buscar_drinks_lista: {
         Args: {
           _categorias?: string[]
           _comparador?: string
