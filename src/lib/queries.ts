@@ -82,20 +82,27 @@ export const ingredientesQuery = queryOptions({
   },
 });
 
+/** Consulta completa — exclusiva da página de detalhe da receita. */
 const DRINK_SELECT =
   "*, drink_ingredientes(ingrediente_id, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
 
+/** Projeção explícita das listagens: nada de select=* nem colunas de texto longo. */
+const DRINK_LISTA_SELECT =
+  "id, slug, nome, imagem_url, dificuldade, created_by, total_ingredientes, drink_ingredientes(ingrediente_id, ingredientes(id, nome, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+
 export const drinksQuery = queryOptions({
-  queryKey: ["drinks"],
-  queryFn: async (): Promise<DrinkComIngredientes[]> => {
+  queryKey: ["drinks", "lista"],
+  ...CACHE_DRINKS,
+  queryFn: async (): Promise<DrinkLista[]> => {
     const { data, error } = await supabase
-      .from("drinks")
-      .select(DRINK_SELECT)
+      .from("drinks_lista")
+      .select(DRINK_LISTA_SELECT)
       .order("nome");
     if (error) throw error;
-    return (data ?? []) as unknown as DrinkComIngredientes[];
+    return (data ?? []) as unknown as DrinkLista[];
   },
 });
+
 
 /** Aceita o slug (URL amigável) ou o UUID antigo do drink. */
 export const drinkQuery = (idOrSlug: string) =>
