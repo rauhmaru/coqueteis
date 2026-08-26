@@ -33,6 +33,31 @@ export type DrinkComIngredientes = Drink & {
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
 };
 
+/**
+ * Projeção enxuta usada em todas as listagens (catálogo, home, carta, busca).
+ * Só traz as colunas dos cards + os vínculos mínimos para busca e cruzamento
+ * com o estoque. A consulta completa fica na página de detalhe da receita.
+ */
+export type DrinkLista = {
+  id: string;
+  slug: string | null;
+  nome: string;
+  imagem_url: string | null;
+  dificuldade: string;
+  created_by: string | null;
+  /** contagem agregada na view drinks_lista (sem trazer todos os vínculos) */
+  total_ingredientes?: number;
+  drink_ingredientes: {
+    ingrediente_id: string;
+    ingredientes: { id: string; nome: string; categorias?: { nome: string } | null } | null;
+  }[];
+  drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
+};
+
+/** Cache compartilhado: navegar entre catálogo e receita não refaz a consulta. */
+const CACHE_DRINKS = { staleTime: 5 * 60 * 1000, gcTime: 30 * 60 * 1000 };
+
+
 export const categoriasQuery = queryOptions({
   queryKey: ["categorias"],
   queryFn: async (): Promise<Categoria[]> => {
@@ -57,20 +82,27 @@ export const ingredientesQuery = queryOptions({
   },
 });
 
+/** Consulta completa — exclusiva da página de detalhe da receita. */
 const DRINK_SELECT =
   "*, drink_ingredientes(ingrediente_id, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
 
+/** Projeção explícita das listagens: nada de select=* nem colunas de texto longo. */
+const DRINK_LISTA_SELECT =
+  "id, slug, nome, imagem_url, dificuldade, created_by, total_ingredientes, drink_ingredientes(ingrediente_id, ingredientes(id, nome, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+
 export const drinksQuery = queryOptions({
-  queryKey: ["drinks"],
-  queryFn: async (): Promise<DrinkComIngredientes[]> => {
+  queryKey: ["drinks", "lista"],
+  ...CACHE_DRINKS,
+  queryFn: async (): Promise<DrinkLista[]> => {
     const { data, error } = await supabase
-      .from("drinks")
-      .select(DRINK_SELECT)
+      .from("drinks_lista")
+      .select(DRINK_LISTA_SELECT)
       .order("nome");
     if (error) throw error;
-    return (data ?? []) as unknown as DrinkComIngredientes[];
+    return (data ?? []) as unknown as DrinkLista[];
   },
 });
+
 
 /** Aceita o slug (URL amigável) ou o UUID antigo do drink. */
 export const drinkQuery = (idOrSlug: string) =>
