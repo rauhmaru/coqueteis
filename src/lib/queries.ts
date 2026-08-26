@@ -33,6 +33,31 @@ export type DrinkComIngredientes = Drink & {
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
 };
 
+/**
+ * Projeção enxuta usada em todas as listagens (catálogo, home, carta, busca).
+ * Só traz as colunas dos cards + os vínculos mínimos para busca e cruzamento
+ * com o estoque. A consulta completa fica na página de detalhe da receita.
+ */
+export type DrinkLista = {
+  id: string;
+  slug: string | null;
+  nome: string;
+  imagem_url: string | null;
+  dificuldade: string;
+  created_by: string | null;
+  /** contagem agregada na view drinks_lista (sem trazer todos os vínculos) */
+  total_ingredientes?: number;
+  drink_ingredientes: {
+    ingrediente_id: string;
+    ingredientes: { id: string; nome: string; categorias?: { nome: string } | null } | null;
+  }[];
+  drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
+};
+
+/** Cache compartilhado: navegar entre catálogo e receita não refaz a consulta. */
+const CACHE_DRINKS = { staleTime: 5 * 60 * 1000, gcTime: 30 * 60 * 1000 };
+
+
 export const categoriasQuery = queryOptions({
   queryKey: ["categorias"],
   queryFn: async (): Promise<Categoria[]> => {
