@@ -158,14 +158,18 @@ export type DrinkFiltrosServidor = {
   comparador: string;
 };
 
-export type DrinksPagina = { total: number; drinks: DrinkComIngredientes[] };
+export type DrinksPagina = { total: number; drinks: DrinkLista[] };
 
-/** Busca paginada no banco: os filtros são aplicados no servidor e só a página pedida é trazida. */
+/**
+ * Busca paginada no banco: filtros aplicados no servidor e projeção enxuta
+ * (buscar_drinks_lista) — sem textos longos nem colunas fora do card.
+ */
 export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number) =>
   queryOptions({
     queryKey: ["drinks", "pagina", filtros, limite],
+    ...CACHE_DRINKS,
     queryFn: async (): Promise<DrinksPagina> => {
-      const { data, error } = await supabase.rpc("buscar_drinks", {
+      const { data, error } = await supabase.rpc("buscar_drinks_lista" as "buscar_drinks", {
         _ingredientes: filtros.ingredientes,
         _categorias: filtros.categorias,
         _dificuldades: filtros.dificuldades,
@@ -178,6 +182,7 @@ export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number)
       const r = (data ?? { total: 0, drinks: [] }) as unknown as DrinksPagina;
       return { total: r.total ?? 0, drinks: r.drinks ?? [] };
     },
+
   });
 
 export type DrinkIndice = {
