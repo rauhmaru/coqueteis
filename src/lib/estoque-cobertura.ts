@@ -1,4 +1,4 @@
-import type { DrinkComIngredientes } from "@/lib/queries";
+import type { DrinkLista } from "@/lib/queries";
 import type { ItemBar } from "@/lib/meu-bar";
 
 /**
@@ -44,7 +44,7 @@ export type Cobertura = {
 };
 
 export function coberturaDrink(
-  drink: DrinkComIngredientes,
+  drink: DrinkLista,
   estoque: Set<string>,
 ): Cobertura {
   const itens: IngredienteCobertura[] = drink.drink_ingredientes.map((di) => {

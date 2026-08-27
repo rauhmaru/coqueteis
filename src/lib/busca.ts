@@ -1,4 +1,4 @@
-import type { DrinkComIngredientes } from "@/lib/queries";
+import type { DrinkLista } from "@/lib/queries";
 
 /** Normalização única (acentos + caixa) usada por toda a busca do site. */
 export function norm(s: string): string {
@@ -9,11 +9,11 @@ export function norm(s: string): string {
 }
 
 /** Casa o termo com nome, categorias ou ingredientes do drink. */
-export function combina(drink: DrinkComIngredientes, termo: string): boolean {
+export function combina(drink: DrinkLista, termo: string): boolean {
   return pontuar(drink, norm(termo.trim())) > 0;
 }
 
-function pontuar(d: DrinkComIngredientes, q: string): number {
+function pontuar(d: DrinkLista, q: string): number {
   if (!q) return 0;
   const nome = norm(d.nome);
   if (nome.startsWith(q)) return 4;
@@ -24,7 +24,7 @@ function pontuar(d: DrinkComIngredientes, q: string): number {
 }
 
 /** Busca por nome, categoria ou ingrediente, ordenada por relevância. */
-export function buscarDrinks<T extends DrinkComIngredientes>(
+export function buscarDrinks<T extends DrinkLista>(
   drinks: T[],
   termo: string,
   limite?: number,

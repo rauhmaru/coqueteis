@@ -2,15 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { DrinkImage } from "@/components/drink-image";
 import { DifficultyBadge } from "@/components/difficulty-badge";
-import { drinksQuery, type DrinkComIngredientes } from "@/lib/queries";
+import { drinksQuery, type DrinkLista } from "@/lib/queries";
 import { drinkParam } from "@/lib/slug";
 
 /** Escolhe até 5 drinks da mesma categoria ou que compartilhem o ingrediente principal. */
 export function relacionar(
-  atual: DrinkComIngredientes,
-  todos: DrinkComIngredientes[],
+  atual: DrinkLista,
+  todos: DrinkLista[],
   max = 5,
-): DrinkComIngredientes[] {
+): DrinkLista[] {
   const categorias = new Set(atual.drink_drink_categorias.map((c) => c.categoria_id));
   const principal = atual.drink_ingredientes[0]?.ingrediente_id;
 
@@ -29,7 +29,7 @@ export function relacionar(
     .map((x) => x.d);
 }
 
-export function DrinksRelacionados({ drink }: { drink: DrinkComIngredientes }) {
+export function DrinksRelacionados({ drink }: { drink: DrinkLista }) {
   const { data: todos } = useQuery(drinksQuery);
   const relacionados = todos ? relacionar(drink, todos) : [];
   if (relacionados.length < 3) return null;
