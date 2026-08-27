@@ -107,7 +107,9 @@ export const drinksQuery = queryOptions({
 /** Aceita o slug (URL amigável) ou o UUID antigo do drink. */
 export const drinkQuery = (idOrSlug: string) =>
   queryOptions({
-    queryKey: ["drinks", idOrSlug],
+    queryKey: ["drinks", "detalhe", idOrSlug],
+    ...CACHE_DRINKS,
+
     queryFn: async (): Promise<DrinkComIngredientes | null> => {
       const coluna = isUuid(idOrSlug) ? "id" : "slug";
       const { data, error } = await supabase
