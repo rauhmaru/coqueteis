@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { DIFICULDADES } from "@/components/difficulty-badge";
 import {
   drinksIndiceQuery,
-  type DrinkComIngredientes,
+  type DrinkLista,
   type Ingrediente,
   type DrinkCategoria,
 } from "@/lib/queries";
@@ -299,7 +299,7 @@ export function useDrinkFilters({
   idPrefix = "filtro",
 }: {
   /** Opcional: quando informado, o hook também filtra no cliente (`filtered`). */
-  drinks?: DrinkComIngredientes[];
+  drinks?: DrinkLista[];
   ingredientes: Ingrediente[];
   categorias: DrinkCategoria[];
   idPrefix?: string;

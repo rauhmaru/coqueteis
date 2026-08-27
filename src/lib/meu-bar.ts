@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { sugerirIngrediente } from "@/lib/abv";
 import { DOSE_PADRAO_ML } from "@/lib/perfil";
 
-import type { DrinkComIngredientes } from "@/lib/queries";
+import type { DrinkLista } from "@/lib/queries";
 
 export type ItemBar = {
   id: string;
@@ -39,7 +39,7 @@ export type CustoIngrediente = {
 };
 
 export type DrinkAvaliado = {
-  drink: DrinkComIngredientes;
+  drink: DrinkLista;
   faltando: string[];
   /** custo estimado de uma unidade do drink (soma dos ingredientes com preço informado) */
   custo: number;
@@ -63,7 +63,7 @@ export function custoPorMl(item: ItemBar): number | null {
  * de cada ingrediente são proporcionais a ele (referência: 50 ml).
  */
 export function avaliarDrinks(
-  drinks: DrinkComIngredientes[],
+  drinks: DrinkLista[],
   estoque: ItemBar[],
   doseMl: number = DOSE_PADRAO_ML,
 ): DrinkAvaliado[] {

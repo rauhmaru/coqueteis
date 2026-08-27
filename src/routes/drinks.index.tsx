@@ -8,7 +8,7 @@ import {
   ingredientesQuery,
   drinkCategoriasQuery,
   drinksPaginaQuery,
-  type DrinkComIngredientes,
+  type DrinkLista,
 } from "@/lib/queries";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -187,11 +187,11 @@ function DrinksList() {
     : porBusca;
   const total = buscando || filtrandoEstoque ? drinks.length : data?.total ?? 0;
   const temMais = !buscando && !filtrandoEstoque && drinks.length < total;
-  const coberturaDe = (d: DrinkComIngredientes) =>
+  const coberturaDe = (d: DrinkLista) =>
     temEstoque ? coberturaDrink(d, estoqueIds) : null;
   const carregandoMais = isFetching && drinks.length < limite && drinks.length < total;
 
-  const canManage = (d: DrinkComIngredientes) => canManageItem({ user, isAdmin, canEdit }, d);
+  const canManage = (d: DrinkLista) => canManageItem({ user, isAdmin, canEdit }, d);
 
   const remover = async (id: string) => {
     const drink = drinks.find((d) => d.id === id);
