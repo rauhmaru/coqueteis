@@ -213,6 +213,13 @@ function MeuBarPage() {
     );
   }, [quaseBase, impacto]);
 
+  // Guarda offline as imagens das receitas que dá para fazer com o estoque atual.
+  useEffect(() => {
+    if (possiveis.length === 0) return;
+    void aquecerImagensOffline(possiveis.map((a) => a.drink.imagem_url));
+  }, [possiveis]);
+
+
   return (
     <div className="min-h-dvh">
       <SiteHeader />
