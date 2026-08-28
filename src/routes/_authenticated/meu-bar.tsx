@@ -1,6 +1,12 @@
 import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  aquecerImagensOffline,
+  formatarSalvoEm,
+  lerSnapshot,
+  salvarSnapshot,
+} from "@/lib/offline";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronDown, Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
 import { toast } from "sonner";
@@ -52,7 +58,16 @@ function MeuBarPage() {
   const qc = useQueryClient();
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useQuery(ingredientesQuery);
-  const { data: estoque, isLoading } = useQuery(meuBarQuery(user?.id));
+  const { data: estoqueRemoto, isLoading } = useQuery(meuBarQuery(user?.id));
+
+  // Snapshot offline do estoque (o bar costuma ter conexão instável).
+  const snapshotBar = useMemo(() => lerSnapshot<ItemBar[]>("meu-bar"), []);
+  useEffect(() => {
+    if (estoqueRemoto) salvarSnapshot("meu-bar", estoqueRemoto);
+  }, [estoqueRemoto]);
+  const estoque = estoqueRemoto ?? snapshotBar?.dados;
+  const usandoCacheBar = !estoqueRemoto && !!snapshotBar;
+
   const { data: perfil } = useQuery(perfilQuery(user?.id));
   const doseMl = perfil?.dose_ml ?? DOSE_PADRAO_ML;
 
@@ -198,6 +213,13 @@ function MeuBarPage() {
     );
   }, [quaseBase, impacto]);
 
+  // Guarda offline as imagens das receitas que dá para fazer com o estoque atual.
+  useEffect(() => {
+    if (possiveis.length === 0) return;
+    void aquecerImagensOffline(possiveis.map((a) => a.drink.imagem_url));
+  }, [possiveis]);
+
+
   return (
     <div className="min-h-dvh">
       <SiteHeader />
@@ -213,6 +235,12 @@ function MeuBarPage() {
             <span className="text-foreground">quase lá</span> (falta 1 ingrediente) e calculamos o
             custo por dose com base no preço que você pagou.
           </p>
+          {usandoCacheBar && (
+            <p className="text-xs text-primary" role="status">
+              Estoque salvo no aparelho
+              {snapshotBar?.salvoEm ? ` em ${formatarSalvoEm(snapshotBar.salvoEm)}` : ""}.
+            </p>
+          )}
         </header>
 
         {/* Tamanho da dose (perfil) */}

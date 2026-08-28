@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccessibilityPanel } from "@/components/accessibility-panel";
 import { AutocompleteDrinks, BuscaOverlay } from "@/components/drink-search";
+import { InstallAppButton } from "@/components/pwa-manager";
 import {
   Sheet,
   SheetContent,
@@ -135,6 +136,7 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2">
           <BuscaOverlay />
           <div className="hidden items-center gap-2 md:flex">
+            <InstallAppButton />
             <AccessibilityPanel />
             <ThemeToggle />
           </div>
@@ -321,6 +323,10 @@ export function SiteHeader() {
                 <AccessibilityPanel />
                 <ThemeToggle />
                 <span className="text-xs text-muted-foreground">Acessibilidade e tema</span>
+              </div>
+
+              <div className="mt-4">
+                <InstallAppButton className="w-full min-h-11" />
               </div>
             </SheetContent>
           </Sheet>

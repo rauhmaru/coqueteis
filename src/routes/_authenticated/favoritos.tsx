@@ -2,7 +2,13 @@ import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Heart, ArrowLeft, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  aquecerImagensOffline,
+  formatarSalvoEm,
+  lerSnapshot,
+  salvarSnapshot,
+} from "@/lib/offline";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -59,7 +65,7 @@ function FavoritosPage() {
   const [sort, setSort] = useState<SortKey>("recent");
   const [viewMode, setViewMode] = useViewMode("favoritos", "grid");
 
-  const { data, isLoading } = useQuery({
+  const { data: dataRemota, isLoading } = useQuery({
     queryKey: ["favoritos", user?.id],
     enabled: !!user,
     queryFn: async (): Promise<FavRow[]> => {
@@ -72,6 +78,17 @@ function FavoritosPage() {
       return (data ?? []) as unknown as FavRow[];
     },
   });
+
+  // Snapshot offline: guarda favoritos + imagens para uso sem conexão.
+  const snapshot = useMemo(() => lerSnapshot<FavRow[]>("favoritos"), []);
+  useEffect(() => {
+    if (!dataRemota) return;
+    salvarSnapshot("favoritos", dataRemota);
+    void aquecerImagensOffline(dataRemota.map((f) => f.drinks?.imagem_url));
+  }, [dataRemota]);
+
+  const data = dataRemota ?? snapshot?.dados;
+  const usandoCache = !dataRemota && !!snapshot;
 
   const favoritos = useMemo(() => (data ?? []).filter((f) => f.drinks), [data]);
 
@@ -144,6 +161,12 @@ function FavoritosPage() {
                 ? `${filtrados.length} de ${total} ${total === 1 ? "drink" : "drinks"}`
                 : `${total} ${total === 1 ? "drink favoritado" : "drinks favoritados"}`}
           </p>
+          {usandoCache && (
+            <p className="text-xs text-primary" role="status">
+              Dados salvos no aparelho
+              {snapshot?.salvoEm ? ` em ${formatarSalvoEm(snapshot.salvoEm)}` : ""}.
+            </p>
+          )}
         </header>
 
         {total > 0 && (

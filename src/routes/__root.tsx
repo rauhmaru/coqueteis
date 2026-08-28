@@ -15,6 +15,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider, useTheme } from "@/hooks/use-theme";
 import { A11yProvider } from "@/hooks/use-a11y";
 import { Pagina404 } from "@/components/pagina-404";
+import { PwaManager, OfflineIndicator } from "@/components/pwa-manager";
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
@@ -60,6 +61,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "application-name", content: "Destilados & Coquetéis" },
+      { name: "apple-mobile-web-app-title", content: "D&C" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "theme-color", content: "#1c1714" },
       { title: "Destilados & Coquetéis — Receitas e mixologia" },
       { name: "description", content: "Gerencie ingredientes, categorias e receitas de coquetéis em um só lugar." },
       { name: "google-site-verification", content: "ewfn-Ehh0dtJpS3nrZr0IB4UKwh28X0Lvb78TLou6kY" },
@@ -96,6 +102,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
+
 
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
@@ -140,6 +149,8 @@ function RootComponent() {
               Pular para o conteúdo principal
             </a>
             <Outlet />
+            <PwaManager />
+            <OfflineIndicator />
             <ThemedToaster />
           </AuthProvider>
         </A11yProvider>
