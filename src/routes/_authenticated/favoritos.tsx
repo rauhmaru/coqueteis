@@ -156,6 +156,12 @@ function FavoritosPage() {
                 ? `${filtrados.length} de ${total} ${total === 1 ? "drink" : "drinks"}`
                 : `${total} ${total === 1 ? "drink favoritado" : "drinks favoritados"}`}
           </p>
+          {usandoCache && (
+            <p className="text-xs text-primary" role="status">
+              Dados salvos no aparelho
+              {snapshot?.salvoEm ? ` em ${formatarSalvoEm(snapshot.salvoEm)}` : ""}.
+            </p>
+          )}
         </header>
 
         {total > 0 && (
