@@ -23,6 +23,8 @@ export default defineConfig({
         registerType: "autoUpdate",
         filename: "sw.js",
         strategies: "generateSW",
+        // O bundle do cliente (servido na raiz do site) fica em dist/client.
+        outDir: "dist/client",
         devOptions: { enabled: false },
         manifest: {
           id: "/",
