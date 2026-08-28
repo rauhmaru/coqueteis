@@ -52,7 +52,16 @@ function MeuBarPage() {
   const qc = useQueryClient();
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useQuery(ingredientesQuery);
-  const { data: estoque, isLoading } = useQuery(meuBarQuery(user?.id));
+  const { data: estoqueRemoto, isLoading } = useQuery(meuBarQuery(user?.id));
+
+  // Snapshot offline do estoque (o bar costuma ter conexão instável).
+  const snapshotBar = useMemo(() => lerSnapshot<ItemBar[]>("meu-bar"), []);
+  useEffect(() => {
+    if (estoqueRemoto) salvarSnapshot("meu-bar", estoqueRemoto);
+  }, [estoqueRemoto]);
+  const estoque = estoqueRemoto ?? snapshotBar?.dados;
+  const usandoCacheBar = !estoqueRemoto && !!snapshotBar;
+
   const { data: perfil } = useQuery(perfilQuery(user?.id));
   const doseMl = perfil?.dose_ml ?? DOSE_PADRAO_ML;
 
