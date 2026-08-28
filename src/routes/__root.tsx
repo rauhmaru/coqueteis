@@ -15,6 +15,7 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider, useTheme } from "@/hooks/use-theme";
 import { A11yProvider } from "@/hooks/use-a11y";
 import { Pagina404 } from "@/components/pagina-404";
+import { PwaManager, OfflineIndicator } from "@/components/pwa-manager";
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
