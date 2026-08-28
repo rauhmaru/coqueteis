@@ -150,6 +150,8 @@ function RootComponent() {
               Pular para o conteúdo principal
             </a>
             <Outlet />
+            <PwaManager />
+            <OfflineIndicator />
             <ThemedToaster />
           </AuthProvider>
         </A11yProvider>
