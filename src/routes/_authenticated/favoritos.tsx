@@ -3,7 +3,12 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { Heart, ArrowLeft, Search, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { aquecerImagensOffline, lerSnapshot, salvarSnapshot } from "@/lib/offline";
+import {
+  aquecerImagensOffline,
+  formatarSalvoEm,
+  lerSnapshot,
+  salvarSnapshot,
+} from "@/lib/offline";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
