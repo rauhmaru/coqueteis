@@ -136,6 +136,7 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2">
           <BuscaOverlay />
           <div className="hidden items-center gap-2 md:flex">
+            <InstallAppButton />
             <AccessibilityPanel />
             <ThemeToggle />
           </div>
