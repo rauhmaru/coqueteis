@@ -1,6 +1,12 @@
 import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import {
+  aquecerImagensOffline,
+  formatarSalvoEm,
+  lerSnapshot,
+  salvarSnapshot,
+} from "@/lib/offline";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { ChevronDown, Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
 import { toast } from "sonner";
