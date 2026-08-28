@@ -235,6 +235,12 @@ function MeuBarPage() {
             <span className="text-foreground">quase lá</span> (falta 1 ingrediente) e calculamos o
             custo por dose com base no preço que você pagou.
           </p>
+          {usandoCacheBar && (
+            <p className="text-xs text-primary" role="status">
+              Estoque salvo no aparelho
+              {snapshotBar?.salvoEm ? ` em ${formatarSalvoEm(snapshotBar.salvoEm)}` : ""}.
+            </p>
+          )}
         </header>
 
         {/* Tamanho da dose (perfil) */}
