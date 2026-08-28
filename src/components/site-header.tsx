@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { AccessibilityPanel } from "@/components/accessibility-panel";
 import { AutocompleteDrinks, BuscaOverlay } from "@/components/drink-search";
+import { InstallAppButton } from "@/components/pwa-manager";
 import {
   Sheet,
   SheetContent,
