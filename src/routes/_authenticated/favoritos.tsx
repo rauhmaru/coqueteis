@@ -59,7 +59,7 @@ function FavoritosPage() {
   const [sort, setSort] = useState<SortKey>("recent");
   const [viewMode, setViewMode] = useViewMode("favoritos", "grid");
 
-  const { data, isLoading } = useQuery({
+  const { data: dataRemota, isLoading } = useQuery({
     queryKey: ["favoritos", user?.id],
     enabled: !!user,
     queryFn: async (): Promise<FavRow[]> => {
