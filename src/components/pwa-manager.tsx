@@ -7,8 +7,23 @@ import { Button } from "@/components/ui/button";
 
 type PromptInstalacao = Event & { prompt: () => Promise<void> };
 
-/** Registro do service worker + aviso de nova versão. */
+const THEME_COLOR = { dark: "#1c1714", light: "#fbf7ef" } as const;
+
+/** Registro do service worker, theme-color do tema ativo e aviso de nova versão. */
 export function PwaManager() {
+  // Mantém a barra do sistema coerente com o tema realmente aplicado.
+  useEffect(() => {
+    const sincronizar = () => {
+      const claro = document.documentElement.classList.contains("light");
+      const meta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
+      if (meta) meta.content = claro ? THEME_COLOR.light : THEME_COLOR.dark;
+    };
+    sincronizar();
+    const obs = new MutationObserver(sincronizar);
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
+    return () => obs.disconnect();
+  }, []);
+
   useEffect(() => {
     void registrarServiceWorker((recarregar) => {
       toast("Nova versão disponível", {
