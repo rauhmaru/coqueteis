@@ -324,6 +324,10 @@ export function SiteHeader() {
                 <ThemeToggle />
                 <span className="text-xs text-muted-foreground">Acessibilidade e tema</span>
               </div>
+
+              <div className="mt-4">
+                <InstallAppButton className="w-full min-h-11" />
+              </div>
             </SheetContent>
           </Sheet>
         </div>
