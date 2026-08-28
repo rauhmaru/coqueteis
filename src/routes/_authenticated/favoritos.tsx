@@ -73,6 +73,17 @@ function FavoritosPage() {
     },
   });
 
+  // Snapshot offline: guarda favoritos + imagens para uso sem conexão.
+  const snapshot = useMemo(() => lerSnapshot<FavRow[]>("favoritos"), []);
+  useEffect(() => {
+    if (!dataRemota) return;
+    salvarSnapshot("favoritos", dataRemota);
+    void aquecerImagensOffline(dataRemota.map((f) => f.drinks?.imagem_url));
+  }, [dataRemota]);
+
+  const data = dataRemota ?? snapshot?.dados;
+  const usandoCache = !dataRemota && !!snapshot;
+
   const favoritos = useMemo(() => (data ?? []).filter((f) => f.drinks), [data]);
 
   const categorias = useMemo(() => {
