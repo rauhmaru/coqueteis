@@ -56,6 +56,25 @@ function AuthPage() {
     }
   }, [user, loading, navigate, next]);
 
+  const [recOpen, setRecOpen] = useState(false);
+  const [recEmail, setRecEmail] = useState("");
+  const [recBusy, setRecBusy] = useState(false);
+
+  const recuperarSenha = async (e: FormEvent) => {
+    e.preventDefault();
+    setRecBusy(true);
+    await supabase.auth.resetPasswordForEmail(recEmail, {
+      redirectTo:
+        typeof window !== "undefined"
+          ? `${window.location.origin}/auth/nova-senha`
+          : undefined,
+    });
+    setRecBusy(false);
+    setRecOpen(false);
+    // Mensagem idêntica mesmo se o e-mail não existir (segurança).
+    toast.success("Enviamos um link de recuperação para seu e-mail. Verifique a caixa de entrada.");
+  };
+
   const entrar = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);

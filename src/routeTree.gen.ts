@@ -34,6 +34,7 @@ import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
 import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as CartaVerRouteImport } from './routes/carta_.ver'
+import { Route as AuthNovaSenhaRouteImport } from './routes/auth/nova-senha'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
 import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
@@ -174,6 +175,11 @@ const CartaVerRoute = CartaVerRouteImport.update({
   path: '/carta/ver',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthNovaSenhaRoute = AuthNovaSenhaRouteImport.update({
+  id: '/nova-senha',
+  path: '/nova-senha',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   id: '/usuarios',
   path: '/usuarios',
@@ -260,7 +266,7 @@ const AuthenticatedDrinksIdEditarRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -277,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -301,7 +308,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
+  '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
@@ -341,7 +349,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
-  '/auth': typeof AuthRoute
+  '/auth': typeof AuthRouteWithChildren
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -358,6 +366,7 @@ export interface FileRoutesById {
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/remocoes': typeof AuthenticatedRemocoesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
+  '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta_/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
@@ -401,6 +410,7 @@ export interface FileRouteTypes {
     | '/meu-bar'
     | '/remocoes'
     | '/usuarios'
+    | '/auth/nova-senha'
     | '/carta/ver'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -440,6 +450,7 @@ export interface FileRouteTypes {
     | '/meu-bar'
     | '/remocoes'
     | '/usuarios'
+    | '/auth/nova-senha'
     | '/carta/ver'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
@@ -481,6 +492,7 @@ export interface FileRouteTypes {
     | '/_authenticated/meu-bar'
     | '/_authenticated/remocoes'
     | '/_authenticated/usuarios'
+    | '/auth/nova-senha'
     | '/carta_/ver'
     | '/drinks/$id'
     | '/mixologia/bebidas'
@@ -507,7 +519,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   CalculadoraAbvRoute: typeof CalculadoraAbvRoute
   CartaRoute: typeof CartaRoute
   ConfiancaRoute: typeof ConfiancaRoute
@@ -701,6 +713,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartaVerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth/nova-senha': {
+      id: '/auth/nova-senha'
+      path: '/nova-senha'
+      fullPath: '/auth/nova-senha'
+      preLoaderRoute: typeof AuthNovaSenhaRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_authenticated/usuarios': {
       id: '/_authenticated/usuarios'
       path: '/usuarios'
@@ -834,6 +853,16 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
 const AuthenticatedRouteRouteWithChildren =
   AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
+interface AuthRouteChildren {
+  AuthNovaSenhaRoute: typeof AuthNovaSenhaRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthNovaSenhaRoute: AuthNovaSenhaRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 interface DrinksIdRouteChildren {
   DrinksIdIndexRoute: typeof DrinksIdIndexRoute
 }
@@ -895,7 +924,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   CalculadoraAbvRoute: CalculadoraAbvRoute,
   CartaRoute: CartaRoute,
   ConfiancaRoute: ConfiancaRoute,
