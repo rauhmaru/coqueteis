@@ -8,6 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { caminhoInternoSeguro, mensagemRedirect } from "@/lib/auth-redirect";
 
@@ -163,12 +170,51 @@ function AuthPage() {
                 <div className="space-y-1.5">
                   <Label htmlFor="senha-in">Senha</Label>
                   <Input id="senha-in" type="password" required value={senha} onChange={(e) => setSenha(e.target.value)} />
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRecEmail(email);
+                        setRecOpen(true);
+                      }}
+                      className="text-xs text-primary hover:underline"
+                    >
+                      Esqueci minha senha
+                    </button>
+                  </div>
                 </div>
                 <Button type="submit" disabled={busy} className="w-full">
                   {busy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                   Entrar
                 </Button>
               </form>
+
+              <Dialog open={recOpen} onOpenChange={setRecOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Recuperar senha</DialogTitle>
+                    <DialogDescription>
+                      Informe o e-mail da sua conta e enviaremos um link para definir uma nova senha.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={recuperarSenha} className="space-y-4">
+                    <div className="space-y-1.5">
+                      <Label htmlFor="email-rec">Email</Label>
+                      <Input
+                        id="email-rec"
+                        type="email"
+                        required
+                        value={recEmail}
+                        onChange={(e) => setRecEmail(e.target.value)}
+                      />
+                    </div>
+                    <Button type="submit" disabled={recBusy} className="w-full">
+                      {recBusy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                      Enviar link de recuperação
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </TabsContent>
 
             <TabsContent value="criar" className="space-y-4 pt-4">
