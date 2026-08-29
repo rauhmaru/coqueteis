@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, useRouter, Link } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { Martini, Loader2 } from "lucide-react";
+import { Martini, Loader2, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { useAuth } from "@/hooks/use-auth";
@@ -18,14 +18,11 @@ import {
 import { toast } from "sonner";
 import { caminhoInternoSeguro, mensagemRedirect } from "@/lib/auth-redirect";
 
-
 export const Route = createFileRoute("/auth")({
   validateSearch: (s: Record<string, unknown>): { redirect?: string } => {
     const destino = caminhoInternoSeguro(s.redirect) ?? caminhoInternoSeguro(s.next);
     return destino ? { redirect: destino } : {};
   },
-
-
 
   head: () => ({
     meta: [
@@ -37,6 +34,53 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+const SENHA_MIN = 8;
+
+interface PasswordFieldProps {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  autoComplete: string;
+  error?: string | null;
+}
+
+function PasswordField({ id, label, value, onChange, autoComplete, error }: PasswordFieldProps) {
+  const [mostrar, setMostrar] = useState(false);
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          name={id}
+          type={mostrar ? "text" : "password"}
+          required
+          minLength={SENHA_MIN}
+          autoComplete={autoComplete}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={error ? "border-destructive pr-10" : "pr-10"}
+          aria-invalid={error ? "true" : "false"}
+          aria-describedby={error ? `${id}-erro` : undefined}
+        />
+        <button
+          type="button"
+          onClick={() => setMostrar((v) => !v)}
+          aria-label={mostrar ? "Ocultar senha" : "Mostrar senha"}
+          className="absolute right-2 top-1/2 -translate-y-1/2 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        >
+          {mostrar ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
+      </div>
+      {error ? (
+        <p id={`${id}-erro`} className="text-xs text-destructive">
+          {error}
+        </p>
+      ) : null}
+    </div>
+  );
+}
 
 function AuthPage() {
   const { user, loading } = useAuth();
@@ -45,8 +89,10 @@ function AuthPage() {
   const { redirect: next } = Route.useSearch();
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [nome, setNome] = useState("");
   const [busy, setBusy] = useState(false);
+  const [erros, setErros] = useState<{ senha?: string; confirmar?: string }>({});
 
   const irParaDestino = () => {
     if (next) {
@@ -67,6 +113,13 @@ function AuthPage() {
   const [recEmail, setRecEmail] = useState("");
   const [recBusy, setRecBusy] = useState(false);
 
+  const validarSenha = (valor: string) => {
+    if (valor.length < SENHA_MIN) {
+      return `A senha deve ter pelo menos ${SENHA_MIN} caracteres.`;
+    }
+    return "";
+  };
+
   const recuperarSenha = async (e: FormEvent) => {
     e.preventDefault();
     setRecBusy(true);
@@ -84,6 +137,12 @@ function AuthPage() {
 
   const entrar = async (e: FormEvent) => {
     e.preventDefault();
+    const erroSenha = validarSenha(senha);
+    if (erroSenha) {
+      setErros({ senha: erroSenha });
+      return;
+    }
+    setErros({});
     setBusy(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password: senha });
     setBusy(false);
@@ -98,6 +157,13 @@ function AuthPage() {
 
   const cadastrar = async (e: FormEvent) => {
     e.preventDefault();
+    const erroSenha = validarSenha(senha);
+    const erroConfirmar = senha !== confirmarSenha ? "As senhas não coincidem." : "";
+    if (erroSenha || erroConfirmar) {
+      setErros({ senha: erroSenha || undefined, confirmar: erroConfirmar || undefined });
+      return;
+    }
+    setErros({});
     setBusy(true);
     const { error } = await supabase.auth.signUp({
       email,
@@ -132,7 +198,6 @@ function AuthPage() {
     if (result.redirected) return;
     router.invalidate();
     irParaDestino();
-
   };
 
   return (
@@ -165,23 +230,35 @@ function AuthPage() {
               <form onSubmit={entrar} className="space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="email-in">Email</Label>
-                  <Input id="email-in" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    id="email-in"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="senha-in">Senha</Label>
-                  <Input id="senha-in" type="password" required value={senha} onChange={(e) => setSenha(e.target.value)} />
-                  <div className="text-right">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setRecEmail(email);
-                        setRecOpen(true);
-                      }}
-                      className="text-xs text-primary hover:underline"
-                    >
-                      Esqueci minha senha
-                    </button>
-                  </div>
+                <PasswordField
+                  id="senha-in"
+                  label="Senha"
+                  value={senha}
+                  onChange={setSenha}
+                  autoComplete="current-password"
+                  error={erros.senha}
+                />
+                <div className="text-right -mt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRecEmail(email);
+                      setRecOpen(true);
+                    }}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Esqueci minha senha
+                  </button>
                 </div>
                 <Button type="submit" disabled={busy} className="w-full">
                   {busy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
@@ -221,16 +298,43 @@ function AuthPage() {
               <form onSubmit={cadastrar} className="space-y-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="nome-up">Nome de exibição</Label>
-                  <Input id="nome-up" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como devemos te chamar?" />
+                  <Input
+                    id="nome-up"
+                    name="name"
+                    autoComplete="name"
+                    value={nome}
+                    onChange={(e) => setNome(e.target.value)}
+                    placeholder="Como devemos te chamar?"
+                  />
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="email-up">Email</Label>
-                  <Input id="email-up" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input
+                    id="email-up"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
                 </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="senha-up">Senha</Label>
-                  <Input id="senha-up" type="password" required minLength={6} value={senha} onChange={(e) => setSenha(e.target.value)} />
-                </div>
+                <PasswordField
+                  id="senha-up"
+                  label="Senha"
+                  value={senha}
+                  onChange={setSenha}
+                  autoComplete="new-password"
+                  error={erros.senha}
+                />
+                <PasswordField
+                  id="confirmar-senha-up"
+                  label="Confirmar senha"
+                  value={confirmarSenha}
+                  onChange={setConfirmarSenha}
+                  autoComplete="new-password"
+                  error={erros.confirmar}
+                />
                 <Button type="submit" disabled={busy} className="w-full">
                   {busy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
                   Criar conta
