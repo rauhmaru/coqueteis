@@ -64,10 +64,11 @@ function IngredientesPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!nome.trim()) { toast.error("Informe o nome."); return; }
+    const nomeNormalizado = normalizarNomeIngrediente(nome);
+    if (!nomeNormalizado) { toast.error("Informe o nome."); return; }
     setSaving(true);
     const payload = {
-      nome,
+      nome: nomeNormalizado,
       categoria_id: categoriaId || null,
     };
     const { error } = editing
