@@ -262,13 +262,16 @@ function AuthPage() {
                 <div className="text-right -mt-2">
                   <button
                     type="button"
+                    disabled={recCooldown > 0}
                     onClick={() => {
                       setRecEmail(email);
                       setRecOpen(true);
                     }}
-                    className="text-xs text-primary hover:underline"
+                    className="text-xs text-primary hover:underline disabled:opacity-60 disabled:no-underline disabled:cursor-not-allowed"
                   >
-                    Esqueci minha senha
+                    {recCooldown > 0
+                      ? `Reenviar link em ${recCooldown}s`
+                      : "Esqueci minha senha"}
                   </button>
                 </div>
                 <Button type="submit" disabled={busy} className="w-full">
@@ -296,9 +299,13 @@ function AuthPage() {
                         onChange={(e) => setRecEmail(e.target.value)}
                       />
                     </div>
-                    <Button type="submit" disabled={recBusy} className="w-full">
+                    <Button type="submit" disabled={recBusy || recCooldown > 0} className="w-full">
                       {recBusy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-                      Enviar link de recuperação
+                      {recBusy
+                        ? "Enviando…"
+                        : recCooldown > 0
+                          ? `Aguarde ${recCooldown}s para reenviar`
+                          : "Enviar link de recuperação"}
                     </Button>
                   </form>
                 </DialogContent>
