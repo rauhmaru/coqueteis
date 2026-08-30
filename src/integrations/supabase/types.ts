@@ -198,14 +198,17 @@ export type Database = {
         Row: {
           drink_id: string
           ingrediente_id: string
+          opcional: boolean
         }
         Insert: {
           drink_id: string
           ingrediente_id: string
+          opcional?: boolean
         }
         Update: {
           drink_id?: string
           ingrediente_id?: string
+          opcional?: boolean
         }
         Relationships: [
           {
