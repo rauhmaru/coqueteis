@@ -112,6 +112,15 @@ function AuthPage() {
   const [recOpen, setRecOpen] = useState(false);
   const [recEmail, setRecEmail] = useState("");
   const [recBusy, setRecBusy] = useState(false);
+  const [recCooldown, setRecCooldown] = useState(0);
+
+  useEffect(() => {
+    if (recCooldown <= 0) return;
+    const timer = window.setInterval(() => {
+      setRecCooldown((v) => (v <= 1 ? 0 : v - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [recCooldown > 0]);
 
   const validarSenha = (valor: string) => {
     if (valor.length < SENHA_MIN) {
@@ -122,6 +131,7 @@ function AuthPage() {
 
   const recuperarSenha = async (e: FormEvent) => {
     e.preventDefault();
+    if (recBusy || recCooldown > 0) return;
     setRecBusy(true);
     await supabase.auth.resetPasswordForEmail(recEmail, {
       redirectTo:
@@ -131,6 +141,7 @@ function AuthPage() {
     });
     setRecBusy(false);
     setRecOpen(false);
+    setRecCooldown(60);
     // Mensagem idêntica mesmo se o e-mail não existir (segurança).
     toast.success("Enviamos um link de recuperação para seu e-mail. Verifique a caixa de entrada.");
   };
