@@ -39,11 +39,15 @@ export function IngredientesEstoque({ drink }: { drink: DrinkComIngredientes }) 
   const linhas: LinhaIngrediente[] = drink.drink_ingredientes.map((di, idx) => {
     const nome = nomes[idx]!;
     const item = cobertura?.itens.find((i) => i.id === di.ingrediente_id) ?? null;
+    // A marcação do vínculo no banco tem prioridade sobre a heurística.
+    const opcional =
+      di.opcional ??
+      (item?.opcional ?? ingredienteOpcional(nome, di.ingredientes?.categorias?.nome ?? null));
     return {
       id: di.ingrediente_id,
       nome,
       dose: doses[idx]?.quantidade ?? "a gosto",
-      opcional: item?.opcional ?? ingredienteOpcional(nome, di.ingredientes?.categorias?.nome ?? null),
+      opcional: !!opcional,
       tem: item ? item.tem : null,
     };
   });
