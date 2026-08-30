@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { ingredientesQuery, categoriasQuery, type Ingrediente } from "@/lib/queries";
+import { normalizarNomeIngrediente } from "@/lib/ingredientes";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -63,10 +64,11 @@ function IngredientesPage() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (!nome.trim()) { toast.error("Informe o nome."); return; }
+    const nomeNormalizado = normalizarNomeIngrediente(nome);
+    if (!nomeNormalizado) { toast.error("Informe o nome."); return; }
     setSaving(true);
     const payload = {
-      nome,
+      nome: nomeNormalizado,
       categoria_id: categoriaId || null,
     };
     const { error } = editing
