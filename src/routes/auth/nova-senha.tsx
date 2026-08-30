@@ -25,6 +25,33 @@ function NovaSenhaPage() {
   const [busy, setBusy] = useState(false);
   const [validando, setValidando] = useState(true);
   const [sessaoValida, setSessaoValida] = useState(false);
+  const [recEmail, setRecEmail] = useState("");
+  const [recBusy, setRecBusy] = useState(false);
+  const [recCooldown, setRecCooldown] = useState(0);
+
+  useEffect(() => {
+    if (recCooldown <= 0) return;
+    const timer = window.setInterval(() => {
+      setRecCooldown((v) => (v <= 1 ? 0 : v - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [recCooldown > 0]);
+
+  const reenviarLink = async (e: FormEvent) => {
+    e.preventDefault();
+    if (recBusy || recCooldown > 0) return;
+    setRecBusy(true);
+    await supabase.auth.resetPasswordForEmail(recEmail, {
+      redirectTo:
+        typeof window !== "undefined"
+          ? `${window.location.origin}/auth/nova-senha`
+          : undefined,
+    });
+    setRecBusy(false);
+    setRecCooldown(60);
+    // Mensagem idêntica mesmo se o e-mail não existir (segurança).
+    toast.success("Enviamos um link de recuperação para seu e-mail. Verifique a caixa de entrada.");
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -89,9 +116,31 @@ function NovaSenhaPage() {
           ) : !sessaoValida ? (
             <div className="space-y-4 text-center">
               <p className="text-sm text-muted-foreground">
-                O link de recuperação é inválido ou já expirou. Solicite um novo na tela de entrada.
+                O link de recuperação é inválido ou já expirou. Informe seu e-mail para receber um novo link.
               </p>
-              <Button asChild className="w-full">
+              <form onSubmit={reenviarLink} className="space-y-4 text-left">
+                <div className="space-y-1.5">
+                  <Label htmlFor="email-reenvio">Email</Label>
+                  <Input
+                    id="email-reenvio"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={recEmail}
+                    onChange={(e) => setRecEmail(e.target.value)}
+                  />
+                </div>
+                <Button type="submit" disabled={recBusy || recCooldown > 0} className="w-full">
+                  {recBusy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
+                  {recBusy
+                    ? "Enviando…"
+                    : recCooldown > 0
+                      ? `Aguarde ${recCooldown}s para reenviar`
+                      : "Reenviar link de recuperação"}
+                </Button>
+              </form>
+              <Button asChild variant="outline" className="w-full">
                 <Link to="/auth">Voltar para o login</Link>
               </Button>
             </div>
