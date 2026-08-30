@@ -112,6 +112,15 @@ function AuthPage() {
   const [recOpen, setRecOpen] = useState(false);
   const [recEmail, setRecEmail] = useState("");
   const [recBusy, setRecBusy] = useState(false);
+  const [recCooldown, setRecCooldown] = useState(0);
+
+  useEffect(() => {
+    if (recCooldown <= 0) return;
+    const timer = window.setInterval(() => {
+      setRecCooldown((v) => (v <= 1 ? 0 : v - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [recCooldown > 0]);
 
   const validarSenha = (valor: string) => {
     if (valor.length < SENHA_MIN) {
@@ -122,6 +131,7 @@ function AuthPage() {
 
   const recuperarSenha = async (e: FormEvent) => {
     e.preventDefault();
+    if (recBusy || recCooldown > 0) return;
     setRecBusy(true);
     await supabase.auth.resetPasswordForEmail(recEmail, {
       redirectTo:
@@ -131,6 +141,7 @@ function AuthPage() {
     });
     setRecBusy(false);
     setRecOpen(false);
+    setRecCooldown(60);
     // Mensagem idêntica mesmo se o e-mail não existir (segurança).
     toast.success("Enviamos um link de recuperação para seu e-mail. Verifique a caixa de entrada.");
   };
@@ -251,13 +262,16 @@ function AuthPage() {
                 <div className="text-right -mt-2">
                   <button
                     type="button"
+                    disabled={recCooldown > 0}
                     onClick={() => {
                       setRecEmail(email);
                       setRecOpen(true);
                     }}
-                    className="text-xs text-primary hover:underline"
+                    className="text-xs text-primary hover:underline disabled:opacity-60 disabled:no-underline disabled:cursor-not-allowed"
                   >
-                    Esqueci minha senha
+                    {recCooldown > 0
+                      ? `Reenviar link em ${recCooldown}s`
+                      : "Esqueci minha senha"}
                   </button>
                 </div>
                 <Button type="submit" disabled={busy} className="w-full">
@@ -285,9 +299,13 @@ function AuthPage() {
                         onChange={(e) => setRecEmail(e.target.value)}
                       />
                     </div>
-                    <Button type="submit" disabled={recBusy} className="w-full">
+                    <Button type="submit" disabled={recBusy || recCooldown > 0} className="w-full">
                       {recBusy ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : null}
-                      Enviar link de recuperação
+                      {recBusy
+                        ? "Enviando…"
+                        : recCooldown > 0
+                          ? `Aguarde ${recCooldown}s para reenviar`
+                          : "Enviar link de recuperação"}
                     </Button>
                   </form>
                 </DialogContent>
