@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { BarChart3, Heart, History, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
+import { BarChart3, Heart, History, Merge, LogIn, LogOut, Martini, Menu, Shield, Wine } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useFavoritos } from "@/components/favorite-icon-button";
 import { Button } from "@/components/ui/button";
@@ -180,6 +180,13 @@ export function SiteHeader() {
                   )}
                   {isAdmin && (
                     <DropdownMenuItem asChild>
+                      <Link to="/unificar-ingredientes" className="cursor-pointer">
+                        <Merge className="mr-2 h-4 w-4" aria-hidden="true" /> Unificar ingredientes
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
                       <Link to="/remocoes" className="cursor-pointer">
                         <History className="mr-2 h-4 w-4" aria-hidden="true" /> Log de remoções
                       </Link>
@@ -309,6 +316,11 @@ export function SiteHeader() {
                 {isAdmin && (
                   <Link to="/indexacao" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
                     <BarChart3 className="h-4 w-4" aria-hidden="true" /> Indexação (SEO)
+                  </Link>
+                )}
+                {isAdmin && (
+                  <Link to="/unificar-ingredientes" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
+                    <Merge className="h-4 w-4" aria-hidden="true" /> Unificar ingredientes
                   </Link>
                 )}
                 {isAdmin && (
