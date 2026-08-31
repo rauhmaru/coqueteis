@@ -671,6 +671,10 @@ export type Database = {
         Returns: boolean
       }
       slugify: { Args: { _txt: string }; Returns: string }
+      unificar_ingredientes: {
+        Args: { _destino: string; _ids: string[]; _novo_nome?: string }
+        Returns: Json
+      }
     }
     Enums: {
       app_role: "admin" | "editor"
