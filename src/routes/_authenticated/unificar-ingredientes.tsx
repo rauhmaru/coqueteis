@@ -117,7 +117,7 @@ function UnificarPage() {
     const { data, error } = await supabase.rpc("unificar_ingredientes", {
       _ids: selecionados,
       _destino: destino,
-      _novo_nome: nomeFinal || null,
+      _novo_nome: nomeFinal || undefined,
     });
     setSalvando(false);
     setConfirmar(false);
