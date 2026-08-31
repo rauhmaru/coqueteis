@@ -36,6 +36,7 @@ import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as CartaVerRouteImport } from './routes/carta_.ver'
 import { Route as AuthNovaSenhaRouteImport } from './routes/auth/nova-senha'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthenticatedUnificarIngredientesRouteImport } from './routes/_authenticated/unificar-ingredientes'
 import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
 import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
@@ -185,6 +186,12 @@ const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
   path: '/usuarios',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedUnificarIngredientesRoute =
+  AuthenticatedUnificarIngredientesRouteImport.update({
+    id: '/unificar-ingredientes',
+    path: '/unificar-ingredientes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedRemocoesRoute = AuthenticatedRemocoesRouteImport.update({
   id: '/remocoes',
   path: '/remocoes',
@@ -282,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
+  '/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
@@ -322,6 +330,7 @@ export interface FileRoutesByTo {
   '/ingredientes': typeof AuthenticatedIngredientesRoute
   '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
+  '/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
@@ -365,6 +374,7 @@ export interface FileRoutesById {
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
   '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/remocoes': typeof AuthenticatedRemocoesRoute
+  '/_authenticated/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta_/ver': typeof CartaVerRoute
@@ -409,6 +419,7 @@ export interface FileRouteTypes {
     | '/ingredientes'
     | '/meu-bar'
     | '/remocoes'
+    | '/unificar-ingredientes'
     | '/usuarios'
     | '/auth/nova-senha'
     | '/carta/ver'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/ingredientes'
     | '/meu-bar'
     | '/remocoes'
+    | '/unificar-ingredientes'
     | '/usuarios'
     | '/auth/nova-senha'
     | '/carta/ver'
@@ -491,6 +503,7 @@ export interface FileRouteTypes {
     | '/_authenticated/ingredientes'
     | '/_authenticated/meu-bar'
     | '/_authenticated/remocoes'
+    | '/_authenticated/unificar-ingredientes'
     | '/_authenticated/usuarios'
     | '/auth/nova-senha'
     | '/carta_/ver'
@@ -727,6 +740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/unificar-ingredientes': {
+      id: '/_authenticated/unificar-ingredientes'
+      path: '/unificar-ingredientes'
+      fullPath: '/unificar-ingredientes'
+      preLoaderRoute: typeof AuthenticatedUnificarIngredientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/remocoes': {
       id: '/_authenticated/remocoes'
       path: '/remocoes'
@@ -834,6 +854,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
   AuthenticatedMeuBarRoute: typeof AuthenticatedMeuBarRoute
   AuthenticatedRemocoesRoute: typeof AuthenticatedRemocoesRoute
+  AuthenticatedUnificarIngredientesRoute: typeof AuthenticatedUnificarIngredientesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
   AuthenticatedDrinksNovoRoute: typeof AuthenticatedDrinksNovoRoute
   AuthenticatedDrinksIdEditarRoute: typeof AuthenticatedDrinksIdEditarRoute
@@ -845,6 +866,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
   AuthenticatedMeuBarRoute: AuthenticatedMeuBarRoute,
   AuthenticatedRemocoesRoute: AuthenticatedRemocoesRoute,
+  AuthenticatedUnificarIngredientesRoute:
+    AuthenticatedUnificarIngredientesRoute,
   AuthenticatedUsuariosRoute: AuthenticatedUsuariosRoute,
   AuthenticatedDrinksNovoRoute: AuthenticatedDrinksNovoRoute,
   AuthenticatedDrinksIdEditarRoute: AuthenticatedDrinksIdEditarRoute,
