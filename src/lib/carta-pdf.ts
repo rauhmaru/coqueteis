@@ -221,7 +221,7 @@ export async function gerarCartaPdf({
       doc.setTextColor(...t.suave);
       doc.text(item.quantidade, W - M - 62, ly);
       doc.text(
-        item.garrafas !== null ? `${item.garrafas} × ${item.embalagem}` : "a gosto",
+        item.garrafas !== null ? `${item.garrafas} × ${item.embalagem}` : item.embalagem,
         W - M - 34,
         ly,
       );

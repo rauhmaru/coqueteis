@@ -112,8 +112,8 @@ function CartaPage() {
     () =>
       selecionados.map((d) => ({
         ingredientes: d!.drink_ingredientes
-          .map((di) => di.ingredientes?.nome ?? "")
-          .filter(Boolean),
+          .filter((di) => di.ingredientes?.nome)
+          .map((di) => ({ nome: di.ingredientes!.nome, unidade: di.unidade })),
       })),
     [selecionados],
   );
@@ -397,13 +397,16 @@ function CartaPage() {
                       </thead>
                       <tbody>
                         {compras.itens.map((i) => (
-                          <tr key={i.nome} className="border-b border-border/60 last:border-0">
+                          <tr
+                            key={`${i.nome}-${i.unidade}`}
+                            className="border-b border-border/60 last:border-0"
+                          >
                             <td className="py-2 pr-3 text-foreground">{i.nome}</td>
                             <td className="py-2 pr-3 text-foreground">{i.quantidade}</td>
                             <td className="py-2 text-muted-foreground">
                               {i.garrafas !== null
                                 ? `${i.garrafas} × ${i.embalagem}`
-                                : "a gosto"}
+                                : i.embalagem}
                             </td>
                           </tr>
                         ))}

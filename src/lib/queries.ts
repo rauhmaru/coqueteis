@@ -32,6 +32,7 @@ export type DrinkComIngredientes = Drink & {
   drink_ingredientes: {
     ingrediente_id: string;
     opcional?: boolean | null;
+    unidade?: string | null;
     ingredientes: Ingrediente | null;
   }[];
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
@@ -53,6 +54,7 @@ export type DrinkLista = {
   total_ingredientes?: number;
   drink_ingredientes: {
     ingrediente_id: string;
+    unidade?: string | null;
     ingredientes: { id: string; nome: string; categorias?: { nome: string } | null } | null;
   }[];
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
@@ -88,11 +90,11 @@ export const ingredientesQuery = queryOptions({
 
 /** Consulta completa — exclusiva da página de detalhe da receita. */
 const DRINK_SELECT =
-  "*, drink_ingredientes(ingrediente_id, opcional, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+  "*, drink_ingredientes(ingrediente_id, opcional, unidade, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
 
 /** Projeção explícita das listagens: nada de select=* nem colunas de texto longo. */
 const DRINK_LISTA_SELECT =
-  "id, slug, nome, imagem_url, dificuldade, created_by, total_ingredientes, drink_ingredientes(ingrediente_id, ingredientes(id, nome, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+  "id, slug, nome, imagem_url, dificuldade, created_by, total_ingredientes, drink_ingredientes(ingrediente_id, unidade, ingredientes(id, nome, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
 
 export const drinksQuery = queryOptions({
   queryKey: ["drinks", "lista"],
