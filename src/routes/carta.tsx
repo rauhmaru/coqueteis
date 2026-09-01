@@ -112,8 +112,8 @@ function CartaPage() {
     () =>
       selecionados.map((d) => ({
         ingredientes: d!.drink_ingredientes
-          .map((di) => di.ingredientes?.nome ?? "")
-          .filter(Boolean),
+          .filter((di) => di.ingredientes?.nome)
+          .map((di) => ({ nome: di.ingredientes!.nome, unidade: di.unidade })),
       })),
     [selecionados],
   );
