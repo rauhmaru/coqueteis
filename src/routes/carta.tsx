@@ -160,8 +160,8 @@ function CartaPage() {
           nome: d!.nome,
           dificuldade: d!.dificuldade,
           ingredientes: d!.drink_ingredientes
-            .map((di) => di.ingredientes?.nome ?? "")
-            .filter(Boolean),
+            .filter((di) => di.ingredientes?.nome)
+            .map((di) => ({ nome: di.ingredientes!.nome, unidade: di.unidade })),
         })),
         compras:
           incluirCompras && porcoesPorReceita > 0 && compras.itens.length > 0
