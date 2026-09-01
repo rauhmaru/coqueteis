@@ -1,4 +1,11 @@
-import { normalizar, sugerirIngrediente } from "@/lib/abv";
+import { normalizar } from "@/lib/abv";
+import {
+  ehVolume,
+  formatarMedida,
+  normalizarUnidade,
+  quantidadePadrao,
+  type Unidade,
+} from "@/lib/unidades";
 
 export const MAX_CONVIDADOS = 500;
 export const MAX_DRINKS_POR_CONVIDADO = 10;
@@ -33,72 +40,103 @@ export function embalagemSugerida(nome: string): { ml: number; rotulo: string } 
   return { ml: 1000, rotulo: "embalagem 1 L" };
 }
 
+/** Embalagem para sólidos vendidos em peso. */
+function embalagemPeso(nome: string): { qtd: number; rotulo: string } {
+  const n = normalizar(nome);
+  if (n.includes("acucar")) return { qtd: 1000, rotulo: "pacote 1 kg" };
+  return { qtd: 100, rotulo: "pacote 100 g" };
+}
+
+export type ItemReceita = { nome: string; unidade?: string | null };
+
+const comoItem = (i: string | ItemReceita): ItemReceita => (typeof i === "string" ? { nome: i } : i);
+
 export type PorcaoIngrediente = {
   nome: string;
-  /** ml de uma única receita */
-  mlUnitario: number;
-  /** ml no total (todas as porções) */
-  mlTotal: number;
-  /** quantidade formatada (ml ou L) */
+  unidade: Unidade;
+  /** quantidade de uma única receita, na unidade do ingrediente */
+  quantidadeUnitaria: number;
+  /** quantidade somada de todas as porções, na unidade do ingrediente */
+  quantidadeTotal: number;
+  /** quantidade de uma receita já formatada (ex.: "20 g", "6 folhas") */
+  unitario: string;
+  /** quantidade total já formatada */
   quantidade: string;
+  /** ml no total — 0 quando o ingrediente não é volume */
+  mlTotal: number;
   embalagem: string;
   garrafas: number | null;
 };
 
+/** Formata volume em ml/L. Use somente com quantidades de volume. */
 export function formatarVolume(ml: number): string {
-  if (ml <= 0) return "a gosto";
-  if (ml < 1000) return `${Math.round(ml)} ml`;
-  const litros = ml / 1000;
-  return `${litros.toFixed(litros >= 10 ? 1 : 2).replace(".", ",")} L`;
+  return formatarMedida(ml, "ml");
 }
 
-/** Escala uma receita para N porções e sugere quantas embalagens comprar. */
+function montarItem(item: ItemReceita, porcoes: number, totalOverride?: number): PorcaoIngrediente {
+  const unidade = normalizarUnidade(item.unidade);
+  const unitaria = quantidadePadrao(item.nome, unidade);
+  const total = totalOverride ?? unitaria * porcoes;
+  const volume = ehVolume(unidade);
+
+  let embalagem: string;
+  let garrafas: number | null = null;
+  if (volume) {
+    const emb = embalagemSugerida(item.nome);
+    embalagem = emb.rotulo;
+    garrafas = total > 0 ? Math.ceil(total / emb.ml) : null;
+  } else if (unidade === "g") {
+    const emb = embalagemPeso(item.nome);
+    embalagem = emb.rotulo;
+    garrafas = total > 0 ? Math.ceil(total / emb.qtd) : null;
+  } else {
+    embalagem = formatarMedida(total, unidade);
+    garrafas = null;
+  }
+
+  return {
+    nome: item.nome,
+    unidade,
+    quantidadeUnitaria: unitaria,
+    quantidadeTotal: total,
+    unitario: formatarMedida(unitaria, unidade),
+    quantidade: formatarMedida(total, unidade),
+    mlTotal: volume ? total : 0,
+    embalagem,
+    garrafas,
+  };
+}
+
+/** Escala uma receita para N porções e sugere quanto comprar de cada item. */
 export function calcularPorcoes(
-  ingredientes: string[],
+  ingredientes: (string | ItemReceita)[],
   porcoes: number,
 ): { itens: PorcaoIngrediente[]; volumeTotalMl: number } {
   const n = Math.max(0, Math.floor(porcoes));
-  const itens = ingredientes.map((nome) => {
-    const mlUnitario = sugerirIngrediente(nome).ml;
-    const mlTotal = mlUnitario * n;
-    const emb = embalagemSugerida(nome);
-    return {
-      nome,
-      mlUnitario,
-      mlTotal,
-      quantidade: formatarVolume(mlTotal),
-      embalagem: emb.rotulo,
-      garrafas: mlTotal > 0 ? Math.ceil(mlTotal / emb.ml) : null,
-    };
-  });
-  const volumeTotalMl = itens.reduce((s, i) => s + i.mlTotal, 0);
-  return { itens, volumeTotalMl };
+  const itens = ingredientes.map((i) => montarItem(comoItem(i), n));
+  return { itens, volumeTotalMl: itens.reduce((s, i) => s + i.mlTotal, 0) };
 }
 
 /** Soma as necessidades de várias receitas para montar a lista de compras da festa. */
 export function calcularListaCompras(
-  receitas: { ingredientes: string[] }[],
+  receitas: { ingredientes: (string | ItemReceita)[] }[],
   porcoesPorReceita: number,
 ): { itens: PorcaoIngrediente[]; volumeTotalMl: number } {
-  const mapa = new Map<string, number>();
+  const n = Math.max(0, Math.floor(porcoesPorReceita));
+  const mapa = new Map<string, { item: ItemReceita; total: number }>();
   for (const r of receitas) {
-    for (const nome of r.ingredientes) {
-      const ml = sugerirIngrediente(nome).ml * Math.max(0, Math.floor(porcoesPorReceita));
-      mapa.set(nome, (mapa.get(nome) ?? 0) + ml);
+    for (const bruto of r.ingredientes) {
+      const item = comoItem(bruto);
+      const unidade = normalizarUnidade(item.unidade);
+      const chave = `${item.nome}__${unidade}`;
+      const qtd = quantidadePadrao(item.nome, unidade) * n;
+      const atual = mapa.get(chave);
+      if (atual) atual.total += qtd;
+      else mapa.set(chave, { item: { nome: item.nome, unidade }, total: qtd });
     }
   }
-  const itens = [...mapa.entries()]
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([nome, mlTotal]) => {
-      const emb = embalagemSugerida(nome);
-      return {
-        nome,
-        mlUnitario: sugerirIngrediente(nome).ml,
-        mlTotal,
-        quantidade: formatarVolume(mlTotal),
-        embalagem: emb.rotulo,
-        garrafas: mlTotal > 0 ? Math.ceil(mlTotal / emb.ml) : null,
-      };
-    });
+  const itens = [...mapa.values()]
+    .sort((a, b) => b.total - a.total || a.item.nome.localeCompare(b.item.nome))
+    .map(({ item, total }) => montarItem(item, n, total));
   return { itens, volumeTotalMl: itens.reduce((s, i) => s + i.mlTotal, 0) };
 }
