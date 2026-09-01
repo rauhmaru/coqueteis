@@ -7,11 +7,12 @@ import {
   MAX_DRINKS_POR_CONVIDADO,
   calcularPorcoes,
   formatarVolume,
+  type ItemReceita,
 } from "@/lib/porcoes";
 
 type Props = {
   nome: string;
-  ingredientes: string[];
+  ingredientes: (string | ItemReceita)[];
 };
 
 function parseInt2(valor: string, max: number): { n: number | null; erro: string | null } {
