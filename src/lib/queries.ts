@@ -32,6 +32,7 @@ export type DrinkComIngredientes = Drink & {
   drink_ingredientes: {
     ingrediente_id: string;
     opcional?: boolean | null;
+    unidade?: string | null;
     ingredientes: Ingrediente | null;
   }[];
   drink_drink_categorias: { categoria_id: string; drink_categorias: DrinkCategoria | null }[];
