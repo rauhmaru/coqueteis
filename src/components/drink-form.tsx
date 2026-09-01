@@ -17,6 +17,12 @@ import { DIFICULDADES, type Dificuldade } from "@/components/difficulty-badge";
 import { gerarImagemDrink } from "@/lib/imagens.functions";
 import { useAuth } from "@/hooks/use-auth";
 import {
+  UNIDADES,
+  UNIDADE_LABEL,
+  normalizarUnidade,
+  type Unidade,
+} from "@/lib/unidades";
+import {
   METODOS_PREPARO,
   METODO_LABEL,
   normalizarPassos,
@@ -46,6 +52,14 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   );
   const [selected, setSelected] = useState<Set<string>>(
     new Set(existing?.drink_ingredientes.map((d) => d.ingrediente_id) ?? []),
+  );
+  const [unidades, setUnidades] = useState<Record<string, Unidade>>(() =>
+    Object.fromEntries(
+      (existing?.drink_ingredientes ?? []).map((d) => [
+        d.ingrediente_id,
+        normalizarUnidade(d.unidade),
+      ]),
+    ),
   );
   const [selectedCats, setSelectedCats] = useState<Set<string>>(
     new Set(existing?.drink_drink_categorias.map((c) => c.categoria_id) ?? []),
@@ -128,7 +142,9 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       }
       if (drinkId && selected.size > 0) {
         const rows = Array.from(selected).map((ingrediente_id) => ({
-          drink_id: drinkId!, ingrediente_id,
+          drink_id: drinkId!,
+          ingrediente_id,
+          unidade: unidades[ingrediente_id] ?? "ml",
         }));
         const { error } = await supabase.from("drink_ingredientes").insert(rows);
         if (error) throw error;
@@ -374,12 +390,38 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
         </form>
 
         {selected.size > 0 && (
-          <div className="text-xs text-muted-foreground flex flex-wrap gap-1">
-            Selecionados:
-            {Array.from(selected).map((id) => {
-              const ing = ingredientes.find((i) => i.id === id);
-              return ing ? <Badge key={id} variant="secondary">{ing.nome}</Badge> : null;
-            })}
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">
+              Unidade de medida de cada ingrediente selecionado
+            </p>
+            <ul className="space-y-2">
+              {Array.from(selected).map((id) => {
+                const ing = ingredientes.find((i) => i.id === id);
+                if (!ing) return null;
+                return (
+                  <li key={id} className="flex flex-wrap items-center gap-2">
+                    <Badge variant="secondary">{ing.nome}</Badge>
+                    <label className="sr-only" htmlFor={`unidade-${id}`}>
+                      Unidade de {ing.nome}
+                    </label>
+                    <select
+                      id={`unidade-${id}`}
+                      value={unidades[id] ?? "ml"}
+                      onChange={(e) =>
+                        setUnidades((prev) => ({ ...prev, [id]: e.target.value as Unidade }))
+                      }
+                      className="h-9 rounded-md border border-input bg-background px-2 text-sm text-foreground"
+                    >
+                      {UNIDADES.map((u) => (
+                        <option key={u} value={u}>
+                          {UNIDADE_LABEL[u].singular}
+                        </option>
+                      ))}
+                    </select>
+                  </li>
+                );
+              })}
+            </ul>
           </div>
         )}
       </main>
