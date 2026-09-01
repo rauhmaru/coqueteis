@@ -344,7 +344,10 @@ function DrinkDetail() {
 
         <PortionCalculator
           nome={drink.nome}
-          ingredientes={drink.drink_ingredientes.map((di) => di.ingredientes?.nome ?? "Ingrediente")}
+          ingredientes={drink.drink_ingredientes.map((di) => ({
+            nome: di.ingredientes?.nome ?? "Ingrediente",
+            unidade: di.unidade,
+          }))}
         />
 
         <DrinksRelacionados drink={drink} />
