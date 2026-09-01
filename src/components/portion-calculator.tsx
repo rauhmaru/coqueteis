@@ -52,7 +52,7 @@ export function PortionCalculator({ nome, ingredientes }: Props) {
       </h2>
       <p className="mt-1 max-w-2xl text-sm text-muted-foreground">
         Informe quantos convidados você espera e mostramos as quantidades de {nome} em ml/litros e
-        quantas garrafas comprar.
+        quanto comprar de cada item — em ml, gramas, folhas ou unidades.
       </p>
 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -134,11 +134,11 @@ export function PortionCalculator({ nome, ingredientes }: Props) {
                 <tr key={i.nome} className="border-b border-border/60 last:border-0">
                   <td className="py-2 pr-3 text-foreground">{i.nome}</td>
                   <td className="py-2 pr-3 text-muted-foreground">
-                    {i.mlUnitario > 0 ? `${i.mlUnitario} ml` : "a gosto"}
+                    {i.unitario}
                   </td>
                   <td className="py-2 pr-3 text-foreground">{i.quantidade}</td>
                   <td className="py-2 text-muted-foreground">
-                    {i.garrafas !== null ? `${i.garrafas} × ${i.embalagem}` : "conforme o gosto"}
+                    {i.garrafas !== null ? `${i.garrafas} × ${i.embalagem}` : i.embalagem}
                   </td>
                 </tr>
               ))}
