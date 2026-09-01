@@ -181,7 +181,7 @@ function CartaPublicaPage() {
                       <td className="py-2 pr-3 text-foreground">{i.nome}</td>
                       <td className="py-2 pr-3 text-foreground">{i.quantidade}</td>
                       <td className="py-2 text-muted-foreground">
-                        {i.garrafas !== null ? `${i.garrafas} × ${i.embalagem}` : "a gosto"}
+                        {i.garrafas !== null ? `${i.garrafas} × ${i.embalagem}` : i.embalagem}
                       </td>
                     </tr>
                   ))}
