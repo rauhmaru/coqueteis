@@ -89,7 +89,7 @@ export const ingredientesQuery = queryOptions({
 
 /** Consulta completa — exclusiva da página de detalhe da receita. */
 const DRINK_SELECT =
-  "*, drink_ingredientes(ingrediente_id, opcional, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
+  "*, drink_ingredientes(ingrediente_id, opcional, unidade, ingredientes(*, categorias(nome))), drink_drink_categorias(categoria_id, drink_categorias(id, nome))";
 
 /** Projeção explícita das listagens: nada de select=* nem colunas de texto longo. */
 const DRINK_LISTA_SELECT =
