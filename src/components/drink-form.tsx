@@ -20,6 +20,7 @@ import {
   UNIDADES,
   UNIDADE_LABEL,
   normalizarUnidade,
+  quantidadePadrao,
   type Unidade,
 } from "@/lib/unidades";
 import {
@@ -61,6 +62,14 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
       ]),
     ),
   );
+  const [quantidades, setQuantidades] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      (existing?.drink_ingredientes ?? []).map((d) => [
+        d.ingrediente_id,
+        d.quantidade != null ? String(d.quantidade) : "",
+      ]),
+    ),
+  );
   const [selectedCats, setSelectedCats] = useState<Set<string>>(
     new Set(existing?.drink_drink_categorias.map((c) => c.categoria_id) ?? []),
   );
@@ -72,7 +81,19 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
   const toggle = (id: string) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+        // Sugere a medida clássica do ingrediente; o usuário pode ajustar.
+        setQuantidades((q) => {
+          if (q[id]) return q;
+          const nomeIng = ingredientes.find((i) => i.id === id)?.nome ?? "";
+          const unidade = unidades[id] ?? "ml";
+          const padrao = quantidadePadrao(nomeIng, unidade);
+          return { ...q, [id]: padrao > 0 ? String(padrao) : "" };
+        });
+      }
       return next;
     });
   };
@@ -145,6 +166,11 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
           drink_id: drinkId!,
           ingrediente_id,
           unidade: unidades[ingrediente_id] ?? "ml",
+          quantidade: (() => {
+            const bruto = (quantidades[ingrediente_id] ?? "").replace(",", ".").trim();
+            const n = Number(bruto);
+            return bruto !== "" && Number.isFinite(n) && n > 0 ? n : null;
+          })(),
         }));
         const { error } = await supabase.from("drink_ingredientes").insert(rows);
         if (error) throw error;
@@ -392,7 +418,8 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
         {selected.size > 0 && (
           <div className="space-y-2">
             <p className="text-xs text-muted-foreground">
-              Unidade de medida de cada ingrediente selecionado
+              Medida exata e unidade de cada ingrediente selecionado — deixe a medida
+              vazia para usar a sugestão automática
             </p>
             <ul className="space-y-2">
               {Array.from(selected).map((id) => {
@@ -401,6 +428,22 @@ export function DrinkForm({ existing }: { existing?: DrinkComIngredientes | null
                 return (
                   <li key={id} className="flex flex-wrap items-center gap-2">
                     <Badge variant="secondary">{ing.nome}</Badge>
+                    <label className="sr-only" htmlFor={`quantidade-${id}`}>
+                      Medida de {ing.nome}
+                    </label>
+                    <Input
+                      id={`quantidade-${id}`}
+                      type="number"
+                      inputMode="decimal"
+                      min="0"
+                      step="any"
+                      value={quantidades[id] ?? ""}
+                      onChange={(e) =>
+                        setQuantidades((prev) => ({ ...prev, [id]: e.target.value }))
+                      }
+                      placeholder="Medida"
+                      className="h-9 w-24"
+                    />
                     <label className="sr-only" htmlFor={`unidade-${id}`}>
                       Unidade de {ing.nome}
                     </label>
