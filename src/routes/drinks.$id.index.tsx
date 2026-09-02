@@ -347,6 +347,7 @@ function DrinkDetail() {
           ingredientes={drink.drink_ingredientes.map((di) => ({
             nome: di.ingredientes?.nome ?? "Ingrediente",
             unidade: di.unidade,
+            quantidade: di.quantidade,
           }))}
         />
 
