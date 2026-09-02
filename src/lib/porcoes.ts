@@ -47,7 +47,19 @@ function embalagemPeso(nome: string): { qtd: number; rotulo: string } {
   return { qtd: 100, rotulo: "pacote 100 g" };
 }
 
-export type ItemReceita = { nome: string; unidade?: string | null };
+export type ItemReceita = {
+  nome: string;
+  unidade?: string | null;
+  /** medida exata cadastrada na receita; sem ela usamos a medida sugerida */
+  quantidade?: number | null;
+};
+
+/** Medida de uma receita: a cadastrada tem prioridade sobre a sugerida. */
+function medidaUnitaria(item: ItemReceita, unidade: Unidade): number {
+  const q = item.quantidade;
+  if (typeof q === "number" && Number.isFinite(q) && q > 0) return q;
+  return quantidadePadrao(item.nome, unidade);
+}
 
 const comoItem = (i: string | ItemReceita): ItemReceita => (typeof i === "string" ? { nome: i } : i);
 
@@ -75,7 +87,7 @@ export function formatarVolume(ml: number): string {
 
 function montarItem(item: ItemReceita, porcoes: number, totalOverride?: number): PorcaoIngrediente {
   const unidade = normalizarUnidade(item.unidade);
-  const unitaria = quantidadePadrao(item.nome, unidade);
+  const unitaria = medidaUnitaria(item, unidade);
   const total = totalOverride ?? unitaria * porcoes;
   const volume = ehVolume(unidade);
 
@@ -129,10 +141,10 @@ export function calcularListaCompras(
       const item = comoItem(bruto);
       const unidade = normalizarUnidade(item.unidade);
       const chave = `${item.nome}__${unidade}`;
-      const qtd = quantidadePadrao(item.nome, unidade) * n;
+      const qtd = medidaUnitaria(item, unidade) * n;
       const atual = mapa.get(chave);
       if (atual) atual.total += qtd;
-      else mapa.set(chave, { item: { nome: item.nome, unidade }, total: qtd });
+      else mapa.set(chave, { item: { nome: item.nome, unidade, quantidade: item.quantidade }, total: qtd });
     }
   }
   const itens = [...mapa.values()]

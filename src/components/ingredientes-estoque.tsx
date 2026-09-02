@@ -35,7 +35,7 @@ export function IngredientesEstoque({ drink }: { drink: DrinkComIngredientes }) 
   // Doses de uma única receita — mesma fonte da calculadora de porções.
   const nomes = drink.drink_ingredientes.map((di) => di.ingredientes?.nome ?? "Ingrediente");
   const { itens: doses } = calcularPorcoes(
-    drink.drink_ingredientes.map((di, idx) => ({ nome: nomes[idx]!, unidade: di.unidade })),
+    drink.drink_ingredientes.map((di, idx) => ({ nome: nomes[idx]!, unidade: di.unidade, quantidade: di.quantidade })),
     1,
   );
 

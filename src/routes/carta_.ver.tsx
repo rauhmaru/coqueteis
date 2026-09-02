@@ -58,7 +58,7 @@ function CartaPublicaPage() {
         selecionados.map((d) => ({
           ingredientes: d!.drink_ingredientes
             .filter((di) => di.ingredientes?.nome)
-            .map((di) => ({ nome: di.ingredientes!.nome, unidade: di.unidade })),
+            .map((di) => ({ nome: di.ingredientes!.nome, unidade: di.unidade, quantidade: di.quantidade })),
         })),
         porcoesPorReceita,
       ),
