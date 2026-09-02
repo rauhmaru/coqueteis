@@ -199,18 +199,21 @@ export type Database = {
           drink_id: string
           ingrediente_id: string
           opcional: boolean
+          quantidade: number | null
           unidade: string
         }
         Insert: {
           drink_id: string
           ingrediente_id: string
           opcional?: boolean
+          quantidade?: number | null
           unidade?: string
         }
         Update: {
           drink_id?: string
           ingrediente_id?: string
           opcional?: boolean
+          quantidade?: number | null
           unidade?: string
         }
         Relationships: [
