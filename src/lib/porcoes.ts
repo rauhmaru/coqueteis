@@ -47,7 +47,19 @@ function embalagemPeso(nome: string): { qtd: number; rotulo: string } {
   return { qtd: 100, rotulo: "pacote 100 g" };
 }
 
-export type ItemReceita = { nome: string; unidade?: string | null };
+export type ItemReceita = {
+  nome: string;
+  unidade?: string | null;
+  /** medida exata cadastrada na receita; sem ela usamos a medida sugerida */
+  quantidade?: number | null;
+};
+
+/** Medida de uma receita: a cadastrada tem prioridade sobre a sugerida. */
+function medidaUnitaria(item: ItemReceita, unidade: Unidade): number {
+  const q = item.quantidade;
+  if (typeof q === "number" && Number.isFinite(q) && q > 0) return q;
+  return quantidadePadrao(item.nome, unidade);
+}
 
 const comoItem = (i: string | ItemReceita): ItemReceita => (typeof i === "string" ? { nome: i } : i);
 
