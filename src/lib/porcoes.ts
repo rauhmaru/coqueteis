@@ -87,7 +87,7 @@ export function formatarVolume(ml: number): string {
 
 function montarItem(item: ItemReceita, porcoes: number, totalOverride?: number): PorcaoIngrediente {
   const unidade = normalizarUnidade(item.unidade);
-  const unitaria = quantidadePadrao(item.nome, unidade);
+  const unitaria = medidaUnitaria(item, unidade);
   const total = totalOverride ?? unitaria * porcoes;
   const volume = ehVolume(unidade);
 
@@ -141,10 +141,10 @@ export function calcularListaCompras(
       const item = comoItem(bruto);
       const unidade = normalizarUnidade(item.unidade);
       const chave = `${item.nome}__${unidade}`;
-      const qtd = quantidadePadrao(item.nome, unidade) * n;
+      const qtd = medidaUnitaria(item, unidade) * n;
       const atual = mapa.get(chave);
       if (atual) atual.total += qtd;
-      else mapa.set(chave, { item: { nome: item.nome, unidade }, total: qtd });
+      else mapa.set(chave, { item: { nome: item.nome, unidade, quantidade: item.quantidade }, total: qtd });
     }
   }
   const itens = [...mapa.values()]
