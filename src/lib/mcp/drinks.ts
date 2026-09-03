@@ -1,4 +1,5 @@
 import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
+import { semAcento } from "@/lib/slug";
 
 export const DRINK_SELECT =
   "id, nome, preparo, passos, copo, metodo_preparo, guarnicao, historia, dificuldade, imagem_url, drink_ingredientes(ingredientes(nome)), drink_drink_categorias(drink_categorias(nome))";
@@ -52,10 +53,4 @@ export function formatarDrink(d: DrinkRow): DrinkFormatado {
   };
 }
 
-export function normalizar(s: string) {
-  return s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
-}
+export const normalizar = semAcento;

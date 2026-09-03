@@ -11,13 +11,8 @@ export const MAX_ABV = 96;
 /** ml de etanol puro em uma "dose padrão" (14 g de álcool / 0,789 g/ml) */
 export const ML_ETANOL_POR_DOSE = 17.74;
 
-export function normalizar(texto: string): string {
-  return texto
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
-}
+export { semAcento as normalizar } from "@/lib/slug";
+import { semAcento as normalizar } from "@/lib/slug";
 
 type Referencia = {
   /** termos (já sem acento, minúsculos) que identificam o ingrediente */

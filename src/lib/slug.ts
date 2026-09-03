@@ -7,6 +7,15 @@ export function isUuid(value: string): boolean {
 }
 
 /** "Não alcoólicos" -> "nao-alcoolicos" */
+/** Remove acentos, aplica minúsculas e corta espaços das pontas. */
+export function semAcento(texto: string): string {
+  return texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+}
+
 export function slugify(texto: string): string {
   return texto
     .normalize("NFD")

@@ -1,12 +1,8 @@
 import type { DrinkLista } from "@/lib/queries";
+import { semAcento } from "@/lib/slug";
 
 /** Normalização única (acentos + caixa) usada por toda a busca do site. */
-export function norm(s: string): string {
-  return s
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase();
-}
+export const norm = semAcento;
 
 /** Casa o termo com nome, categorias ou ingredientes do drink. */
 export function combina(drink: DrinkLista, termo: string): boolean {

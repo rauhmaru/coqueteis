@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { ingredientesQuery } from "@/lib/queries";
 import { normalizarNomeIngrediente } from "@/lib/ingredientes";
+import { semAcento as normalizar } from "@/lib/slug";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { toast } from "sonner";
@@ -30,9 +31,6 @@ export const Route = createFileRoute("/_authenticated/unificar-ingredientes")({
   }),
   component: UnificarPage,
 });
-
-const normalizar = (t: string) =>
-  t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 /** Contagem de vínculos com receitas por ingrediente. */
 const usosQuery = {
