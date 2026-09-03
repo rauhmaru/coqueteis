@@ -8,13 +8,13 @@ import {
   salvarSnapshot,
 } from "@/lib/offline";
 import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { ChevronDown, Loader2, Plus, Trash2, Wine, Wallet, Sparkles } from "lucide-react";
+import { ChevronDown, Loader2, Plus, Wine, Wallet, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { drinksQuery, ingredientesQuery } from "@/lib/queries";
-import { avaliarDrinks, brl, custoPorMl, meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { avaliarDrinks, brl, meuBarQuery, type ItemBar } from "@/lib/meu-bar";
 import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
 
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
@@ -25,7 +25,6 @@ import { EstoqueLista } from "@/components/estoque-lista";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";

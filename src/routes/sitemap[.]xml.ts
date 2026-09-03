@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
+import { slugify as slugifyNome } from "@/lib/slug";
 
 const BASE_URL = "https://coqueteis.lovable.app";
 
@@ -28,15 +29,6 @@ const STATIC_ENTRIES: SitemapEntry[] = [
   { path: "/consumo-responsavel", changefreq: "yearly", priority: "0.5" },
   { path: "/confianca", changefreq: "yearly", priority: "0.3" },
 ];
-
-function slugifyNome(texto: string): string {
-  return texto
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 async function drinkEntries(): Promise<SitemapEntry[]> {
   const url = process.env["VITE_SUPABASE_URL"];

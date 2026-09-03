@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, ArrowUp, List } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
+import { slugify } from "@/lib/slug";
 
 /** Ordem de leitura dos artigos de mixologia (usada em anterior/próximo). */
 export const MIXOLOGIA_ARTIGOS = [
@@ -16,15 +17,6 @@ export const MIXOLOGIA_ARTIGOS = [
   { to: "/mixologia/tecnicas", label: "Técnicas de bartending" },
   { to: "/mixologia/sabores", label: "Balanço de sabores" },
 ] as const;
-
-function slugify(texto: string) {
-  return texto
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-}
 
 /** Barra fina de progresso de leitura fixada abaixo do header. */
 function ProgressoLeitura({ alvo }: { alvo: React.RefObject<HTMLElement | null> }) {

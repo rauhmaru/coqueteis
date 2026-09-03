@@ -1,11 +1,10 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ArrowRight, Martini, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
 import { AutocompleteDrinks } from "@/components/drink-search";
-import { FavoriteIconButton } from "@/components/favorite-icon-button";
 import { useAuth } from "@/hooks/use-auth";
 import { countsQuery, drinksQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { drinkParam, slugify } from "@/lib/slug";
@@ -49,7 +48,6 @@ function HomePage() {
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   // Atalhos para as categorias com mais receitas.
   const categoriasPopulares = useMemo(
