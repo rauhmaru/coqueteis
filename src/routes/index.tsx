@@ -67,9 +67,16 @@ function HomePage() {
 
 
 
+  // O sorteio só acontece depois da hidratação: usar Math.random() durante a
+  // renderização faz o HTML do servidor divergir do cliente e derruba a página.
+  const [indiceSugestao, setIndiceSugestao] = useState<number | null>(null);
+  useEffect(() => {
+    if (drinks.length) setIndiceSugestao(Math.floor(Math.random() * drinks.length));
+  }, [drinks.length]);
+
   const sugestao = useMemo(
-    () => (drinks.length ? drinks[Math.floor(Math.random() * drinks.length)] : null),
-    [drinks],
+    () => (indiceSugestao !== null ? (drinks[indiceSugestao] ?? null) : (drinks[0] ?? null)),
+    [drinks, indiceSugestao],
   );
 
 
