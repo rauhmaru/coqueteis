@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Martini, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { DrinkImage } from "@/components/drink-image";
@@ -30,12 +30,16 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
-  loader: ({ context }) =>
-    Promise.all([
-      context.queryClient.ensureQueryData(countsQuery),
-      context.queryClient.ensureQueryData(drinksQuery),
-      context.queryClient.ensureQueryData(drinkCategoriasQuery),
-    ]),
+  loader: async ({ context }) => {
+    console.warn("LOADER start", typeof window !== "undefined");
+    const r = await Promise.all([
+      context.queryClient.ensureQueryData(countsQuery).then(v=>{console.warn("counts ok");return v;}),
+      context.queryClient.ensureQueryData(drinksQuery).then(v=>{console.warn("drinks ok");return v;}),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery).then(v=>{console.warn("cat ok");return v;}),
+    ]);
+    console.warn("LOADER done");
+    return r;
+  },
   component: HomePage,
   errorComponent: ({ error }) => (
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
@@ -44,6 +48,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
+  console.warn("HOMEPAGE render");
   const { data: counts } = useSuspenseQuery(countsQuery);
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
@@ -67,9 +72,16 @@ function HomePage() {
 
 
 
+  // O sorteio só acontece depois da hidratação: usar Math.random() durante a
+  // renderização faz o HTML do servidor divergir do cliente e derruba a página.
+  const [indiceSugestao, setIndiceSugestao] = useState<number | null>(null);
+  useEffect(() => {
+    if (drinks.length) setIndiceSugestao(Math.floor(Math.random() * drinks.length));
+  }, [drinks.length]);
+
   const sugestao = useMemo(
-    () => (drinks.length ? drinks[Math.floor(Math.random() * drinks.length)] : null),
-    [drinks],
+    () => (indiceSugestao !== null ? (drinks[indiceSugestao] ?? null) : (drinks[0] ?? null)),
+    [drinks, indiceSugestao],
   );
 
 
