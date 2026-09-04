@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Martini, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -30,12 +30,16 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
-  loader: ({ context }) =>
-    Promise.all([
-      context.queryClient.ensureQueryData(countsQuery),
-      context.queryClient.ensureQueryData(drinksQuery),
-      context.queryClient.ensureQueryData(drinkCategoriasQuery),
-    ]),
+  loader: async ({ context }) => {
+    console.warn("LOADER start", typeof window !== "undefined");
+    const r = await Promise.all([
+      context.queryClient.ensureQueryData(countsQuery).then(v=>{console.warn("counts ok");return v;}),
+      context.queryClient.ensureQueryData(drinksQuery).then(v=>{console.warn("drinks ok");return v;}),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery).then(v=>{console.warn("cat ok");return v;}),
+    ]);
+    console.warn("LOADER done");
+    return r;
+  },
   component: HomePage,
   errorComponent: ({ error }) => (
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
@@ -44,11 +48,10 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const qA = useQuery(countsQuery); const qB = useQuery(drinksQuery); const qC = useQuery(drinkCategoriasQuery);
-  console.warn("EXPHOME", qA.status, qB.status, qC.status, String(qA.error), String(qB.error), String(qC.error));
-  const counts = qA.data ?? { drinks: 0, ingredientes: 0 };
-  const drinks = qB.data ?? [];
-  const categorias = qC.data ?? [];
+  console.warn("HOMEPAGE render");
+  const { data: counts } = useSuspenseQuery(countsQuery);
+  const { data: drinks } = useSuspenseQuery(drinksQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const { user } = useAuth();
 
   // Atalhos para as categorias com mais receitas.
