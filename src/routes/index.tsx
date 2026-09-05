@@ -30,16 +30,12 @@ export const Route = createFileRoute("/")({
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
-  loader: async ({ context }) => {
-    console.warn("LOADER start", typeof window !== "undefined");
-    const r = await Promise.all([
-      context.queryClient.ensureQueryData(countsQuery).then(v=>{console.warn("counts ok");return v;}),
-      context.queryClient.ensureQueryData(drinksQuery).then(v=>{console.warn("drinks ok");return v;}),
-      context.queryClient.ensureQueryData(drinkCategoriasQuery).then(v=>{console.warn("cat ok");return v;}),
-    ]);
-    console.warn("LOADER done");
-    return r;
-  },
+  loader: ({ context }) =>
+    Promise.all([
+      context.queryClient.ensureQueryData(countsQuery),
+      context.queryClient.ensureQueryData(drinksQuery),
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
+    ]),
   component: HomePage,
   errorComponent: ({ error }) => (
     <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
