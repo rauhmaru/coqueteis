@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Martini, Wine, Sparkles, Wallet } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
@@ -44,9 +44,9 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  const { data: counts } = useSuspenseQuery(countsQuery);
-  const { data: drinks } = useSuspenseQuery(drinksQuery);
-  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
+  const { data: counts = { drinks: 0, ingredientes: 0 } } = useQuery(countsQuery);
+  const { data: drinks = [] } = useQuery(drinksQuery);
+  const { data: categorias = [] } = useQuery(drinkCategoriasQuery);
   const { user } = useAuth();
 
   // Atalhos para as categorias com mais receitas.
