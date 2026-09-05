@@ -45,6 +45,7 @@ const mobileLinkActive =
   "flex min-h-11 items-center rounded-md px-3 text-base text-primary bg-secondary/80";
 
 export function SiteHeader() {
+  console.warn("RENDER SiteHeader");
   const { user, canEdit, isAdmin, signOut } = useAuth();
   const favoritos = useFavoritos();
   const favCount = favoritos.size;
