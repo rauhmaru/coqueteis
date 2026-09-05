@@ -48,7 +48,6 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  console.warn("HOMEPAGE render");
   const { data: counts } = useSuspenseQuery(countsQuery);
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
