@@ -136,6 +136,7 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  if (typeof window !== "undefined") (window as unknown as Record<string, unknown>)["__QC__"] = queryClient;
 
   return (
     <QueryClientProvider client={queryClient}>
