@@ -1,6 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { isUuid } from "@/lib/slug";
+if (typeof window !== "undefined") (window as unknown as Record<string, unknown>)["__SB__"] = supabase;
 
 
 export type Categoria = { id: string; nome: string };
