@@ -73,7 +73,6 @@ export function AutocompleteDrinks({
   emDialog?: boolean;
   limite?: number;
 }) {
-  console.warn("RENDER AutocompleteDrinks");
   const { data: drinks } = useQuery(drinksQuery);
   const { user } = useAuth();
   const navigate = useNavigate();

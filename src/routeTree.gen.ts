@@ -9,92 +9,52 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as MixologiaRouteImport } from './routes/mixologia'
-import { Route as McpRouteImport } from './routes/mcp'
-import { Route as DrinksRouteImport } from './routes/drinks'
-import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
-import { Route as ConfiancaRouteImport } from './routes/confianca'
-import { Route as CartaRouteImport } from './routes/carta'
-import { Route as CalculadoraAbvRouteImport } from './routes/calculadora-abv'
-import { Route as AuthRouteImport } from './routes/auth'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
-import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
-import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
-import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
-import { Route as MixologiaTecnicasRouteImport } from './routes/mixologia.tecnicas'
-import { Route as MixologiaSaboresRouteImport } from './routes/mixologia.sabores'
-import { Route as MixologiaOrigemRouteImport } from './routes/mixologia.origem'
-import { Route as MixologiaMateriaisRouteImport } from './routes/mixologia.materiais'
-import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
-import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
-import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
-import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
-import { Route as CartaVerRouteImport } from './routes/carta_.ver'
-import { Route as AuthNovaSenhaRouteImport } from './routes/auth/nova-senha'
-import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
-import { Route as AuthenticatedUnificarIngredientesRouteImport } from './routes/_authenticated/unificar-ingredientes'
-import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
-import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
-import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
-import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
-import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
-import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as CalculadoraAbvRouteImport } from './routes/calculadora-abv'
+import { Route as CartaRouteImport } from './routes/carta'
+import { Route as ConfiancaRouteImport } from './routes/confianca'
+import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
+import { Route as DrinksRouteImport } from './routes/drinks'
+import { Route as McpRouteImport } from './routes/mcp'
+import { Route as MixologiaRouteImport } from './routes/mixologia'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
+import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
+import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
+import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
+import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
+import { Route as AuthenticatedUnificarIngredientesRouteImport } from './routes/_authenticated/unificar-ingredientes'
+import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
+import { Route as AuthNovaSenhaRouteImport } from './routes/auth/nova-senha'
+import { Route as CartaVerRouteImport } from './routes/carta_.ver'
+import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
+import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
+import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
+import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
+import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
+import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
+import { Route as MixologiaMateriaisRouteImport } from './routes/mixologia.materiais'
+import { Route as MixologiaOrigemRouteImport } from './routes/mixologia.origem'
+import { Route as MixologiaSaboresRouteImport } from './routes/mixologia.sabores'
+import { Route as MixologiaTecnicasRouteImport } from './routes/mixologia.tecnicas'
+import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
+import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
+import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as DrinksCategoriaCategoriaRouteImport } from './routes/drinks.categoria.$categoria'
-import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
-import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
-import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
-import { Route as ApiPublicDrinkImageSplatRouteImport } from './routes/api/public/drink-image.$'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
+import { Route as ApiPublicDrinkImageSplatRouteImport } from './routes/api/public/drink-image.$'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MixologiaRoute = MixologiaRouteImport.update({
-  id: '/mixologia',
-  path: '/mixologia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const McpRoute = McpRouteImport.update({
-  id: '/mcp',
-  path: '/mcp',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DrinksRoute = DrinksRouteImport.update({
-  id: '/drinks',
-  path: '/drinks',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConsumoResponsavelRoute = ConsumoResponsavelRouteImport.update({
-  id: '/consumo-responsavel',
-  path: '/consumo-responsavel',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ConfiancaRoute = ConfiancaRouteImport.update({
-  id: '/confianca',
-  path: '/confianca',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartaRoute = CartaRouteImport.update({
-  id: '/carta',
-  path: '/carta',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CalculadoraAbvRoute = CalculadoraAbvRouteImport.update({
-  id: '/calculadora-abv',
-  path: '/calculadora-abv',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/auth',
-  path: '/auth',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SplatRoute = SplatRouteImport.update({
@@ -106,100 +66,71 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MixologiaIndexRoute = MixologiaIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const DrinksIndexRoute = DrinksIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => DrinksRoute,
-} as any)
-const MixologiaXaropesRoute = MixologiaXaropesRouteImport.update({
-  id: '/xaropes',
-  path: '/xaropes',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaTiposRoute = MixologiaTiposRouteImport.update({
-  id: '/tipos',
-  path: '/tipos',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaTecnicasRoute = MixologiaTecnicasRouteImport.update({
-  id: '/tecnicas',
-  path: '/tecnicas',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaSaboresRoute = MixologiaSaboresRouteImport.update({
-  id: '/sabores',
-  path: '/sabores',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaOrigemRoute = MixologiaOrigemRouteImport.update({
-  id: '/origem',
-  path: '/origem',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaMateriaisRoute = MixologiaMateriaisRouteImport.update({
-  id: '/materiais',
-  path: '/materiais',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaGeloRoute = MixologiaGeloRouteImport.update({
-  id: '/gelo',
-  path: '/gelo',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaCoposRoute = MixologiaCoposRouteImport.update({
-  id: '/copos',
-  path: '/copos',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const MixologiaBebidasRoute = MixologiaBebidasRouteImport.update({
-  id: '/bebidas',
-  path: '/bebidas',
-  getParentRoute: () => MixologiaRoute,
-} as any)
-const DrinksIdRoute = DrinksIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => DrinksRoute,
-} as any)
-const CartaVerRoute = CartaVerRouteImport.update({
-  id: '/carta_/ver',
-  path: '/carta/ver',
+const CalculadoraAbvRoute = CalculadoraAbvRouteImport.update({
+  id: '/calculadora-abv',
+  path: '/calculadora-abv',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthNovaSenhaRoute = AuthNovaSenhaRouteImport.update({
-  id: '/nova-senha',
-  path: '/nova-senha',
-  getParentRoute: () => AuthRoute,
+const CartaRoute = CartaRouteImport.update({
+  id: '/carta',
+  path: '/carta',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
-  id: '/usuarios',
-  path: '/usuarios',
-  getParentRoute: () => AuthenticatedRouteRoute,
+const ConfiancaRoute = ConfiancaRouteImport.update({
+  id: '/confianca',
+  path: '/confianca',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedUnificarIngredientesRoute =
-  AuthenticatedUnificarIngredientesRouteImport.update({
-    id: '/unificar-ingredientes',
-    path: '/unificar-ingredientes',
-    getParentRoute: () => AuthenticatedRouteRoute,
+const ConsumoResponsavelRoute = ConsumoResponsavelRouteImport.update({
+  id: '/consumo-responsavel',
+  path: '/consumo-responsavel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DrinksRoute = DrinksRouteImport.update({
+  id: '/drinks',
+  path: '/drinks',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MixologiaRoute = MixologiaRouteImport.update({
+  id: '/mixologia',
+  path: '/mixologia',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93ListToolsRoute =
+  Char91DotmcpChar93ListToolsRouteImport.update({
+    id: '/.mcp/list-tools',
+    path: '/.mcp/list-tools',
+    getParentRoute: () => rootRouteImport,
   } as any)
-const AuthenticatedRemocoesRoute = AuthenticatedRemocoesRouteImport.update({
-  id: '/remocoes',
-  path: '/remocoes',
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedMeuBarRoute = AuthenticatedMeuBarRouteImport.update({
-  id: '/meu-bar',
-  path: '/meu-bar',
+const AuthenticatedIndexacaoRoute = AuthenticatedIndexacaoRouteImport.update({
+  id: '/indexacao',
+  path: '/indexacao',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedIngredientesRoute =
@@ -208,28 +139,113 @@ const AuthenticatedIngredientesRoute =
     path: '/ingredientes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedIndexacaoRoute = AuthenticatedIndexacaoRouteImport.update({
-  id: '/indexacao',
-  path: '/indexacao',
+const AuthenticatedMeuBarRoute = AuthenticatedMeuBarRouteImport.update({
+  id: '/meu-bar',
+  path: '/meu-bar',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
-  id: '/favoritos',
-  path: '/favoritos',
+const AuthenticatedRemocoesRoute = AuthenticatedRemocoesRouteImport.update({
+  id: '/remocoes',
+  path: '/remocoes',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const Char91DotwellKnownChar93OauthProtectedResourceRoute =
-  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
-    id: '/.well-known/oauth-protected-resource',
-    path: '/.well-known/oauth-protected-resource',
+const AuthenticatedUnificarIngredientesRoute =
+  AuthenticatedUnificarIngredientesRouteImport.update({
+    id: '/unificar-ingredientes',
+    path: '/unificar-ingredientes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedUsuariosRoute = AuthenticatedUsuariosRouteImport.update({
+  id: '/usuarios',
+  path: '/usuarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthNovaSenhaRoute = AuthNovaSenhaRouteImport.update({
+  id: '/nova-senha',
+  path: '/nova-senha',
+  getParentRoute: () => AuthRoute,
+} as any)
+const CartaVerRoute = CartaVerRouteImport.update({
+  id: '/carta_/ver',
+  path: '/carta/ver',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DrinksIndexRoute = DrinksIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DrinksRoute,
+} as any)
+const DrinksIdRoute = DrinksIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => DrinksRoute,
+} as any)
+const MixologiaIndexRoute = MixologiaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaBebidasRoute = MixologiaBebidasRouteImport.update({
+  id: '/bebidas',
+  path: '/bebidas',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaCoposRoute = MixologiaCoposRouteImport.update({
+  id: '/copos',
+  path: '/copos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaGeloRoute = MixologiaGeloRouteImport.update({
+  id: '/gelo',
+  path: '/gelo',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaMateriaisRoute = MixologiaMateriaisRouteImport.update({
+  id: '/materiais',
+  path: '/materiais',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaOrigemRoute = MixologiaOrigemRouteImport.update({
+  id: '/origem',
+  path: '/origem',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaSaboresRoute = MixologiaSaboresRouteImport.update({
+  id: '/sabores',
+  path: '/sabores',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaTecnicasRoute = MixologiaTecnicasRouteImport.update({
+  id: '/tecnicas',
+  path: '/tecnicas',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaTiposRoute = MixologiaTiposRouteImport.update({
+  id: '/tipos',
+  path: '/tipos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const MixologiaXaropesRoute = MixologiaXaropesRouteImport.update({
+  id: '/xaropes',
+  path: '/xaropes',
+  getParentRoute: () => MixologiaRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Char91DotmcpChar93InvokeToolToolRoute =
+  Char91DotmcpChar93InvokeToolToolRouteImport.update({
+    id: '/.mcp/invoke-tool/$tool',
+    path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
-const Char91DotmcpChar93ListToolsRoute =
-  Char91DotmcpChar93ListToolsRouteImport.update({
-    id: '/.mcp/list-tools',
-    path: '/.mcp/list-tools',
-    getParentRoute: () => rootRouteImport,
-  } as any)
+const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
+  id: '/drinks/novo',
+  path: '/drinks/novo',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -241,33 +257,17 @@ const DrinksCategoriaCategoriaRoute =
     path: '/categoria/$categoria',
     getParentRoute: () => DrinksRoute,
   } as any)
-const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
-  id: '/drinks/novo',
-  path: '/drinks/novo',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
-const Char91DotmcpChar93InvokeToolToolRoute =
-  Char91DotmcpChar93InvokeToolToolRouteImport.update({
-    id: '/.mcp/invoke-tool/$tool',
-    path: '/.mcp/invoke-tool/$tool',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
-  id: '/.lovable/oauth/consent',
-  path: '/.lovable/oauth/consent',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicDrinkImageSplatRoute =
-  ApiPublicDrinkImageSplatRouteImport.update({
-    id: '/api/public/drink-image/$',
-    path: '/api/public/drink-image/$',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const AuthenticatedDrinksIdEditarRoute =
   AuthenticatedDrinksIdEditarRouteImport.update({
     id: '/drinks/$id/editar',
     path: '/drinks/$id/editar',
     getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const ApiPublicDrinkImageSplatRoute =
+  ApiPublicDrinkImageSplatRouteImport.update({
+    id: '/api/public/drink-image/$',
+    path: '/api/public/drink-image/$',
+    getParentRoute: () => rootRouteImport,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -551,67 +551,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mixologia': {
-      id: '/mixologia'
-      path: '/mixologia'
-      fullPath: '/mixologia'
-      preLoaderRoute: typeof MixologiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mcp': {
-      id: '/mcp'
-      path: '/mcp'
-      fullPath: '/mcp'
-      preLoaderRoute: typeof McpRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/drinks': {
-      id: '/drinks'
-      path: '/drinks'
-      fullPath: '/drinks'
-      preLoaderRoute: typeof DrinksRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/consumo-responsavel': {
-      id: '/consumo-responsavel'
-      path: '/consumo-responsavel'
-      fullPath: '/consumo-responsavel'
-      preLoaderRoute: typeof ConsumoResponsavelRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/confianca': {
-      id: '/confianca'
-      path: '/confianca'
-      fullPath: '/confianca'
-      preLoaderRoute: typeof ConfiancaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/carta': {
-      id: '/carta'
-      path: '/carta'
-      fullPath: '/carta'
-      preLoaderRoute: typeof CartaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calculadora-abv': {
-      id: '/calculadora-abv'
-      path: '/calculadora-abv'
-      fullPath: '/calculadora-abv'
-      preLoaderRoute: typeof CalculadoraAbvRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/auth': {
-      id: '/auth'
-      path: '/auth'
-      fullPath: '/auth'
-      preLoaderRoute: typeof AuthRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$': {
@@ -628,144 +572,88 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/mixologia/': {
-      id: '/mixologia/'
-      path: '/'
-      fullPath: '/mixologia/'
-      preLoaderRoute: typeof MixologiaIndexRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/drinks/': {
-      id: '/drinks/'
-      path: '/'
-      fullPath: '/drinks/'
-      preLoaderRoute: typeof DrinksIndexRouteImport
-      parentRoute: typeof DrinksRoute
-    }
-    '/mixologia/xaropes': {
-      id: '/mixologia/xaropes'
-      path: '/xaropes'
-      fullPath: '/mixologia/xaropes'
-      preLoaderRoute: typeof MixologiaXaropesRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/tipos': {
-      id: '/mixologia/tipos'
-      path: '/tipos'
-      fullPath: '/mixologia/tipos'
-      preLoaderRoute: typeof MixologiaTiposRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/tecnicas': {
-      id: '/mixologia/tecnicas'
-      path: '/tecnicas'
-      fullPath: '/mixologia/tecnicas'
-      preLoaderRoute: typeof MixologiaTecnicasRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/sabores': {
-      id: '/mixologia/sabores'
-      path: '/sabores'
-      fullPath: '/mixologia/sabores'
-      preLoaderRoute: typeof MixologiaSaboresRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/origem': {
-      id: '/mixologia/origem'
-      path: '/origem'
-      fullPath: '/mixologia/origem'
-      preLoaderRoute: typeof MixologiaOrigemRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/materiais': {
-      id: '/mixologia/materiais'
-      path: '/materiais'
-      fullPath: '/mixologia/materiais'
-      preLoaderRoute: typeof MixologiaMateriaisRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/gelo': {
-      id: '/mixologia/gelo'
-      path: '/gelo'
-      fullPath: '/mixologia/gelo'
-      preLoaderRoute: typeof MixologiaGeloRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/copos': {
-      id: '/mixologia/copos'
-      path: '/copos'
-      fullPath: '/mixologia/copos'
-      preLoaderRoute: typeof MixologiaCoposRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/mixologia/bebidas': {
-      id: '/mixologia/bebidas'
-      path: '/bebidas'
-      fullPath: '/mixologia/bebidas'
-      preLoaderRoute: typeof MixologiaBebidasRouteImport
-      parentRoute: typeof MixologiaRoute
-    }
-    '/drinks/$id': {
-      id: '/drinks/$id'
-      path: '/$id'
-      fullPath: '/drinks/$id'
-      preLoaderRoute: typeof DrinksIdRouteImport
-      parentRoute: typeof DrinksRoute
-    }
-    '/carta_/ver': {
-      id: '/carta_/ver'
-      path: '/carta/ver'
-      fullPath: '/carta/ver'
-      preLoaderRoute: typeof CartaVerRouteImport
+    '/calculadora-abv': {
+      id: '/calculadora-abv'
+      path: '/calculadora-abv'
+      fullPath: '/calculadora-abv'
+      preLoaderRoute: typeof CalculadoraAbvRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/auth/nova-senha': {
-      id: '/auth/nova-senha'
-      path: '/nova-senha'
-      fullPath: '/auth/nova-senha'
-      preLoaderRoute: typeof AuthNovaSenhaRouteImport
-      parentRoute: typeof AuthRoute
+    '/carta': {
+      id: '/carta'
+      path: '/carta'
+      fullPath: '/carta'
+      preLoaderRoute: typeof CartaRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/usuarios': {
-      id: '/_authenticated/usuarios'
-      path: '/usuarios'
-      fullPath: '/usuarios'
-      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/confianca': {
+      id: '/confianca'
+      path: '/confianca'
+      fullPath: '/confianca'
+      preLoaderRoute: typeof ConfiancaRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/unificar-ingredientes': {
-      id: '/_authenticated/unificar-ingredientes'
-      path: '/unificar-ingredientes'
-      fullPath: '/unificar-ingredientes'
-      preLoaderRoute: typeof AuthenticatedUnificarIngredientesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/consumo-responsavel': {
+      id: '/consumo-responsavel'
+      path: '/consumo-responsavel'
+      fullPath: '/consumo-responsavel'
+      preLoaderRoute: typeof ConsumoResponsavelRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/remocoes': {
-      id: '/_authenticated/remocoes'
-      path: '/remocoes'
-      fullPath: '/remocoes'
-      preLoaderRoute: typeof AuthenticatedRemocoesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/drinks': {
+      id: '/drinks'
+      path: '/drinks'
+      fullPath: '/drinks'
+      preLoaderRoute: typeof DrinksRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/meu-bar': {
-      id: '/_authenticated/meu-bar'
-      path: '/meu-bar'
-      fullPath: '/meu-bar'
-      preLoaderRoute: typeof AuthenticatedMeuBarRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/ingredientes': {
-      id: '/_authenticated/ingredientes'
-      path: '/ingredientes'
-      fullPath: '/ingredientes'
-      preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
+    '/mixologia': {
+      id: '/mixologia'
+      path: '/mixologia'
+      fullPath: '/mixologia'
+      preLoaderRoute: typeof MixologiaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/list-tools': {
+      id: '/.mcp/list-tools'
+      path: '/.mcp/list-tools'
+      fullPath: '/.mcp/list-tools'
+      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/favoritos': {
+      id: '/_authenticated/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/indexacao': {
@@ -775,26 +663,159 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedIndexacaoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/favoritos': {
-      id: '/_authenticated/favoritos'
-      path: '/favoritos'
-      fullPath: '/favoritos'
-      preLoaderRoute: typeof AuthenticatedFavoritosRouteImport
+    '/_authenticated/ingredientes': {
+      id: '/_authenticated/ingredientes'
+      path: '/ingredientes'
+      fullPath: '/ingredientes'
+      preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/.well-known/oauth-protected-resource': {
-      id: '/.well-known/oauth-protected-resource'
-      path: '/.well-known/oauth-protected-resource'
-      fullPath: '/.well-known/oauth-protected-resource'
-      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+    '/_authenticated/meu-bar': {
+      id: '/_authenticated/meu-bar'
+      path: '/meu-bar'
+      fullPath: '/meu-bar'
+      preLoaderRoute: typeof AuthenticatedMeuBarRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/remocoes': {
+      id: '/_authenticated/remocoes'
+      path: '/remocoes'
+      fullPath: '/remocoes'
+      preLoaderRoute: typeof AuthenticatedRemocoesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/unificar-ingredientes': {
+      id: '/_authenticated/unificar-ingredientes'
+      path: '/unificar-ingredientes'
+      fullPath: '/unificar-ingredientes'
+      preLoaderRoute: typeof AuthenticatedUnificarIngredientesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/usuarios': {
+      id: '/_authenticated/usuarios'
+      path: '/usuarios'
+      fullPath: '/usuarios'
+      preLoaderRoute: typeof AuthenticatedUsuariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth/nova-senha': {
+      id: '/auth/nova-senha'
+      path: '/nova-senha'
+      fullPath: '/auth/nova-senha'
+      preLoaderRoute: typeof AuthNovaSenhaRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/carta_/ver': {
+      id: '/carta_/ver'
+      path: '/carta/ver'
+      fullPath: '/carta/ver'
+      preLoaderRoute: typeof CartaVerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/.mcp/list-tools': {
-      id: '/.mcp/list-tools'
-      path: '/.mcp/list-tools'
-      fullPath: '/.mcp/list-tools'
-      preLoaderRoute: typeof Char91DotmcpChar93ListToolsRouteImport
+    '/drinks/': {
+      id: '/drinks/'
+      path: '/'
+      fullPath: '/drinks/'
+      preLoaderRoute: typeof DrinksIndexRouteImport
+      parentRoute: typeof DrinksRoute
+    }
+    '/drinks/$id': {
+      id: '/drinks/$id'
+      path: '/$id'
+      fullPath: '/drinks/$id'
+      preLoaderRoute: typeof DrinksIdRouteImport
+      parentRoute: typeof DrinksRoute
+    }
+    '/mixologia/': {
+      id: '/mixologia/'
+      path: '/'
+      fullPath: '/mixologia/'
+      preLoaderRoute: typeof MixologiaIndexRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/bebidas': {
+      id: '/mixologia/bebidas'
+      path: '/bebidas'
+      fullPath: '/mixologia/bebidas'
+      preLoaderRoute: typeof MixologiaBebidasRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/copos': {
+      id: '/mixologia/copos'
+      path: '/copos'
+      fullPath: '/mixologia/copos'
+      preLoaderRoute: typeof MixologiaCoposRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/gelo': {
+      id: '/mixologia/gelo'
+      path: '/gelo'
+      fullPath: '/mixologia/gelo'
+      preLoaderRoute: typeof MixologiaGeloRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/materiais': {
+      id: '/mixologia/materiais'
+      path: '/materiais'
+      fullPath: '/mixologia/materiais'
+      preLoaderRoute: typeof MixologiaMateriaisRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/origem': {
+      id: '/mixologia/origem'
+      path: '/origem'
+      fullPath: '/mixologia/origem'
+      preLoaderRoute: typeof MixologiaOrigemRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/sabores': {
+      id: '/mixologia/sabores'
+      path: '/sabores'
+      fullPath: '/mixologia/sabores'
+      preLoaderRoute: typeof MixologiaSaboresRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/tecnicas': {
+      id: '/mixologia/tecnicas'
+      path: '/tecnicas'
+      fullPath: '/mixologia/tecnicas'
+      preLoaderRoute: typeof MixologiaTecnicasRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/tipos': {
+      id: '/mixologia/tipos'
+      path: '/tipos'
+      fullPath: '/mixologia/tipos'
+      preLoaderRoute: typeof MixologiaTiposRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/mixologia/xaropes': {
+      id: '/mixologia/xaropes'
+      path: '/xaropes'
+      fullPath: '/mixologia/xaropes'
+      preLoaderRoute: typeof MixologiaXaropesRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/.mcp/invoke-tool/$tool': {
+      id: '/.mcp/invoke-tool/$tool'
+      path: '/.mcp/invoke-tool/$tool'
+      fullPath: '/.mcp/invoke-tool/$tool'
+      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/drinks/novo': {
+      id: '/_authenticated/drinks/novo'
+      path: '/drinks/novo'
+      fullPath: '/drinks/novo'
+      preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/drinks/$id/': {
       id: '/drinks/$id/'
@@ -810,26 +831,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DrinksCategoriaCategoriaRouteImport
       parentRoute: typeof DrinksRoute
     }
-    '/_authenticated/drinks/novo': {
-      id: '/_authenticated/drinks/novo'
-      path: '/drinks/novo'
-      fullPath: '/drinks/novo'
-      preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
+    '/_authenticated/drinks/$id/editar': {
+      id: '/_authenticated/drinks/$id/editar'
+      path: '/drinks/$id/editar'
+      fullPath: '/drinks/$id/editar'
+      preLoaderRoute: typeof AuthenticatedDrinksIdEditarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/.mcp/invoke-tool/$tool': {
-      id: '/.mcp/invoke-tool/$tool'
-      path: '/.mcp/invoke-tool/$tool'
-      fullPath: '/.mcp/invoke-tool/$tool'
-      preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/.lovable/oauth/consent': {
-      id: '/.lovable/oauth/consent'
-      path: '/.lovable/oauth/consent'
-      fullPath: '/.lovable/oauth/consent'
-      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/api/public/drink-image/$': {
       id: '/api/public/drink-image/$'
@@ -837,13 +844,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/public/drink-image/$'
       preLoaderRoute: typeof ApiPublicDrinkImageSplatRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/drinks/$id/editar': {
-      id: '/_authenticated/drinks/$id/editar'
-      path: '/drinks/$id/editar'
-      fullPath: '/drinks/$id/editar'
-      preLoaderRoute: typeof AuthenticatedDrinksIdEditarRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }

@@ -9,6 +9,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+if (typeof window !== "undefined") console.warn("ROOT MODULE loaded");
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "sonner";
 import { AuthProvider } from "@/hooks/use-auth";
@@ -135,7 +136,9 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  console.warn("ROOTCOMP render");
   const { queryClient } = Route.useRouteContext();
+  if (typeof window !== "undefined") (window as unknown as Record<string, unknown>)["__QC__"] = queryClient;
 
   return (
     <QueryClientProvider client={queryClient}>
