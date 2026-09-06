@@ -10,7 +10,6 @@ import { countsQuery, drinksQuery, drinkCategoriasQuery } from "@/lib/queries";
 import { drinkParam, slugify } from "@/lib/slug";
 
 
-if (typeof window !== "undefined") console.warn("INDEX MODULE loaded");
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -45,7 +44,6 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
-  console.warn("HOMEPAGE render");
   const { data: counts } = useSuspenseQuery(countsQuery);
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);

@@ -1,7 +1,6 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { isUuid } from "@/lib/slug";
-if (typeof window !== "undefined") (window as unknown as Record<string, unknown>)["__SB__"] = supabase;
 
 
 export type Categoria = { id: string; nome: string };
@@ -103,7 +102,6 @@ export const drinksQuery = queryOptions({
   queryKey: ["drinks", "lista"],
   ...CACHE_DRINKS,
   queryFn: async (): Promise<DrinkLista[]> => {
-    console.warn("QF drinks start");
     const { data, error } = await supabase
       .from("drinks_lista")
       .select(DRINK_LISTA_SELECT)
@@ -136,7 +134,6 @@ export const drinkQuery = (idOrSlug: string) =>
 export const drinkCategoriasQuery = queryOptions({
   queryKey: ["drink_categorias"],
   queryFn: async (): Promise<DrinkCategoria[]> => {
-    console.warn("QF cats start");
     const { data, error } = await supabase
       .from("drink_categorias")
       .select("id, nome")
@@ -149,7 +146,6 @@ export const drinkCategoriasQuery = queryOptions({
 export const countsQuery = queryOptions({
   queryKey: ["counts"],
   queryFn: async () => {
-    console.warn("QF counts start");
     const [ing, drk] = await Promise.all([
       supabase.from("ingredientes").select("*", { count: "exact", head: true }),
       supabase.from("drinks").select("*", { count: "exact", head: true }),
