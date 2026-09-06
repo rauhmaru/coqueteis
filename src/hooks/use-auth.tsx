@@ -48,14 +48,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (event, sess) => {
+    const { data: sub } = supabase.auth.onAuthStateChange((event, sess) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       setSession(sess);
       setUser(sess?.user ?? null);
-      await loadRoles(sess?.user?.id);
+      // Nunca consultar o banco dentro deste retorno: isso trava a sessão.
+      setTimeout(() => {
+        void loadRoles(sess?.user?.id);
+      }, 0);
       router.invalidate();
       if (event !== "SIGNED_OUT") qc.invalidateQueries();
     });
+
 
     return () => {
       mounted = false;
