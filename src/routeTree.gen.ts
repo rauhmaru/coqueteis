@@ -23,6 +23,7 @@ import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
@@ -123,6 +124,11 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
     path: '/.well-known/oauth-protected-resource',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedFavoritosRoute = AuthenticatedFavoritosRouteImport.update({
   id: '/favoritos',
   path: '/favoritos',
@@ -284,6 +290,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
@@ -325,6 +332,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
@@ -369,6 +377,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/indexacao': typeof AuthenticatedIndexacaoRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
@@ -414,6 +423,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin'
     | '/favoritos'
     | '/indexacao'
     | '/ingredientes'
@@ -455,6 +465,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/admin'
     | '/favoritos'
     | '/indexacao'
     | '/ingredientes'
@@ -498,6 +509,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/admin'
     | '/_authenticated/favoritos'
     | '/_authenticated/indexacao'
     | '/_authenticated/ingredientes'
@@ -648,6 +660,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/.well-known/oauth-protected-resource'
       preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/favoritos': {
       id: '/_authenticated/favoritos'
@@ -849,6 +868,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedIndexacaoRoute: typeof AuthenticatedIndexacaoRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
@@ -861,6 +881,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedIndexacaoRoute: AuthenticatedIndexacaoRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
