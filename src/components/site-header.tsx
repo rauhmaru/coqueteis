@@ -164,31 +164,10 @@ export function SiteHeader() {
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel className="truncate">{nome}</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {isAdmin && (
+                  {canEdit && (
                     <DropdownMenuItem asChild>
-                      <Link to="/usuarios" className="cursor-pointer">
-                        <Shield className="mr-2 h-4 w-4" aria-hidden="true" /> Usuários
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/indexacao" className="cursor-pointer">
-                        <BarChart3 className="mr-2 h-4 w-4" aria-hidden="true" /> Indexação (SEO)
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/unificar-ingredientes" className="cursor-pointer">
-                        <Merge className="mr-2 h-4 w-4" aria-hidden="true" /> Unificar ingredientes
-                      </Link>
-                    </DropdownMenuItem>
-                  )}
-                  {isAdmin && (
-                    <DropdownMenuItem asChild>
-                      <Link to="/remocoes" className="cursor-pointer">
-                        <History className="mr-2 h-4 w-4" aria-hidden="true" /> Log de remoções
+                      <Link to="/admin" className="cursor-pointer">
+                        <Shield className="mr-2 h-4 w-4" aria-hidden="true" /> Administração
                       </Link>
                     </DropdownMenuItem>
                   )}
