@@ -287,24 +287,9 @@ export function SiteHeader() {
                       {item.label}
                     </Link>
                   ))}
-                {isAdmin && (
-                  <Link to="/usuarios" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
-                    <Shield className="h-4 w-4" aria-hidden="true" /> Usuários
-                  </Link>
-                )}
-                {isAdmin && (
-                  <Link to="/indexacao" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
-                    <BarChart3 className="h-4 w-4" aria-hidden="true" /> Indexação (SEO)
-                  </Link>
-                )}
-                {isAdmin && (
-                  <Link to="/unificar-ingredientes" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
-                    <Merge className="h-4 w-4" aria-hidden="true" /> Unificar ingredientes
-                  </Link>
-                )}
-                {isAdmin && (
-                  <Link to="/remocoes" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
-                    <History className="h-4 w-4" aria-hidden="true" /> Log de remoções
+                {canEdit && (
+                  <Link to="/admin" onClick={fechar} className={`${mobileLinkBase} gap-2`}>
+                    <Shield className="h-4 w-4" aria-hidden="true" /> Administração
                   </Link>
                 )}
               </nav>
