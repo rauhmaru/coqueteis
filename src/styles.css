@@ -242,3 +242,54 @@
   }
 }
 
+
+/* Impressão: apenas o essencial da receita, em uma página */
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  .print-titulo {
+    font-family: var(--font-serif);
+    font-size: 22pt;
+    margin: 0 0 0.2rem;
+  }
+
+  .print-ficha {
+    font-size: 10pt;
+    margin: 0 0 0.8rem;
+    border-bottom: 1px solid #999;
+    padding-bottom: 0.4rem;
+  }
+
+  .print-sub {
+    font-size: 12pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 0.8rem 0 0.3rem;
+  }
+
+  .print-lista {
+    margin: 0;
+    padding-left: 1.2rem;
+    line-height: 1.45;
+  }
+
+  .print-lista li {
+    margin-bottom: 0.2rem;
+    break-inside: avoid;
+  }
+
+  .print-rodape {
+    margin-top: 1rem;
+    font-size: 9pt;
+    color: #555;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}
