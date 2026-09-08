@@ -6,7 +6,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+import { ArrowLeft, Calculator, ChefHat, Pencil, Printer, Trash2, Youtube } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -178,6 +178,7 @@ function DrinkDetail() {
   const [confirmar, setConfirmar] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [removendo, setRemovendo] = useState(false);
+  const [preparo, setPreparo] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
 
@@ -370,6 +371,8 @@ function DrinkDetail() {
 
         <DrinkSocial drinkId={drink.id} />
       </main>
+
+      {preparo && <ModoPreparo drink={drink} onFechar={() => setPreparo(false)} />}
 
       <AlertDialog open={confirmar} onOpenChange={setConfirmar}>
         <AlertDialogContent>
