@@ -29,6 +29,8 @@ import { ShareDrink } from "@/components/share-drink";
 import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
 import { WakeLockButton } from "@/components/wake-lock-button";
+import { ModoPreparo } from "@/components/modo-preparo";
+import { ReceitaImpressao } from "@/components/receita-impressao";
 import { FichaTecnica } from "@/components/ficha-tecnica";
 import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
