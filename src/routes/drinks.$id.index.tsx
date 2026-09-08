@@ -6,7 +6,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, Calculator, Pencil, Trash2, Youtube } from "lucide-react";
+import { ArrowLeft, Calculator, ChefHat, Pencil, Printer, Trash2, Youtube } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -29,6 +29,8 @@ import { ShareDrink } from "@/components/share-drink";
 import { PortionCalculator } from "@/components/portion-calculator";
 import { FavoriteButton } from "@/components/favorite-button";
 import { WakeLockButton } from "@/components/wake-lock-button";
+import { ModoPreparo } from "@/components/modo-preparo";
+import { ReceitaImpressao } from "@/components/receita-impressao";
 import { FichaTecnica } from "@/components/ficha-tecnica";
 import { normalizarPassos, metodoLabel } from "@/lib/ficha-tecnica";
 import { useAuth } from "@/hooks/use-auth";
@@ -176,6 +178,7 @@ function DrinkDetail() {
   const [confirmar, setConfirmar] = useState(false);
   const [motivo, setMotivo] = useState("");
   const [removendo, setRemovendo] = useState(false);
+  const [preparo, setPreparo] = useState(false);
   if (!drink) return null;
   const passos = normalizarPassos(drink.passos, drink.preparo);
 
@@ -216,8 +219,11 @@ function DrinkDetail() {
 
   return (
     <div className="min-h-dvh">
-      <SiteHeader />
-      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <div className="print:hidden">
+        <SiteHeader />
+      </div>
+      <ReceitaImpressao drink={drink} />
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8 print:hidden">
         <Link to="/drinks" className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Voltar para drinks
         </Link>
@@ -335,6 +341,16 @@ function DrinkDetail() {
                 </Link>
               </Button>
 
+              <Button className="min-h-11 sm:min-h-9" onClick={() => setPreparo(true)}>
+                <ChefHat className="h-4 w-4 mr-2" aria-hidden="true" /> Modo preparo
+              </Button>
+              <Button
+                variant="outline"
+                className="min-h-11 sm:min-h-9"
+                onClick={() => window.print()}
+              >
+                <Printer className="h-4 w-4 mr-2" aria-hidden="true" /> Imprimir
+              </Button>
               <WakeLockButton />
               <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drinkParam(drink)} imagemPath={drink.imagem_url} />
@@ -357,6 +373,8 @@ function DrinkDetail() {
 
         <DrinkSocial drinkId={drink.id} />
       </main>
+
+      {preparo && <ModoPreparo drink={drink} onFechar={() => setPreparo(false)} />}
 
       <AlertDialog open={confirmar} onOpenChange={setConfirmar}>
         <AlertDialogContent>
