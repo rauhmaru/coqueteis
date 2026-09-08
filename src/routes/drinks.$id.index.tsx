@@ -338,6 +338,16 @@ function DrinkDetail() {
                 </Link>
               </Button>
 
+              <Button className="min-h-11 sm:min-h-9" onClick={() => setPreparo(true)}>
+                <ChefHat className="h-4 w-4 mr-2" aria-hidden="true" /> Modo preparo
+              </Button>
+              <Button
+                variant="outline"
+                className="min-h-11 sm:min-h-9"
+                onClick={() => window.print()}
+              >
+                <Printer className="h-4 w-4 mr-2" aria-hidden="true" /> Imprimir
+              </Button>
               <WakeLockButton />
               <FavoriteButton drinkId={drink.id} />
               <ShareDrink nome={drink.nome} drinkId={drinkParam(drink)} imagemPath={drink.imagem_url} />
