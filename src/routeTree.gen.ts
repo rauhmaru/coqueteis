@@ -19,6 +19,7 @@ import { Route as ConfiancaRouteImport } from './routes/confianca'
 import { Route as ConsumoResponsavelRouteImport } from './routes/consumo-responsavel'
 import { Route as DrinksRouteImport } from './routes/drinks'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as MeuBarRouteImport } from './routes/meu-bar'
 import { Route as MixologiaRouteImport } from './routes/mixologia'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as Char91DotmcpChar93ListToolsRouteImport } from './routes/[.mcp]/list-tools'
@@ -27,7 +28,6 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedFavoritosRouteImport } from './routes/_authenticated/favoritos'
 import { Route as AuthenticatedIndexacaoRouteImport } from './routes/_authenticated/indexacao'
 import { Route as AuthenticatedIngredientesRouteImport } from './routes/_authenticated/ingredientes'
-import { Route as AuthenticatedMeuBarRouteImport } from './routes/_authenticated/meu-bar'
 import { Route as AuthenticatedRemocoesRouteImport } from './routes/_authenticated/remocoes'
 import { Route as AuthenticatedUnificarIngredientesRouteImport } from './routes/_authenticated/unificar-ingredientes'
 import { Route as AuthenticatedUsuariosRouteImport } from './routes/_authenticated/usuarios'
@@ -102,6 +102,11 @@ const McpRoute = McpRouteImport.update({
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MeuBarRoute = MeuBarRouteImport.update({
+  id: '/meu-bar',
+  path: '/meu-bar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MixologiaRoute = MixologiaRouteImport.update({
   id: '/mixologia',
   path: '/mixologia',
@@ -145,11 +150,6 @@ const AuthenticatedIngredientesRoute =
     path: '/ingredientes',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
-const AuthenticatedMeuBarRoute = AuthenticatedMeuBarRouteImport.update({
-  id: '/meu-bar',
-  path: '/meu-bar',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedRemocoesRoute = AuthenticatedRemocoesRouteImport.update({
   id: '/remocoes',
   path: '/remocoes',
@@ -286,6 +286,7 @@ export interface FileRoutesByFullPath {
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mcp': typeof McpRoute
+  '/meu-bar': typeof MeuBarRoute
   '/mixologia': typeof MixologiaRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -294,7 +295,6 @@ export interface FileRoutesByFullPath {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
-  '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
   '/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -329,6 +329,7 @@ export interface FileRoutesByTo {
   '/confianca': typeof ConfiancaRoute
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/mcp': typeof McpRoute
+  '/meu-bar': typeof MeuBarRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
@@ -336,7 +337,6 @@ export interface FileRoutesByTo {
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/indexacao': typeof AuthenticatedIndexacaoRoute
   '/ingredientes': typeof AuthenticatedIngredientesRoute
-  '/meu-bar': typeof AuthenticatedMeuBarRoute
   '/remocoes': typeof AuthenticatedRemocoesRoute
   '/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/usuarios': typeof AuthenticatedUsuariosRoute
@@ -373,6 +373,7 @@ export interface FileRoutesById {
   '/consumo-responsavel': typeof ConsumoResponsavelRoute
   '/drinks': typeof DrinksRouteWithChildren
   '/mcp': typeof McpRoute
+  '/meu-bar': typeof MeuBarRoute
   '/mixologia': typeof MixologiaRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
@@ -381,7 +382,6 @@ export interface FileRoutesById {
   '/_authenticated/favoritos': typeof AuthenticatedFavoritosRoute
   '/_authenticated/indexacao': typeof AuthenticatedIndexacaoRoute
   '/_authenticated/ingredientes': typeof AuthenticatedIngredientesRoute
-  '/_authenticated/meu-bar': typeof AuthenticatedMeuBarRoute
   '/_authenticated/remocoes': typeof AuthenticatedRemocoesRoute
   '/_authenticated/unificar-ingredientes': typeof AuthenticatedUnificarIngredientesRoute
   '/_authenticated/usuarios': typeof AuthenticatedUsuariosRoute
@@ -419,6 +419,7 @@ export interface FileRouteTypes {
     | '/consumo-responsavel'
     | '/drinks'
     | '/mcp'
+    | '/meu-bar'
     | '/mixologia'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
@@ -427,7 +428,6 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/indexacao'
     | '/ingredientes'
-    | '/meu-bar'
     | '/remocoes'
     | '/unificar-ingredientes'
     | '/usuarios'
@@ -462,6 +462,7 @@ export interface FileRouteTypes {
     | '/confianca'
     | '/consumo-responsavel'
     | '/mcp'
+    | '/meu-bar'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
@@ -469,7 +470,6 @@ export interface FileRouteTypes {
     | '/favoritos'
     | '/indexacao'
     | '/ingredientes'
-    | '/meu-bar'
     | '/remocoes'
     | '/unificar-ingredientes'
     | '/usuarios'
@@ -505,6 +505,7 @@ export interface FileRouteTypes {
     | '/consumo-responsavel'
     | '/drinks'
     | '/mcp'
+    | '/meu-bar'
     | '/mixologia'
     | '/sitemap.xml'
     | '/.mcp/list-tools'
@@ -513,7 +514,6 @@ export interface FileRouteTypes {
     | '/_authenticated/favoritos'
     | '/_authenticated/indexacao'
     | '/_authenticated/ingredientes'
-    | '/_authenticated/meu-bar'
     | '/_authenticated/remocoes'
     | '/_authenticated/unificar-ingredientes'
     | '/_authenticated/usuarios'
@@ -551,6 +551,7 @@ export interface RootRouteChildren {
   ConsumoResponsavelRoute: typeof ConsumoResponsavelRoute
   DrinksRoute: typeof DrinksRouteWithChildren
   McpRoute: typeof McpRoute
+  MeuBarRoute: typeof MeuBarRoute
   MixologiaRoute: typeof MixologiaRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   Char91DotmcpChar93ListToolsRoute: typeof Char91DotmcpChar93ListToolsRoute
@@ -633,6 +634,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/meu-bar': {
+      id: '/meu-bar'
+      path: '/meu-bar'
+      fullPath: '/meu-bar'
+      preLoaderRoute: typeof MeuBarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mixologia': {
       id: '/mixologia'
       path: '/mixologia'
@@ -687,13 +695,6 @@ declare module '@tanstack/react-router' {
       path: '/ingredientes'
       fullPath: '/ingredientes'
       preLoaderRoute: typeof AuthenticatedIngredientesRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
-    '/_authenticated/meu-bar': {
-      id: '/_authenticated/meu-bar'
-      path: '/meu-bar'
-      fullPath: '/meu-bar'
-      preLoaderRoute: typeof AuthenticatedMeuBarRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/remocoes': {
@@ -872,7 +873,6 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedFavoritosRoute: typeof AuthenticatedFavoritosRoute
   AuthenticatedIndexacaoRoute: typeof AuthenticatedIndexacaoRoute
   AuthenticatedIngredientesRoute: typeof AuthenticatedIngredientesRoute
-  AuthenticatedMeuBarRoute: typeof AuthenticatedMeuBarRoute
   AuthenticatedRemocoesRoute: typeof AuthenticatedRemocoesRoute
   AuthenticatedUnificarIngredientesRoute: typeof AuthenticatedUnificarIngredientesRoute
   AuthenticatedUsuariosRoute: typeof AuthenticatedUsuariosRoute
@@ -885,7 +885,6 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedFavoritosRoute: AuthenticatedFavoritosRoute,
   AuthenticatedIndexacaoRoute: AuthenticatedIndexacaoRoute,
   AuthenticatedIngredientesRoute: AuthenticatedIngredientesRoute,
-  AuthenticatedMeuBarRoute: AuthenticatedMeuBarRoute,
   AuthenticatedRemocoesRoute: AuthenticatedRemocoesRoute,
   AuthenticatedUnificarIngredientesRoute:
     AuthenticatedUnificarIngredientesRoute,
@@ -975,6 +974,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsumoResponsavelRoute: ConsumoResponsavelRoute,
   DrinksRoute: DrinksRouteWithChildren,
   McpRoute: McpRoute,
+  MeuBarRoute: MeuBarRoute,
   MixologiaRoute: MixologiaRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   Char91DotmcpChar93ListToolsRoute: Char91DotmcpChar93ListToolsRoute,
