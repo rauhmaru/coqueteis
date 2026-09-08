@@ -14,7 +14,14 @@ import { SiteHeader } from "@/components/site-header";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { drinksQuery, ingredientesQuery } from "@/lib/queries";
-import { avaliarDrinks, brl, meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { avaliarDrinks, brl, type ItemBar } from "@/lib/meu-bar";
+import {
+  adicionarItemEstoque,
+  atualizarItemEstoque,
+  estoqueQuery,
+  removerItemEstoque,
+} from "@/lib/estoque";
+import { lerDoseLocal, salvarDoseLocal } from "@/lib/estoque-local";
 import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
 
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
@@ -31,7 +38,9 @@ import { Badge } from "@/components/ui/badge";
 import { DrinkImage } from "@/components/drink-image";
 import { DifficultyBadge } from "@/components/difficulty-badge";
 
-export const Route = createFileRoute("/_authenticated/meu-bar")({
+export const Route = createFileRoute("/meu-bar")({
+  // Estoque do visitante fica no navegador: renderizar no cliente evita divergência.
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Meu Bar — estoque e custo por dose" },
@@ -57,18 +66,20 @@ function MeuBarPage() {
   const qc = useQueryClient();
   const { data: drinks } = useSuspenseQuery(drinksQuery);
   const { data: ingredientes } = useQuery(ingredientesQuery);
-  const { data: estoqueRemoto, isLoading } = useQuery(meuBarQuery(user?.id));
+  const { data: estoqueRemoto, isLoading } = useQuery(estoqueQuery(user?.id));
 
   // Snapshot offline do estoque (o bar costuma ter conexão instável).
   const snapshotBar = useMemo(() => lerSnapshot<ItemBar[]>("meu-bar"), []);
   useEffect(() => {
-    if (estoqueRemoto) salvarSnapshot("meu-bar", estoqueRemoto);
-  }, [estoqueRemoto]);
-  const estoque = estoqueRemoto ?? snapshotBar?.dados;
-  const usandoCacheBar = !estoqueRemoto && !!snapshotBar;
+    if (user && estoqueRemoto) salvarSnapshot("meu-bar", estoqueRemoto);
+  }, [user, estoqueRemoto]);
+  const estoque = estoqueRemoto ?? (user ? snapshotBar?.dados : undefined);
+  const usandoCacheBar = !!user && !estoqueRemoto && !!snapshotBar;
 
   const { data: perfil } = useQuery(perfilQuery(user?.id));
-  const doseMl = perfil?.dose_ml ?? DOSE_PADRAO_ML;
+  const [doseLocal, setDoseLocal] = useState<number | null>(null);
+  useEffect(() => setDoseLocal(lerDoseLocal()), []);
+  const doseMl = user ? (perfil?.dose_ml ?? DOSE_PADRAO_ML) : (doseLocal ?? DOSE_PADRAO_ML);
 
   const [nome, setNome] = useState("");
   const [preco, setPreco] = useState("");
@@ -84,7 +95,11 @@ function MeuBarPage() {
       const n = Number(doseInput.trim().replace(",", "."));
       if (!Number.isFinite(n) || n <= 0 || n > 500)
         throw new Error("Informe uma dose entre 1 e 500 ml.");
-      await salvarDoseMl(user!.id, n);
+      if (user) await salvarDoseMl(user.id, n);
+      else {
+        salvarDoseLocal(n);
+        setDoseLocal(n);
+      }
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ["perfil"] });
@@ -95,21 +110,6 @@ function MeuBarPage() {
 
   const adicionar = useMutation({
     mutationFn: async () => {
-      const limpo = nome.trim();
-      if (!limpo) throw new Error("Informe o nome da bebida ou ingrediente.");
-      const alvo = normalizar(limpo);
-      let ingredienteId = (ingredientes ?? []).find((i) => normalizar(i.nome) === alvo)?.id;
-
-      if (!ingredienteId) {
-        const { data, error } = await supabase
-          .from("ingredientes")
-          .insert({ nome: limpo })
-          .select("id")
-          .single();
-        if (error) throw error;
-        ingredienteId = data.id;
-      }
-
       const precoNum = preco.trim() ? Number(preco.replace(",", ".")) : null;
       const volumeNum = volume.trim() ? Number(volume.replace(",", ".")) : null;
       if (precoNum !== null && (!Number.isFinite(precoNum) || precoNum < 0))
@@ -117,16 +117,13 @@ function MeuBarPage() {
       if (volumeNum !== null && (!Number.isFinite(volumeNum) || volumeNum <= 0))
         throw new Error("Volume inválido.");
 
-      const { error } = await supabase.from("meu_bar").upsert(
-        {
-          user_id: user!.id,
-          ingrediente_id: ingredienteId,
-          preco_garrafa: precoNum,
-          volume_garrafa_ml: volumeNum,
-        },
-        { onConflict: "user_id,ingrediente_id" },
-      );
-      if (error) throw error;
+      await adicionarItemEstoque({
+        userId: user?.id,
+        nome,
+        preco: precoNum,
+        volume: volumeNum,
+        catalogo: ingredientes ?? [],
+      });
     },
     onSuccess: () => {
       setNome("");
@@ -146,15 +143,7 @@ function MeuBarPage() {
       volume: number | null;
       observacoes: string | null;
     }) => {
-      const { error } = await supabase
-        .from("meu_bar")
-        .update({
-          preco_garrafa: v.preco,
-          volume_garrafa_ml: v.volume,
-          observacoes: v.observacoes,
-        })
-        .eq("id", v.id);
-      if (error) throw error;
+      await atualizarItemEstoque({ userId: user?.id, ...v });
     },
     onSuccess: () => {
       invalidar();
@@ -165,8 +154,7 @@ function MeuBarPage() {
 
   const remover = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabase.from("meu_bar").delete().eq("id", id);
-      if (error) throw error;
+      await removerItemEstoque({ userId: user?.id, id });
     },
     onSuccess: () => {
       invalidar();
@@ -242,6 +230,25 @@ function MeuBarPage() {
           )}
         </header>
 
+        {!user && (
+          <aside
+            role="note"
+            className="flex flex-col gap-3 rounded-xl border border-primary/40 bg-primary/5 p-4 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <p className="text-sm text-foreground">
+              Seu bar está salvo apenas neste navegador.{" "}
+              <span className="text-muted-foreground">
+                Crie uma conta para sincronizar entre dispositivos.
+              </span>
+            </p>
+            <Button asChild variant="outline" className="min-h-11 shrink-0 sm:min-h-10">
+              <Link to="/auth" search={{ redirect: "/meu-bar" }}>
+                Criar conta ou entrar
+              </Link>
+            </Button>
+          </aside>
+        )}
+
         {/* Tamanho da dose (perfil) */}
         <section
           aria-labelledby="dose-titulo"
@@ -251,8 +258,9 @@ function MeuBarPage() {
             Tamanho da minha dose
           </h2>
           <p className="mb-4 max-w-2xl text-sm text-muted-foreground">
-            Definimos as quantidades das receitas com base nesta dose, salva no seu perfil. Assim o
-            custo por dose fica sempre exato para o seu jeito de servir.
+            Definimos as quantidades das receitas com base nesta dose, salva no seu perfil (ou
+            neste navegador, se você ainda não tem conta). Assim o custo por dose
+            fica sempre exato para o seu jeito de servir.
           </p>
           <form
             className="grid grid-cols-1 gap-3 sm:grid-cols-[minmax(0,12rem)_auto] sm:items-end"
