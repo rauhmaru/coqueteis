@@ -217,7 +217,8 @@ function DrinkDetail() {
   return (
     <div className="min-h-dvh">
       <SiteHeader />
-      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8">
+      <ReceitaImpressao drink={drink} />
+      <main id="conteudo" className="mx-auto max-w-4xl px-4 py-10 space-y-8 print:hidden">
         <Link to="/drinks" className="inline-flex min-h-11 items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> Voltar para drinks
         </Link>
