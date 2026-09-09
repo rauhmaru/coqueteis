@@ -2,7 +2,9 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { Session, User } from "@supabase/supabase-js";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { migrarEstoqueLocal } from "@/lib/estoque";
 
 type Role = "admin" | "editor";
 
@@ -55,6 +57,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Nunca consultar o banco dentro deste retorno: isso trava a sessão.
       setTimeout(() => {
         void loadRoles(sess?.user?.id);
+        // Primeiro login: leva o bar montado como visitante para a conta.
+        const uid = sess?.user?.id;
+        if (event === "SIGNED_IN" && uid) {
+          void migrarEstoqueLocal(uid)
+            .then((total) => {
+              if (total === 0) return;
+              qc.invalidateQueries({ queryKey: ["meu-bar"] });
+              toast.success("Seu bar foi salvo na sua conta.");
+            })
+            .catch(() => undefined);
+        }
       }, 0);
       router.invalidate();
       if (event !== "SIGNED_OUT") qc.invalidateQueries();

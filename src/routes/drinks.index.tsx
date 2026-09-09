@@ -28,7 +28,7 @@ import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useDrinkFilters } from "@/components/drink-filters";
 import { CampoBuscaDrinks } from "@/components/drink-search";
 import { combina } from "@/lib/busca";
-import { meuBarQuery } from "@/lib/meu-bar";
+import { estoqueQuery } from "@/lib/estoque";
 import { coberturaDrink, idsDoEstoque } from "@/lib/estoque-cobertura";
 import { SeloEstoque } from "@/components/selo-estoque";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -166,9 +166,9 @@ function DrinksList() {
     navigate({ search: (prev) => ({ ...prev, pagina: 1 }), replace: true });
   }, [chaveFiltros, navigate]);
 
-  const { data: estoque } = useQuery(meuBarQuery(user?.id));
+  const { data: estoque } = useQuery(estoqueQuery(user?.id));
   const estoqueIds = idsDoEstoque(estoque);
-  const temEstoque = !!user && estoqueIds.size > 0;
+  const temEstoque = estoqueIds.size > 0;
   const filtrandoEstoque = temEstoque && soPossiveis;
 
   const buscando = busca.trim().length > 0;
