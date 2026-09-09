@@ -18,12 +18,13 @@ import {
  * Os componentes usam sempre a mesma interface (`ItemBar`).
  */
 export const estoqueQuery = (userId: string | undefined) =>
-  userId
-    ? meuBarQuery(userId)
-    : queryOptions({
-        queryKey: ["meu-bar", "local"],
-        queryFn: async (): Promise<ItemBar[]> => comoItensBar(lerEstoqueLocal()),
-      });
+  queryOptions({
+    queryKey: ["meu-bar", userId ?? "local"],
+    queryFn: async (): Promise<ItemBar[]> => {
+      if (!userId) return comoItensBar(lerEstoqueLocal());
+      return (await meuBarQuery(userId).queryFn!({} as never)) as ItemBar[];
+    },
+  });
 
 type Catalogo = { id: string; nome: string }[];
 
