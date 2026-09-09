@@ -5,8 +5,7 @@ import { Check, CircleAlert, Loader2, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
-import { supabase } from "@/integrations/supabase/client";
-import { meuBarQuery } from "@/lib/meu-bar";
+import { adicionarFaltantesEstoque, estoqueQuery } from "@/lib/estoque";
 import { coberturaDrink, idsDoEstoque, ingredienteOpcional } from "@/lib/estoque-cobertura";
 import { calcularPorcoes } from "@/lib/porcoes";
 import type { DrinkComIngredientes } from "@/lib/queries";
@@ -26,10 +25,10 @@ type LinhaIngrediente = {
 export function IngredientesEstoque({ drink }: { drink: DrinkComIngredientes }) {
   const { user } = useAuth();
   const qc = useQueryClient();
-  const { data: estoque } = useQuery(meuBarQuery(user?.id));
+  const { data: estoque } = useQuery(estoqueQuery(user?.id));
   const [salvando, setSalvando] = useState(false);
 
-  const temEstoque = !!user && !!estoque && estoque.length > 0;
+  const temEstoque = !!estoque && estoque.length > 0;
   const cobertura = temEstoque ? coberturaDrink(drink, idsDoEstoque(estoque)) : null;
 
   // Doses de uma única receita — mesma fonte da calculadora de porções.
@@ -58,16 +57,19 @@ export function IngredientesEstoque({ drink }: { drink: DrinkComIngredientes }) 
   const faltamTodos = cobertura?.itens.filter((i) => !i.tem) ?? [];
 
   const adicionarFaltantes = async () => {
-    if (!user || faltamTodos.length === 0) return;
+    if (faltamTodos.length === 0) return;
     setSalvando(true);
-    const { error } = await supabase
-      .from("meu_bar")
-      .insert(faltamTodos.map((i) => ({ user_id: user.id, ingrediente_id: i.id })));
-    setSalvando(false);
-    if (error) {
-      toast.error("Erro ao adicionar: " + error.message);
+    try {
+      await adicionarFaltantesEstoque({
+        userId: user?.id,
+        itens: faltamTodos.map((i) => ({ id: i.id, nome: i.nome })),
+      });
+    } catch (e) {
+      setSalvando(false);
+      toast.error("Erro ao adicionar: " + (e as Error).message);
       return;
     }
+    setSalvando(false);
     toast.success(
       faltamTodos.length === 1
         ? `${faltamTodos[0]!.nome} adicionado ao Meu Bar.`

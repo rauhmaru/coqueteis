@@ -21,7 +21,8 @@ import {
   estoqueQuery,
   removerItemEstoque,
 } from "@/lib/estoque";
-import { lerDoseLocal, salvarDoseLocal } from "@/lib/estoque-local";
+import { lerDoseLocal, lerEstoqueLocal, salvarDoseLocal } from "@/lib/estoque-local";
+import { migrarEstoqueLocal } from "@/lib/estoque";
 import { DOSE_PADRAO_ML, perfilQuery, salvarDoseMl } from "@/lib/perfil";
 
 import { IngredienteAutocomplete } from "@/components/ingrediente-autocomplete";
@@ -89,6 +90,17 @@ function MeuBarPage() {
   const [openQuase, setOpenQuase] = useState(true);
 
   const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
+
+  // Rede de segurança: se sobrou bar de visitante, passa para a conta ao abrir a página.
+  useEffect(() => {
+    if (!user || lerEstoqueLocal().length === 0) return;
+    void migrarEstoqueLocal(user.id).then((total) => {
+      if (total === 0) return;
+      qc.invalidateQueries({ queryKey: ["meu-bar"] });
+      toast.success("Seu bar foi salvo na sua conta.");
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
 
   const salvarDose = useMutation({
     mutationFn: async () => {

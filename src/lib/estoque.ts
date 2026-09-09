@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { normalizar } from "@/lib/abv";
-import { meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { buscarEstoqueRemoto, type ItemBar } from "@/lib/meu-bar";
 import {
   comoItensBar,
   ehIdProvisorio,
@@ -18,12 +18,13 @@ import {
  * Os componentes usam sempre a mesma interface (`ItemBar`).
  */
 export const estoqueQuery = (userId: string | undefined) =>
-  userId
-    ? meuBarQuery(userId)
-    : queryOptions({
-        queryKey: ["meu-bar", "local"],
-        queryFn: async (): Promise<ItemBar[]> => comoItensBar(lerEstoqueLocal()),
-      });
+  queryOptions({
+    queryKey: ["meu-bar", userId ?? "local"],
+    queryFn: async (): Promise<ItemBar[]> => {
+      if (!userId) return comoItensBar(lerEstoqueLocal());
+      return buscarEstoqueRemoto();
+    },
+  });
 
 type Catalogo = { id: string; nome: string }[];
 

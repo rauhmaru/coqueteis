@@ -107,7 +107,7 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
-          {user && (
+          {
             <Link
               to="/meu-bar"
               className={`${linkBase} inline-flex items-center gap-1`}
@@ -115,7 +115,7 @@ export function SiteHeader() {
             >
               <Wine className="h-3.5 w-3.5" aria-hidden="true" /> Meu Bar
             </Link>
-          )}
+          }
           {user && (
             <Link
               to="/favoritos"
@@ -234,16 +234,16 @@ export function SiteHeader() {
               </div>
 
               {/* Atalhos pessoais */}
-              {user && (
-                <nav aria-label="Atalhos da conta" className="mt-4 flex flex-col gap-1">
-                  <Link
-                    to="/meu-bar"
-                    onClick={fechar}
-                    className={`${mobileLinkBase} gap-2`}
-                    activeProps={{ className: `${mobileLinkActive} gap-2` }}
-                  >
-                    <Wine className="h-4 w-4" aria-hidden="true" /> Meu Bar
-                  </Link>
+              <nav aria-label="Atalhos da conta" className="mt-4 flex flex-col gap-1">
+                <Link
+                  to="/meu-bar"
+                  onClick={fechar}
+                  className={`${mobileLinkBase} gap-2`}
+                  activeProps={{ className: `${mobileLinkActive} gap-2` }}
+                >
+                  <Wine className="h-4 w-4" aria-hidden="true" /> Meu Bar
+                </Link>
+                {user && (
                   <Link
                     to="/favoritos"
                     onClick={fechar}
@@ -258,8 +258,8 @@ export function SiteHeader() {
                       </span>
                     )}
                   </Link>
-                </nav>
-              )}
+                )}
+              </nav>
 
               {/* Conteúdo */}
               <nav aria-label="Navegação principal" className="mt-4 flex flex-col gap-1 border-t border-border/60 pt-4">

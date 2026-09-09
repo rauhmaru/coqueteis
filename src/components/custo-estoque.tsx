@@ -1,23 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { Wallet } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { meuBarQuery, avaliarDrinks, brl } from "@/lib/meu-bar";
+import { avaliarDrinks, brl } from "@/lib/meu-bar";
+import { estoqueQuery } from "@/lib/estoque";
+import { lerDoseLocal } from "@/lib/estoque-local";
 import { perfilQuery, DOSE_PADRAO_ML } from "@/lib/perfil";
 import type { DrinkComIngredientes } from "@/lib/queries";
 
 /**
  * Selo com o custo estimado do drink usando o estoque de Meu Bar do usuário
- * (mesma lógica de custo por dose da rota /meu-bar). Só aparece para usuários
- * logados que já cadastraram bebidas com preço e volume.
+ * (mesma lógica de custo por dose da rota /meu-bar). Aparece para quem já
+ * cadastrou bebidas com preço e volume — com ou sem conta.
  */
 export function CustoEstoque({ drink }: { drink: DrinkComIngredientes }) {
   const { user } = useAuth();
-  const { data: estoque } = useQuery(meuBarQuery(user?.id));
+  const { data: estoque } = useQuery(estoqueQuery(user?.id));
   const { data: perfil } = useQuery(perfilQuery(user?.id));
 
-  if (!user || !estoque || estoque.length === 0) return null;
+  if (!estoque || estoque.length === 0) return null;
 
-  const doseMl = perfil?.dose_ml ?? DOSE_PADRAO_ML;
+  const doseMl = user
+    ? (perfil?.dose_ml ?? DOSE_PADRAO_ML)
+    : (lerDoseLocal() ?? DOSE_PADRAO_ML);
   const [avaliado] = avaliarDrinks([drink], estoque, doseMl);
   if (!avaliado || avaliado.custo <= 0) return null;
 
@@ -46,7 +50,7 @@ export function CustoEstoque({ drink }: { drink: DrinkComIngredientes }) {
           </p>
         )}
         <p className="mt-1 text-xs text-muted-foreground">
-          Base: dose de {doseMl} ml configurada no seu perfil.
+          Base: dose de {doseMl} ml configurada em Meu Bar.
         </p>
       </div>
     </div>
