@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { normalizar } from "@/lib/abv";
-import { meuBarQuery, type ItemBar } from "@/lib/meu-bar";
+import { buscarEstoqueRemoto, type ItemBar } from "@/lib/meu-bar";
 import {
   comoItensBar,
   ehIdProvisorio,
@@ -22,7 +22,7 @@ export const estoqueQuery = (userId: string | undefined) =>
     queryKey: ["meu-bar", userId ?? "local"],
     queryFn: async (): Promise<ItemBar[]> => {
       if (!userId) return comoItensBar(lerEstoqueLocal());
-      return (await meuBarQuery(userId).queryFn!({} as never)) as ItemBar[];
+      return buscarEstoqueRemoto();
     },
   });
 

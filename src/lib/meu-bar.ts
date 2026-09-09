@@ -14,20 +14,23 @@ export type ItemBar = {
   ingredientes: { id: string; nome: string; categorias?: { nome: string } | null } | null;
 };
 
+/** Estoque salvo na conta (RLS limita ao próprio usuário). */
+export async function buscarEstoqueRemoto(): Promise<ItemBar[]> {
+  const { data, error } = await supabase
+    .from("meu_bar")
+    .select(
+      "id, ingrediente_id, preco_garrafa, volume_garrafa_ml, observacoes, ingredientes(id, nome, categorias(nome))",
+    )
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as unknown as ItemBar[];
+}
+
 export const meuBarQuery = (userId: string | undefined) =>
   queryOptions({
     queryKey: ["meu-bar", userId],
     enabled: !!userId,
-    queryFn: async (): Promise<ItemBar[]> => {
-      const { data, error } = await supabase
-        .from("meu_bar")
-        .select(
-          "id, ingrediente_id, preco_garrafa, volume_garrafa_ml, observacoes, ingredientes(id, nome, categorias(nome))",
-        )
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as unknown as ItemBar[];
-    },
+    queryFn: buscarEstoqueRemoto,
   });
 
 
