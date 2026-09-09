@@ -610,6 +610,39 @@ export type Database = {
         }
         Relationships: []
       }
+      web_vitals: {
+        Row: {
+          avaliacao: string | null
+          conexao: string | null
+          created_at: string
+          id: string
+          metrica: string
+          rota: string
+          tipo_navegacao: string | null
+          valor: number
+        }
+        Insert: {
+          avaliacao?: string | null
+          conexao?: string | null
+          created_at?: string
+          id?: string
+          metrica: string
+          rota: string
+          tipo_navegacao?: string | null
+          valor: number
+        }
+        Update: {
+          avaliacao?: string | null
+          conexao?: string | null
+          created_at?: string
+          id?: string
+          metrica?: string
+          rota?: string
+          tipo_navegacao?: string | null
+          valor?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       drinks_lista: {
@@ -680,6 +713,15 @@ export type Database = {
       unificar_ingredientes: {
         Args: { _destino: string; _ids: string[]; _novo_nome?: string }
         Returns: Json
+      }
+      web_vitals_resumo: {
+        Args: { _dias?: number; _metrica?: string }
+        Returns: {
+          amostras: number
+          mediana: number
+          p75: number
+          rota: string
+        }[]
       }
     }
     Enums: {
