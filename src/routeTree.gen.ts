@@ -48,6 +48,7 @@ import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
+import { Route as ApiPublicWebVitalsRouteImport } from './routes/api/public/web-vitals'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
 import { Route as DrinksCategoriaCategoriaRouteImport } from './routes/drinks.categoria.$categoria'
 import { Route as AuthenticatedDrinksIdEditarRouteImport } from './routes/_authenticated/drinks.$id.editar'
@@ -252,6 +253,11 @@ const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   path: '/drinks/novo',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicWebVitalsRoute = ApiPublicWebVitalsRouteImport.update({
+  id: '/api/public/web-vitals',
+  path: '/api/public/web-vitals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DrinksIdIndexRoute = DrinksIdIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -315,6 +321,7 @@ export interface FileRoutesByFullPath {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -356,6 +363,7 @@ export interface FileRoutesByTo {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -402,6 +410,7 @@ export interface FileRoutesById {
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
+  '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
@@ -448,6 +457,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
+    | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/drinks/novo'
+    | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
     | '/drinks/$id'
     | '/drinks/$id/editar'
@@ -534,6 +545,7 @@ export interface FileRouteTypes {
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/drinks/novo'
+    | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
@@ -559,6 +571,7 @@ export interface RootRouteChildren {
   CartaVerRoute: typeof CartaVerRoute
   DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
   Char91DotmcpChar93InvokeToolToolRoute: typeof Char91DotmcpChar93InvokeToolToolRoute
+  ApiPublicWebVitalsRoute: typeof ApiPublicWebVitalsRoute
   ApiPublicDrinkImageSplatRoute: typeof ApiPublicDrinkImageSplatRoute
 }
 
@@ -837,6 +850,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDrinksNovoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/web-vitals': {
+      id: '/api/public/web-vitals'
+      path: '/api/public/web-vitals'
+      fullPath: '/api/public/web-vitals'
+      preLoaderRoute: typeof ApiPublicWebVitalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/drinks/$id/': {
       id: '/drinks/$id/'
       path: '/'
@@ -983,6 +1003,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartaVerRoute: CartaVerRoute,
   DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
   Char91DotmcpChar93InvokeToolToolRoute: Char91DotmcpChar93InvokeToolToolRoute,
+  ApiPublicWebVitalsRoute: ApiPublicWebVitalsRoute,
   ApiPublicDrinkImageSplatRoute: ApiPublicDrinkImageSplatRoute,
 }
 export const routeTree = rootRouteImport
