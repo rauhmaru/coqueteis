@@ -33,6 +33,7 @@ export const Route = createFileRoute("/api/public/drink-image/$")({
               headers: {
                 "Content-Type": data.type || "image/webp",
                 "Cache-Control": "public, max-age=31536000, immutable",
+                "Timing-Allow-Origin": "*",
                 Vary: "Accept",
               },
             });
@@ -46,6 +47,7 @@ export const Route = createFileRoute("/api/public/drink-image/$")({
           headers: {
             "Content-Type": data.type || "image/jpeg",
             "Cache-Control": "public, max-age=31536000, immutable",
+            "Timing-Allow-Origin": "*",
           },
         });
       },

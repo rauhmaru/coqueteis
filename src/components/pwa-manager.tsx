@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Download, WifiOff } from "lucide-react";
 import { toast } from "sonner";
 import { registrarServiceWorker } from "@/lib/pwa";
+import { iniciarWebVitals } from "@/lib/web-vitals";
 import { useOnline } from "@/hooks/use-online";
 import { Button } from "@/components/ui/button";
 
@@ -22,6 +23,11 @@ export function PwaManager() {
     const obs = new MutationObserver(sincronizar);
     obs.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => obs.disconnect();
+  }, []);
+
+  // Web Vitals reais (LCP, CLS, INP, TTFB) com amostragem.
+  useEffect(() => {
+    void iniciarWebVitals();
   }, []);
 
   useEffect(() => {
