@@ -83,7 +83,7 @@ export const ingredientesQuery = queryOptions({
   queryFn: async (): Promise<Ingrediente[]> => {
     const { data, error } = await supabase
       .from("ingredientes")
-      .select("*, categorias(nome)")
+      .select("id, nome, categoria_id, quantidade, created_by, categorias(nome)")
       .order("nome");
     if (error) throw error;
     return (data ?? []) as Ingrediente[];
@@ -147,8 +147,8 @@ export const countsQuery = queryOptions({
   queryKey: ["counts"],
   queryFn: async () => {
     const [ing, drk] = await Promise.all([
-      supabase.from("ingredientes").select("*", { count: "exact", head: true }),
-      supabase.from("drinks").select("*", { count: "exact", head: true }),
+      supabase.from("ingredientes").select("id", { count: "exact", head: true }),
+      supabase.from("drinks").select("id", { count: "exact", head: true }),
     ]);
     return {
       ingredientes: ing.count ?? 0,
