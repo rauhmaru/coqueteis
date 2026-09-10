@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BarChart3,
   FlaskConical,
+  Gauge,
   History,
   Merge,
   Martini,
@@ -83,6 +84,13 @@ function AdminPage() {
       titulo: "Indexação (SEO)",
       desc: "Acompanhar a indexação das páginas e o estado do sitemap.",
       Icon: BarChart3,
+      admin: true,
+    },
+    {
+      to: "/desempenho" as const,
+      titulo: "Desempenho real",
+      desc: "Mediana e percentil 75 do carregamento das páginas nos últimos 7 dias.",
+      Icon: Gauge,
       admin: true,
     },
     {
