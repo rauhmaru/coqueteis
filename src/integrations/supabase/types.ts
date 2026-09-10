@@ -677,6 +677,7 @@ export type Database = {
       }
     }
     Functions: {
+      admin_metricas: { Args: never; Returns: Json }
       buscar_drinks: {
         Args: {
           _categorias?: string[]
