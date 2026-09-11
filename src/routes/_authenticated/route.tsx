@@ -14,7 +14,7 @@ function AuthenticatedLayout() {
   const href = useRouterState({ select: (s) => s.location.href });
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !href.startsWith("/auth")) {
       navigate({ to: "/auth", search: { redirect: href }, replace: true });
     }
   }, [loading, user, navigate, href]);
