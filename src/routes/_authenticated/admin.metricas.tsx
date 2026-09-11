@@ -2,11 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
-  Comment,
   FlaskConical,
   Heart,
   Loader2,
   Martini,
+  MessageSquare,
   Star,
   TrendingUp,
   Users,
@@ -93,7 +93,7 @@ function MetricasPage() {
         { rotulo: "Categorias", valor: data.totais.categorias, Icon: BarChart3 },
         { rotulo: "Usuários", valor: data.totais.usuarios, Icon: Users },
         { rotulo: "Curtidas", valor: data.totais.curtidas, Icon: Heart },
-        { rotulo: "Comentários", valor: data.totais.comentarios, Icon: Comment },
+        { rotulo: "Comentários", valor: data.totais.comentarios, Icon: MessageSquare },
         { rotulo: "Favoritos", valor: data.totais.favoritos, Icon: Star },
       ]
     : [];

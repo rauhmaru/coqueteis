@@ -48,6 +48,7 @@ import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
 import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as ApiPublicWebVitalsRouteImport } from './routes/api/public/web-vitals'
@@ -255,6 +256,11 @@ const Char91DotmcpChar93InvokeToolToolRoute =
     path: '/.mcp/invoke-tool/$tool',
     getParentRoute: () => rootRouteImport,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 const AuthenticatedAdminMetricasRoute =
   AuthenticatedAdminMetricasRouteImport.update({
     id: '/metricas',
@@ -338,6 +344,7 @@ export interface FileRoutesByFullPath {
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
   '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
@@ -355,7 +362,6 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/.mcp/list-tools': typeof Char91DotmcpChar93ListToolsRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
-  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/desempenho': typeof AuthenticatedDesempenhoRoute
   '/favoritos': typeof AuthenticatedFavoritosRoute
   '/indexacao': typeof AuthenticatedIndexacaoRoute
@@ -382,6 +388,7 @@ export interface FileRoutesByTo {
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/drinks/$id': typeof DrinksIdIndexRoute
   '/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
   '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
@@ -431,6 +438,7 @@ export interface FileRoutesById {
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/drinks/$id/': typeof DrinksIdIndexRoute
   '/_authenticated/drinks/$id/editar': typeof AuthenticatedDrinksIdEditarRoute
   '/api/public/drink-image/$': typeof ApiPublicDrinkImageSplatRoute
@@ -480,6 +488,7 @@ export interface FileRouteTypes {
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
+    | '/admin/'
     | '/drinks/$id/'
     | '/drinks/$id/editar'
     | '/api/public/drink-image/$'
@@ -497,7 +506,6 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/.mcp/list-tools'
     | '/.well-known/oauth-protected-resource'
-    | '/admin'
     | '/desempenho'
     | '/favoritos'
     | '/indexacao'
@@ -524,6 +532,7 @@ export interface FileRouteTypes {
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
+    | '/admin'
     | '/drinks/$id'
     | '/drinks/$id/editar'
     | '/api/public/drink-image/$'
@@ -572,6 +581,7 @@ export interface FileRouteTypes {
     | '/_authenticated/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
+    | '/_authenticated/admin/'
     | '/drinks/$id/'
     | '/_authenticated/drinks/$id/editar'
     | '/api/public/drink-image/$'
@@ -875,6 +885,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof Char91DotmcpChar93InvokeToolToolRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/metricas': {
       id: '/_authenticated/admin/metricas'
       path: '/metricas'
@@ -929,10 +946,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminMetricasRoute: typeof AuthenticatedAdminMetricasRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminMetricasRoute: AuthenticatedAdminMetricasRoute,
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
 const AuthenticatedAdminRouteWithChildren =
