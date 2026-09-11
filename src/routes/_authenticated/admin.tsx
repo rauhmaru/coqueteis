@@ -8,6 +8,7 @@ import {
   Martini,
   Shield,
   ScrollText,
+  TrendingUp,
 } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { useAuth } from "@/hooks/use-auth";

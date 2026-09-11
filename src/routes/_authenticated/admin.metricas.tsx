@@ -2,11 +2,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
-  Comment,
   FlaskConical,
   Heart,
   Loader2,
   Martini,
+  MessageSquare,
   Star,
   TrendingUp,
   Users,
