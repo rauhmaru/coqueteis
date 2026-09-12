@@ -489,7 +489,12 @@ function DrinksList() {
               {temMais && (
                 <Button
                   variant="outline"
-                  onClick={() => navigate({ search: { pagina: pagina + 1 } })}
+                  onClick={() =>
+                    navigate({
+                      search: { pagina: pagina + 1 },
+                      resetScroll: false,
+                    })
+                  }
                   disabled={isFetching}
                 >
                   {isFetching && <Loader2 className="h-4 w-4 mr-2 animate-spin" aria-hidden="true" />}
