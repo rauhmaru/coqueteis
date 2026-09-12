@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BarChart3,
   FlaskConical,
+  FolderTree,
   Gauge,
   History,
   Merge,
@@ -51,6 +52,13 @@ function AdminPage() {
       desc: "Cadastrar, editar e remover ingredientes do acervo.",
       Icon: FlaskConical,
       admin: false,
+    },
+    {
+      to: "/admin/categorias" as const,
+      titulo: "Categorias",
+      desc: "Cadastrar, renomear e remover categorias de ingredientes.",
+      Icon: FolderTree,
+      admin: true,
     },
     {
       to: "/drinks" as const,

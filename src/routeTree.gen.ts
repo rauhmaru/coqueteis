@@ -49,6 +49,7 @@ import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_authenticated/admin.categorias'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as ApiPublicWebVitalsRouteImport } from './routes/api/public/web-vitals'
@@ -261,6 +262,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCategoriasRoute =
+  AuthenticatedAdminCategoriasRouteImport.update({
+    id: '/categorias',
+    path: '/categorias',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminMetricasRoute =
   AuthenticatedAdminMetricasRouteImport.update({
     id: '/metricas',
@@ -340,6 +347,7 @@ export interface FileRoutesByFullPath {
   '/mixologia/': typeof MixologiaIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
@@ -384,6 +392,7 @@ export interface FileRoutesByTo {
   '/mixologia': typeof MixologiaIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
@@ -434,6 +443,7 @@ export interface FileRoutesById {
   '/mixologia/': typeof MixologiaIndexRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
+  '/_authenticated/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
@@ -484,6 +494,7 @@ export interface FileRouteTypes {
     | '/mixologia/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/categorias'
     | '/admin/metricas'
     | '/drinks/novo'
     | '/api/public/web-vitals'
@@ -528,6 +539,7 @@ export interface FileRouteTypes {
     | '/mixologia'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/admin/categorias'
     | '/admin/metricas'
     | '/drinks/novo'
     | '/api/public/web-vitals'
@@ -577,6 +589,7 @@ export interface FileRouteTypes {
     | '/mixologia/'
     | '/.lovable/oauth/consent'
     | '/.mcp/invoke-tool/$tool'
+    | '/_authenticated/admin/categorias'
     | '/_authenticated/admin/metricas'
     | '/_authenticated/drinks/novo'
     | '/api/public/web-vitals'
@@ -892,6 +905,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/categorias': {
+      id: '/_authenticated/admin/categorias'
+      path: '/categorias'
+      fullPath: '/admin/categorias'
+      preLoaderRoute: typeof AuthenticatedAdminCategoriasRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/metricas': {
       id: '/_authenticated/admin/metricas'
       path: '/metricas'
@@ -945,11 +965,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCategoriasRoute: typeof AuthenticatedAdminCategoriasRoute
   AuthenticatedAdminMetricasRoute: typeof AuthenticatedAdminMetricasRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCategoriasRoute: AuthenticatedAdminCategoriasRoute,
   AuthenticatedAdminMetricasRoute: AuthenticatedAdminMetricasRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
