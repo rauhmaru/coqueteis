@@ -18,6 +18,8 @@ export const Route = createFileRoute("/confianca")({
         content:
           "Como protegemos os dados do catálogo de coquetéis: autenticação, controle de acesso, armazenamento e privacidade.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/confianca" }],
   }),

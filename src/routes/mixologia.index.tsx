@@ -37,6 +37,7 @@ export const Route = createFileRoute("/mixologia/")({
         content: "Guia completo de mixologia e coquetelaria: história, técnicas, utensílios e ingredientes.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/mixologia" }],
   }),

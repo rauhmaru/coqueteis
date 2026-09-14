@@ -69,6 +69,7 @@ export const Route = createFileRoute("/drinks/")({
         content: "Filtre receitas de coquetéis pelos ingredientes que você tem em casa.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/drinks" }],
   }),
