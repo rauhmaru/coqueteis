@@ -14,6 +14,8 @@ export const Route = createFileRoute("/mixologia")({
         property: "og:description",
         content: "Guia de mixologia: história, utensílios, copos, bebidas, xaropes, bitters e gelo.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: () => <Outlet />,

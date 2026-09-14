@@ -27,6 +27,7 @@ export const Route = createFileRoute("/")({
           "Catálogo de receitas de coquetéis, xaropes e drinks sem álcool: ingredientes, preparo, dificuldade e ferramentas de bar.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/" }],
   }),
