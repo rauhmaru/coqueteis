@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { drinksQuery, ingredientesQuery } from "@/lib/queries";
 import { avaliarDrinks, brl, type ItemBar } from "@/lib/meu-bar";
 import {
+  adicionarFaltantesEstoque,
   adicionarItemEstoque,
   atualizarItemEstoque,
   estoqueQuery,
@@ -30,6 +31,7 @@ import { normalizar } from "@/lib/abv";
 import { agruparPorImpacto } from "@/lib/impacto";
 import { ImpactoCompras } from "@/components/impacto-compras";
 import { EstoqueLista } from "@/components/estoque-lista";
+import { AssistenteMeuBar } from "@/components/assistente-meu-bar";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -88,6 +90,11 @@ function MeuBarPage() {
   const [doseInput, setDoseInput] = useState("");
   const [openPossiveis, setOpenPossiveis] = useState(true);
   const [openQuase, setOpenQuase] = useState(true);
+  const [assistenteAtivo, setAssistenteAtivo] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && (estoque ?? []).length === 0) setAssistenteAtivo(true);
+  }, [isLoading, estoque]);
 
   const invalidar = () => qc.invalidateQueries({ queryKey: ["meu-bar"] });
 
@@ -175,6 +182,23 @@ function MeuBarPage() {
     onError: (e: Error) => toast.error(e.message),
   });
 
+  const salvarSelecaoAssistente = async (selecionados: { id: string; nome: string }[]) => {
+    const ids = new Set(selecionados.map((item) => item.id));
+    const atuais = estoque ?? [];
+    const paraRemover = atuais.filter((item) => !ids.has(item.ingrediente_id));
+    const paraAdicionar = selecionados.filter(
+      (item) => !atuais.some((atual) => atual.ingrediente_id === item.id),
+    );
+
+    if (paraRemover.length > 0) {
+      await Promise.all(
+        paraRemover.map((item) => removerItemEstoque({ userId: user?.id, id: item.id })),
+      );
+    }
+    await adicionarFaltantesEstoque({ userId: user?.id, itens: paraAdicionar });
+    await invalidar();
+  };
+
   const avaliados = useMemo(
     () => avaliarDrinks(drinks, estoque ?? [], doseMl),
     [drinks, estoque, doseMl],
@@ -259,6 +283,25 @@ function MeuBarPage() {
               </Link>
             </Button>
           </aside>
+        )}
+
+        {assistenteAtivo && !isLoading && (
+          <AssistenteMeuBar
+            catalogo={(ingredientes ?? []).map(({ id, nome: nomeIngrediente }) => ({
+              id,
+              nome: nomeIngrediente,
+            }))}
+            onSalvar={salvarSelecaoAssistente}
+            onConcluir={() => {
+              setAssistenteAtivo(false);
+              toast.success("Seu bar está pronto.");
+              window.requestAnimationFrame(() =>
+                document
+                  .getElementById("resultados-meu-bar")
+                  ?.scrollIntoView({ behavior: "smooth" }),
+              );
+            }}
+          />
         )}
 
         {/* Tamanho da dose (perfil) */}
@@ -413,7 +456,7 @@ function MeuBarPage() {
             <p className="text-sm text-muted-foreground">Carregando seu bar...</p>
           ) : (estoque ?? []).length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Seu bar está vazio. Adicione a primeira garrafa acima.
+              Seu bar está vazio. Use o assistente acima ou adicione a primeira garrafa.
             </p>
           ) : (
             <EstoqueLista
@@ -428,6 +471,7 @@ function MeuBarPage() {
           )}
         </section>
 
+        <div id="resultados-meu-bar" className="space-y-10 scroll-mt-6">
         {/* Possíveis */}
         <SecaoRecolhivel
           id="possiveis-lista"
@@ -484,6 +528,7 @@ function MeuBarPage() {
             </ul>
           )}
         </SecaoRecolhivel>
+        </div>
       </main>
     </div>
   );
