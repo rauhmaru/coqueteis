@@ -3,4 +3,4 @@
 - [x] Listar achados de SEO que estão falhando
 - [x] Corrigir todos os achados atuais que forem acionáveis
 - [x] Validar as correções e atualizar o estado dos achados
-- [ ] Criar assistente de cadastro de ingredientes em 3 passos no Meu Bar
+- [x] Criar assistente de cadastro de ingredientes em 3 passos no Meu Bar

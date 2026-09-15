@@ -48,7 +48,7 @@ export function ImpactoCompras({ itens }: { itens: ImpactoIngrediente[] }) {
           className="inline-flex items-center gap-2 font-serif text-2xl text-foreground"
         >
           <TrendingUp className="h-6 w-6 shrink-0 text-primary" aria-hidden="true" />
-          Compre isto e desbloqueie mais receitas
+          Compre isto primeiro
         </h2>
         <p className="max-w-2xl text-sm text-muted-foreground">
           Ordenamos por impacto: os ingredientes que faltam para o maior número de receitas
