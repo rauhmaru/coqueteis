@@ -498,9 +498,6 @@ function MeuBarPage() {
           )}
         </SecaoRecolhivel>
 
-        {/* Ranking de impacto das compras */}
-        <ImpactoCompras itens={impacto} />
-
         {/* Quase lá */}
 
         <SecaoRecolhivel
@@ -528,6 +525,9 @@ function MeuBarPage() {
             </ul>
           )}
         </SecaoRecolhivel>
+
+        {/* Ranking de impacto das compras */}
+        <ImpactoCompras itens={impacto} />
         </div>
       </main>
     </div>
