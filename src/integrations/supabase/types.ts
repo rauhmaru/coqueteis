@@ -463,6 +463,51 @@ export type Database = {
           },
         ]
       }
+      mixologia_postagens: {
+        Row: {
+          conteudo_markdown: string
+          created_at: string
+          created_by: string
+          id: string
+          imagem_alt: string | null
+          imagem_url: string | null
+          publicado: boolean
+          publicado_em: string | null
+          resumo: string
+          slug: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          conteudo_markdown: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          imagem_alt?: string | null
+          imagem_url?: string | null
+          publicado?: boolean
+          publicado_em?: string | null
+          resumo: string
+          slug: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          conteudo_markdown?: string
+          created_at?: string
+          created_by?: string
+          id?: string
+          imagem_alt?: string | null
+          imagem_url?: string | null
+          publicado?: boolean
+          publicado_em?: string | null
+          resumo?: string
+          slug?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
