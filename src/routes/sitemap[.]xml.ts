@@ -38,9 +38,10 @@ async function drinkEntries(): Promise<SitemapEntry[]> {
     const supabase = createClient(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },
     });
-    const [{ data, error }, { data: categorias }] = await Promise.all([
+    const [{ data, error }, { data: categorias }, { data: postagens }] = await Promise.all([
       supabase.from("drinks").select("id, slug").order("nome"),
       supabase.from("drink_categorias").select("nome").order("nome"),
+      supabase.from("mixologia_postagens").select("slug").eq("publicado", true).order("publicado_em", { ascending: false }),
     ]);
     if (error || !data) return [];
     const drinks: SitemapEntry[] = data.map((d) => ({
@@ -53,7 +54,12 @@ async function drinkEntries(): Promise<SitemapEntry[]> {
       changefreq: "weekly" as const,
       priority: "0.7",
     }));
-    return [...cats, ...drinks];
+    const artigos: SitemapEntry[] = (postagens ?? []).map((p) => ({
+      path: `/mixologia/${p.slug}`,
+      changefreq: "monthly" as const,
+      priority: "0.7",
+    }));
+    return [...cats, ...drinks, ...artigos];
   } catch {
     return [];
   }

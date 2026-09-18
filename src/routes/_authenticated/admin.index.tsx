@@ -7,6 +7,7 @@ import {
   History,
   Merge,
   Martini,
+  Newspaper,
   Shield,
   ScrollText,
   TrendingUp,
@@ -66,6 +67,13 @@ function AdminPage() {
       desc: "Consultar o catálogo, editar receitas e cadastrar novas.",
       Icon: Martini,
       admin: false,
+    },
+    {
+      to: "/admin/mixologia" as const,
+      titulo: "Postagens de Mixologia",
+      desc: "Criar, revisar, publicar e remover artigos do guia de Mixologia.",
+      Icon: Newspaper,
+      admin: true,
     },
     {
       to: "/carta" as const,
