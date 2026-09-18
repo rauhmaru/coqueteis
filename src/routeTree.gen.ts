@@ -52,6 +52,7 @@ import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_authenticated/admin.categorias'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
+import { Route as AuthenticatedAdminMixologiaRouteImport } from './routes/_authenticated/admin.mixologia'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as ApiPublicWebVitalsRouteImport } from './routes/api/public/web-vitals'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
@@ -280,6 +281,12 @@ const AuthenticatedAdminMetricasRoute =
     path: '/metricas',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminMixologiaRoute =
+  AuthenticatedAdminMixologiaRouteImport.update({
+    id: '/mixologia',
+    path: '/mixologia',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   id: '/drinks/novo',
   path: '/drinks/novo',
@@ -356,6 +363,7 @@ export interface FileRoutesByFullPath {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -402,6 +410,7 @@ export interface FileRoutesByTo {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -454,6 +463,7 @@ export interface FileRoutesById {
   '/.mcp/invoke-tool/$tool': typeof Char91DotmcpChar93InvokeToolToolRoute
   '/_authenticated/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
+  '/_authenticated/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -506,6 +516,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/categorias'
     | '/admin/metricas'
+    | '/admin/mixologia'
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -552,6 +563,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/admin/categorias'
     | '/admin/metricas'
+    | '/admin/mixologia'
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -603,6 +615,7 @@ export interface FileRouteTypes {
     | '/.mcp/invoke-tool/$tool'
     | '/_authenticated/admin/categorias'
     | '/_authenticated/admin/metricas'
+    | '/_authenticated/admin/mixologia'
     | '/_authenticated/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -938,6 +951,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMetricasRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/mixologia': {
+      id: '/_authenticated/admin/mixologia'
+      path: '/mixologia'
+      fullPath: '/admin/mixologia'
+      preLoaderRoute: typeof AuthenticatedAdminMixologiaRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/drinks/novo': {
       id: '/_authenticated/drinks/novo'
       path: '/drinks/novo'
@@ -986,12 +1006,14 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriasRoute: typeof AuthenticatedAdminCategoriasRoute
   AuthenticatedAdminMetricasRoute: typeof AuthenticatedAdminMetricasRoute
+  AuthenticatedAdminMixologiaRoute: typeof AuthenticatedAdminMixologiaRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriasRoute: AuthenticatedAdminCategoriasRoute,
   AuthenticatedAdminMetricasRoute: AuthenticatedAdminMetricasRoute,
+  AuthenticatedAdminMixologiaRoute: AuthenticatedAdminMixologiaRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
