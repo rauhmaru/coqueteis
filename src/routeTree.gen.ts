@@ -37,6 +37,7 @@ import { Route as CartaVerRouteImport } from './routes/carta_.ver'
 import { Route as DrinksIndexRouteImport } from './routes/drinks.index'
 import { Route as DrinksIdRouteImport } from './routes/drinks.$id'
 import { Route as MixologiaIndexRouteImport } from './routes/mixologia.index'
+import { Route as MixologiaSlugRouteImport } from './routes/mixologia.$slug'
 import { Route as MixologiaBebidasRouteImport } from './routes/mixologia.bebidas'
 import { Route as MixologiaCoposRouteImport } from './routes/mixologia.copos'
 import { Route as MixologiaGeloRouteImport } from './routes/mixologia.gelo'
@@ -201,6 +202,11 @@ const MixologiaIndexRoute = MixologiaIndexRouteImport.update({
   path: '/',
   getParentRoute: () => MixologiaRoute,
 } as any)
+const MixologiaSlugRoute = MixologiaSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => MixologiaRoute,
+} as any)
 const MixologiaBebidasRoute = MixologiaBebidasRouteImport.update({
   id: '/bebidas',
   path: '/bebidas',
@@ -334,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/mixologia/$slug': typeof MixologiaSlugRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
   '/mixologia/gelo': typeof MixologiaGeloRoute
@@ -379,6 +386,7 @@ export interface FileRoutesByTo {
   '/usuarios': typeof AuthenticatedUsuariosRoute
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta/ver': typeof CartaVerRoute
+  '/mixologia/$slug': typeof MixologiaSlugRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
   '/mixologia/gelo': typeof MixologiaGeloRoute
@@ -430,6 +438,7 @@ export interface FileRoutesById {
   '/auth/nova-senha': typeof AuthNovaSenhaRoute
   '/carta_/ver': typeof CartaVerRoute
   '/drinks/$id': typeof DrinksIdRouteWithChildren
+  '/mixologia/$slug': typeof MixologiaSlugRoute
   '/mixologia/bebidas': typeof MixologiaBebidasRoute
   '/mixologia/copos': typeof MixologiaCoposRoute
   '/mixologia/gelo': typeof MixologiaGeloRoute
@@ -481,6 +490,7 @@ export interface FileRouteTypes {
     | '/auth/nova-senha'
     | '/carta/ver'
     | '/drinks/$id'
+    | '/mixologia/$slug'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
     | '/mixologia/gelo'
@@ -526,6 +536,7 @@ export interface FileRouteTypes {
     | '/usuarios'
     | '/auth/nova-senha'
     | '/carta/ver'
+    | '/mixologia/$slug'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
     | '/mixologia/gelo'
@@ -576,6 +587,7 @@ export interface FileRouteTypes {
     | '/auth/nova-senha'
     | '/carta_/ver'
     | '/drinks/$id'
+    | '/mixologia/$slug'
     | '/mixologia/bebidas'
     | '/mixologia/copos'
     | '/mixologia/gelo'
@@ -821,6 +833,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MixologiaIndexRouteImport
       parentRoute: typeof MixologiaRoute
     }
+    '/mixologia/$slug': {
+      id: '/mixologia/$slug'
+      path: '/$slug'
+      fullPath: '/mixologia/$slug'
+      preLoaderRoute: typeof MixologiaSlugRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
     '/mixologia/bebidas': {
       id: '/mixologia/bebidas'
       path: '/bebidas'
@@ -1047,6 +1066,7 @@ const DrinksRouteWithChildren =
   DrinksRoute._addFileChildren(DrinksRouteChildren)
 
 interface MixologiaRouteChildren {
+  MixologiaSlugRoute: typeof MixologiaSlugRoute
   MixologiaBebidasRoute: typeof MixologiaBebidasRoute
   MixologiaCoposRoute: typeof MixologiaCoposRoute
   MixologiaGeloRoute: typeof MixologiaGeloRoute
@@ -1060,6 +1080,7 @@ interface MixologiaRouteChildren {
 }
 
 const MixologiaRouteChildren: MixologiaRouteChildren = {
+  MixologiaSlugRoute: MixologiaSlugRoute,
   MixologiaBebidasRoute: MixologiaBebidasRoute,
   MixologiaCoposRoute: MixologiaCoposRoute,
   MixologiaGeloRoute: MixologiaGeloRoute,

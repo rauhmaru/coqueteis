@@ -1,4 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
+import { listarPostagensPublicadas } from "@/lib/mixologia-postagens.functions";
+import { DrinkImage } from "@/components/drink-image";
 import { SiteHeader } from "@/components/site-header";
 import origemImg from "@/assets/mixologia/origem.jpg";
 import tiposImg from "@/assets/mixologia/tipos.jpg";
@@ -23,6 +25,7 @@ const topicos = [
 ] as const;
 
 export const Route = createFileRoute("/mixologia/")({
+  loader: () => listarPostagensPublicadas(),
   head: () => ({
     meta: [
       { property: "og:url", content: "https://coqueteis.lovable.app/mixologia" },
@@ -45,6 +48,7 @@ export const Route = createFileRoute("/mixologia/")({
 });
 
 function MixologiaIndex() {
+  const postagens = Route.useLoaderData();
   return (
     <div className="min-h-dvh">
       <SiteHeader />
@@ -82,6 +86,19 @@ function MixologiaIndex() {
             </Link>
           ))}
         </section>
+        {postagens.length > 0 && (
+          <section aria-labelledby="postagens-mixologia" className="space-y-5 border-t border-border pt-10">
+            <div><p className="text-xs uppercase tracking-[0.3em] text-primary">Novos conteúdos</p><h2 id="postagens-mixologia" className="mt-2 font-serif text-3xl text-foreground">Postagens de Mixologia</h2></div>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {postagens.map((postagem) => (
+                <Link key={postagem.id} to="/mixologia/$slug" params={{ slug: postagem.slug }} className="group overflow-hidden rounded-lg border border-border bg-card transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring">
+                  <DrinkImage path={postagem.imagem_url} alt={postagem.imagem_alt ?? postagem.titulo} width={400} height={225} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="aspect-video w-full object-cover" />
+                  <div className="space-y-2 p-5"><h3 className="font-serif text-xl text-foreground transition-colors group-hover:text-primary">{postagem.titulo}</h3><p className="line-clamp-3 text-sm text-muted-foreground">{postagem.resumo}</p></div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
     </div>
   );
