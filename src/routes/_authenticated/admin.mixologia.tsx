@@ -41,6 +41,14 @@ type FormState = {
 
 const vazio: FormState = { titulo: "", slug: "", resumo: "", conteudo_markdown: "## Introdução\n\nComece a escrever aqui.", imagem_url: "", imagem_alt: "", publicado: false };
 
+const formatarData = (data: string) => new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+}).format(new Date(data));
+
 function AdminMixologiaPage() {
   const { isAdmin } = useAuth();
   const queryClient = useQueryClient();
