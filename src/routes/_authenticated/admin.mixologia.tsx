@@ -2,7 +2,7 @@ import { useMemo, useRef, useState, type FormEvent } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { Bold, Eye, Heading2, Italic, Link2, List, Loader2, Pencil, Plus, Search, Shield, Trash2, X } from "lucide-react";
+import { Bold, CalendarDays, Eye, Heading2, Italic, Link2, List, Loader2, Pencil, Plus, Search, Send, Shield, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/site-header";
 import { MixologiaMarkdown } from "@/components/mixologia-markdown";
@@ -54,11 +54,12 @@ function AdminMixologiaPage() {
   const [saving, setSaving] = useState(false);
   const [confirm, setConfirm] = useState<MixologiaPostagem | null>(null);
   const [removing, setRemoving] = useState(false);
+  const [publishingId, setPublishingId] = useState<string | null>(null);
 
   const query = useQuery({ queryKey: ["admin-mixologia-postagens"], queryFn: () => listar(), enabled: isAdmin });
   const postagens = useMemo(() => {
     const termo = busca.trim().toLocaleLowerCase("pt-BR");
-    return (query.data ?? []).filter((p) => !termo || `${p.titulo} ${p.resumo} ${p.slug}`.toLocaleLowerCase("pt-BR").includes(termo));
+    return (query.data ?? []).filter((p) => !termo || `${p.titulo} ${p.resumo} ${p.slug} ${p.conteudo_markdown}`.toLocaleLowerCase("pt-BR").includes(termo));
   }, [busca, query.data]);
 
   const setCampo = <K extends keyof FormState>(campo: K, valor: FormState[K]) => setForm((atual) => ({ ...atual, [campo]: valor }));
@@ -110,12 +111,42 @@ function AdminMixologiaPage() {
     } finally { setRemoving(false); }
   };
 
+  const publicar = async (postagem: MixologiaPostagem) => {
+    if (!postagem.imagem_url || !postagem.imagem_alt || postagem.imagem_alt.length < 3) {
+      toast.error("Adicione a imagem e sua descrição antes de publicar.");
+      editar(postagem);
+      return;
+    }
+    setPublishingId(postagem.id);
+    try {
+      await salvar({ data: {
+        id: postagem.id,
+        titulo: postagem.titulo,
+        slug: postagem.slug,
+        resumo: postagem.resumo,
+        conteudo_markdown: postagem.conteudo_markdown,
+        imagem_url: postagem.imagem_url,
+        imagem_alt: postagem.imagem_alt,
+        publicado: true,
+      } });
+      toast.success("Postagem publicada.");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["admin-mixologia-postagens"] }),
+        queryClient.invalidateQueries({ queryKey: ["mixologia-postagens"] }),
+      ]);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível publicar a postagem.");
+    } finally {
+      setPublishingId(null);
+    }
+  };
+
   if (!isAdmin) return <Restrito />;
 
   return (
     <div className="min-h-dvh"><SiteHeader /><main id="conteudo" className="mx-auto max-w-6xl space-y-8 px-4 py-10">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div><h1 className="font-serif text-3xl text-foreground sm:text-4xl">Postagens de Mixologia</h1><p className="mt-2 text-sm text-muted-foreground">Escreva em Markdown, revise a prévia e publique no guia.</p></div>
+        <div><h1 className="font-serif text-3xl text-foreground sm:text-4xl">Revisão de Mixologia</h1><p className="mt-2 text-sm text-muted-foreground">Revise títulos, conteúdo e datas antes de publicar no guia.</p></div>
         {!editing && <Button type="button" onClick={novo}><Plus className="mr-2 h-4 w-4" aria-hidden="true" />Nova postagem</Button>}
       </header>
 
@@ -150,8 +181,8 @@ function AdminMixologiaPage() {
         </form>
       ) : (
         <section aria-labelledby="lista-postagens" className="space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><h2 id="lista-postagens" className="text-lg font-semibold">Postagens cadastradas</h2><div className="relative w-full sm:max-w-xs"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" /><Input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Buscar postagem" aria-label="Buscar postagem" className="pl-9" /></div></div>
-          {query.isLoading ? <p className="flex justify-center gap-2 py-12 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Carregando…</p> : query.error ? <p className="rounded-lg border border-destructive/40 p-4 text-destructive">{query.error.message}</p> : postagens.length === 0 ? <p className="rounded-lg border border-border p-10 text-center text-muted-foreground">Nenhuma postagem encontrada.</p> : <ul className="divide-y divide-border overflow-hidden rounded-lg border border-border">{postagens.map((p) => <li key={p.id} className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="truncate font-semibold">{p.titulo}</h3><span className={`rounded-full px-2 py-0.5 text-xs ${p.publicado ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>{p.publicado ? "Publicada" : "Rascunho"}</span></div><p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.resumo}</p></div><div className="flex shrink-0 gap-1">{p.publicado && <Button asChild variant="ghost" size="icon"><Link to="/mixologia/$slug" params={{ slug: p.slug }} aria-label={`Ver ${p.titulo}`}><Eye className="h-4 w-4" /></Link></Button>}<Button type="button" variant="ghost" size="icon" onClick={() => editar(p)} aria-label={`Editar ${p.titulo}`}><Pencil className="h-4 w-4" /></Button><Button type="button" variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setConfirm(p)} aria-label={`Remover ${p.titulo}`}><Trash2 className="h-4 w-4" /></Button></div></li>)}</ul>}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"><div><h2 id="lista-postagens" className="text-lg font-semibold">Fila de revisão</h2><p className="mt-1 text-sm text-muted-foreground">{postagens.length} {postagens.length === 1 ? "postagem" : "postagens"} — rascunhos aparecem primeiro.</p></div><div className="relative w-full sm:max-w-xs"><Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" aria-hidden="true" /><Input value={busca} onChange={(e) => setBusca(e.target.value)} placeholder="Buscar no título ou conteúdo" aria-label="Buscar no título ou conteúdo" className="pl-9" /></div></div>
+          {query.isLoading ? <p className="flex justify-center gap-2 py-12 text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" />Carregando…</p> : query.error ? <p className="rounded-lg border border-destructive/40 p-4 text-destructive">{query.error.message}</p> : postagens.length === 0 ? <p className="rounded-lg border border-border p-10 text-center text-muted-foreground">Nenhuma postagem encontrada.</p> : <ul className="space-y-4">{postagens.map((p) => <li key={p.id} className="rounded-lg border border-border bg-card p-4 sm:p-6"><header className="flex flex-col gap-3 border-b border-border pb-4 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-serif text-xl text-foreground sm:text-2xl">{p.titulo}</h3><span className={`rounded-full px-2 py-0.5 text-xs ${p.publicado ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}>{p.publicado ? "Publicada" : "Aguardando revisão"}</span></div><div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground"><span className="inline-flex items-center gap-1.5"><CalendarDays className="h-3.5 w-3.5" aria-hidden="true" />Criada em {formatarData(p.created_at)}</span><span>Atualizada em {formatarData(p.updated_at)}</span>{p.publicado_em && <span>Publicada em {formatarData(p.publicado_em)}</span>}</div></div><div className="flex shrink-0 gap-1">{p.publicado && <Button asChild variant="ghost" size="icon"><Link to="/mixologia/$slug" params={{ slug: p.slug }} aria-label={`Ver ${p.titulo}`}><Eye className="h-4 w-4" /></Link></Button>}<Button type="button" variant="ghost" size="icon" onClick={() => editar(p)} aria-label={`Editar ${p.titulo}`}><Pencil className="h-4 w-4" /></Button><Button type="button" variant="ghost" size="icon" className="text-destructive hover:text-destructive" onClick={() => setConfirm(p)} aria-label={`Remover ${p.titulo}`}><Trash2 className="h-4 w-4" /></Button></div></header><p className="mt-4 text-sm font-medium text-muted-foreground">{p.resumo}</p><div className="prose-mixologia mt-5 border-t border-border pt-5"><MixologiaMarkdown conteudo={p.conteudo_markdown} /></div>{!p.publicado && <footer className="mt-6 flex flex-col gap-2 border-t border-border pt-4 sm:flex-row sm:justify-end"><Button type="button" variant="outline" onClick={() => editar(p)}><Pencil className="mr-2 h-4 w-4" />Ajustar conteúdo</Button><Button type="button" onClick={() => publicar(p)} disabled={publishingId === p.id}>{publishingId === p.id ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}Publicar após revisão</Button></footer>}</li>)}</ul>}
         </section>
       )}
     </main>
