@@ -59,7 +59,7 @@ export const listarPostagensPublicadas = createServerFn({ method: "GET" }).handl
 );
 
 export const obterPostagemPublicada = createServerFn({ method: "GET" })
-  .inputValidator((input: unknown) => slugSchema.parse(input))
+  .validator((input: unknown) => slugSchema.parse(input))
   .handler(async ({ data }): Promise<MixologiaPostagem | null> => {
     const { data: postagem, error } = await publicClient()
       .from("mixologia_postagens")
@@ -85,7 +85,7 @@ export const listarPostagensAdmin = createServerFn({ method: "GET" })
 
 export const salvarPostagem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => postagemSchema.parse(input))
+  .validator((input: unknown) => postagemSchema.parse(input))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context.supabase, context.userId);
     if (data.publicado && (!data.imagem_url || data.imagem_alt.length < 3)) {
@@ -112,7 +112,7 @@ export const salvarPostagem = createServerFn({ method: "POST" })
 
 export const removerPostagem = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .inputValidator((input: unknown) => idSchema.parse(input))
+  .validator((input: unknown) => idSchema.parse(input))
   .handler(async ({ data, context }) => {
     await ensureAdmin(context.supabase, context.userId);
     const { error } = await context.supabase.from("mixologia_postagens").delete().eq("id", data.id);
