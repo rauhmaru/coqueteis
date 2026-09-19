@@ -78,6 +78,7 @@ export const listarPostagensAdmin = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("mixologia_postagens")
       .select("id, titulo, slug, resumo, conteudo_markdown, imagem_url, imagem_alt, publicado, publicado_em, created_by, created_at, updated_at")
+      .order("publicado", { ascending: true })
       .order("updated_at", { ascending: false });
     if (error) throw new Error(error.message);
     return data ?? [];
