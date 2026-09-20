@@ -332,7 +332,13 @@ export function useDrinkFilters({
   const [openDif, setOpenDif] = useState((initialFilters?.dificuldades.length ?? 0) > 0);
   const [openCat, setOpenCat] = useState((initialFilters?.categorias.length ?? 0) > 0);
   const [openQtd, setOpenQtd] = useState(initialFilters?.qtd !== null && initialFilters?.qtd !== undefined);
-  const primeiraEmissao = useRef(true);
+  const ultimaEmissao = useRef(JSON.stringify({
+    ingredientes: initialFilters?.ingredientes ?? [],
+    categorias: initialFilters?.categorias ?? [],
+    dificuldades: initialFilters?.dificuldades ?? [],
+    qtd: initialFilters?.qtd ?? null,
+    comparador: initialFilters?.comparador ?? "igual",
+  }));
 
   const { data: indice } = useQuery(drinksIndiceQuery);
 
@@ -529,10 +535,9 @@ export function useDrinkFilters({
   );
 
   useEffect(() => {
-    if (primeiraEmissao.current) {
-      primeiraEmissao.current = false;
-      return;
-    }
+    const chave = JSON.stringify(filtrosServidor);
+    if (ultimaEmissao.current === chave) return;
+    ultimaEmissao.current = chave;
     onFiltersChange?.(filtrosServidor);
   }, [filtrosServidor, onFiltersChange]);
 
