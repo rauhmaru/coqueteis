@@ -53,6 +53,7 @@ export type DrinkLista = {
   created_by: string | null;
   /** contagem agregada na view drinks_lista (sem trazer todos os vínculos) */
   total_ingredientes?: number;
+  total_curtidas?: number;
   drink_ingredientes: {
     ingrediente_id: string;
     unidade?: string | null;
@@ -174,9 +175,14 @@ export type DrinksPagina = { total: number; drinks: DrinkLista[] };
  * Busca paginada no banco: filtros aplicados no servidor e projeção enxuta
  * (buscar_drinks_lista) — sem textos longos nem colunas fora do card.
  */
-export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number) =>
+export const drinksPaginaQuery = (
+  filtros: DrinkFiltrosServidor,
+  limite: number,
+  ordem = "nome-asc",
+  termo = "",
+) =>
   queryOptions({
-    queryKey: ["drinks", "pagina", filtros, limite],
+    queryKey: ["drinks", "pagina", filtros, limite, ordem, termo],
     ...CACHE_DRINKS,
     queryFn: async (): Promise<DrinksPagina> => {
       const { data, error } = await supabase.rpc("buscar_drinks_lista" as "buscar_drinks", {
@@ -187,6 +193,8 @@ export const drinksPaginaQuery = (filtros: DrinkFiltrosServidor, limite: number)
         _comparador: filtros.comparador,
         _limite: limite,
         _offset: 0,
+        _ordem: ordem,
+        _termo: termo,
       });
       if (error) throw error;
       const r = (data ?? { total: 0, drinks: [] }) as unknown as DrinksPagina;
