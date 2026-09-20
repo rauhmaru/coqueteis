@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
 import { keepPreviousData, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { ArrowLeft, Loader2, Martini } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
@@ -7,9 +8,11 @@ import { DrinkCatalogCard } from "@/components/drink-catalog-card";
 import { DrinkOrderSelect } from "@/components/drink-order-select";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useViewMode } from "@/hooks/use-view-mode";
-import { drinkCategoriasQuery, drinksPaginaQuery } from "@/lib/queries";
-import { nomeDaOrdem, ordemDrinksValida, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
+import { drinkCategoriasQuery, drinksPaginaQuery, ingredientesQuery } from "@/lib/queries";
+import { nomeDaOrdem, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
 import { slugify } from "@/lib/slug";
+import { useDrinkFilters } from "@/components/drink-filters";
+import { filtrosDaBusca, parametrosDosFiltros, validarBuscaDrinks } from "@/lib/drink-filter-search";
 
 const POR_PAGINA = 24;
 const filtrosCategoria = (categoriaId: string) => ({
@@ -23,13 +26,7 @@ const filtrosCategoria = (categoriaId: string) => ({
 type LoaderData = { nome: string; id: string; total: number };
 
 export const Route = createFileRoute("/drinks/categoria/$categoria")({
-  validateSearch: (search: Record<string, unknown>): { pagina?: number; ordem?: ReturnType<typeof ordemDrinksValida> } => {
-    const pagina = Number(search["pagina"]);
-    return {
-      pagina: Number.isFinite(pagina) && pagina >= 1 ? Math.min(Math.floor(pagina), 100) : 1,
-      ordem: ordemDrinksValida(search["ordem"]),
-    };
-  },
+  validateSearch: validarBuscaDrinks,
   head: ({ params, loaderData }) => {
     const dados = loaderData as unknown as LoaderData | undefined;
     const url = `https://coqueteis.lovable.app/drinks/categoria/${params.categoria}`;
@@ -48,7 +45,10 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
     };
   },
   loader: async ({ context, params }): Promise<LoaderData> => {
-    const categorias = await context.queryClient.ensureQueryData(drinkCategoriasQuery);
+    const [categorias] = await Promise.all([
+      context.queryClient.ensureQueryData(drinkCategoriasQuery),
+      context.queryClient.ensureQueryData(ingredientesQuery),
+    ]);
     const categoria = categorias.find((item) => slugify(item.nome) === params.categoria);
     if (!categoria) throw notFound();
     const data = await context.queryClient.ensureQueryData(
@@ -63,16 +63,29 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
 
 function CategoriaPage() {
   const { categoria: slug } = Route.useParams();
-  const { pagina = 1, ordem = ORDEM_PADRAO } = Route.useSearch();
+  const search = Route.useSearch();
+  const { pagina = 1, ordem = ORDEM_PADRAO, q = "" } = search;
   const navigate = useNavigate({ from: "/drinks/categoria/$categoria" });
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
+  const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const categoria = categorias.find((item) => slugify(item.nome) === slug);
   const [viewMode, setViewMode] = useViewMode(`categoria:${slug}`, "grid");
   if (!categoria) return null;
 
+  const filtrosIniciais = filtrosDaBusca(search, ingredientes, categorias);
+  const atualizarFiltros = useCallback((filtros: typeof filtrosIniciais) => navigate({
+    search: (prev) => ({ ...prev, ...parametrosDosFiltros(filtros, ingredientes, categorias), pagina: 1 }),
+    replace: true,
+    resetScroll: false,
+  }), [categorias, ingredientes, navigate]);
+  const { element: filtrosUI, filtrosServidor: filtrosAdicionais, ativos } = useDrinkFilters({
+    ingredientes, categorias, idPrefix: `categoria-${slug}-filtro`, initialFilters: filtrosIniciais, onFiltersChange: atualizarFiltros,
+  });
+  const filtrosServidor = { ...filtrosAdicionais, categorias: [...new Set([categoria.id, ...filtrosAdicionais.categorias])] };
+
   const limite = pagina * POR_PAGINA;
   const { data, isFetching } = useQuery({
-    ...drinksPaginaQuery(filtrosCategoria(categoria.id), limite, ordem),
+    ...drinksPaginaQuery(filtrosServidor, limite, ordem, q),
     placeholderData: keepPreviousData,
   });
   const lista = data?.drinks ?? [];
@@ -97,6 +110,11 @@ function CategoriaPage() {
             <ViewModeToggle value={viewMode} onChange={setViewMode} />
           </div>
         </header>
+        <CampoBuscaDrinks id={`busca-categoria-${slug}`} value={q} onChange={(valor) => navigate({ search: (prev) => ({ ...prev, q: valor || undefined, pagina: 1 }), replace: true, resetScroll: false })} className="max-w-xl" />
+        <details open={ativos > 0} className="rounded-xl border border-border bg-card p-4">
+          <summary className="min-h-11 cursor-pointer font-medium">Filtros{ativos > 0 ? ` (${ativos})` : ""}</summary>
+          <div className="pt-4">{filtrosUI}</div>
+        </details>
         <p aria-live="polite" className="sr-only">{total} receitas. Ordenado por {nomeDaOrdem(ordem)}.</p>
         {total === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center">

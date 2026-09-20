@@ -8,21 +8,20 @@ import { DrinkOrderSelect } from "@/components/drink-order-select";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
-import { drinksPaginaQuery } from "@/lib/queries";
-import { nomeDaOrdem, ordemDrinksValida, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
+import { drinkCategoriasQuery, drinksPaginaQuery, ingredientesQuery } from "@/lib/queries";
+import { nomeDaOrdem, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { useDrinkFilters } from "@/components/drink-filters";
+import { filtrosDaBusca, parametrosDosFiltros, validarBuscaDrinks } from "@/lib/drink-filter-search";
 
 const POR_PAGINA = 24;
-const FILTROS = { ingredientes: [] as string[], categorias: [] as string[], dificuldades: [] as string[], qtd: null, comparador: "igual" };
-
 export const Route = createFileRoute("/busca")({
-  validateSearch: (search: Record<string, unknown>): { q?: string; pagina?: number; ordem?: ReturnType<typeof ordemDrinksValida> } => {
-    const pagina = Number(search["pagina"]);
-    return {
-      q: typeof search["q"] === "string" ? search["q"].slice(0, 100) : "",
-      pagina: Number.isFinite(pagina) && pagina >= 1 ? Math.min(Math.floor(pagina), 100) : 1,
-      ordem: ordemDrinksValida(search["ordem"]),
-    };
-  },
+  validateSearch: validarBuscaDrinks,
+  loader: ({ context }) => Promise.all([
+    context.queryClient.ensureQueryData(ingredientesQuery),
+    context.queryClient.ensureQueryData(drinkCategoriasQuery),
+  ]),
   head: () => ({
     meta: [
       { title: "Buscar receitas de drinks — Destilados & Coquetéis" },
@@ -38,12 +37,24 @@ export const Route = createFileRoute("/busca")({
 });
 
 function BuscaPage() {
-  const { q = "", pagina = 1, ordem = ORDEM_PADRAO } = Route.useSearch();
+  const search = Route.useSearch();
+  const { q = "", pagina = 1, ordem = ORDEM_PADRAO } = search;
   const navigate = useNavigate({ from: "/busca" });
+  const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
+  const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
+  const filtrosIniciais = filtrosDaBusca(search, ingredientes, categorias);
+  const atualizarFiltros = useCallback((filtros: typeof filtrosIniciais) => navigate({
+    search: (prev) => ({ ...prev, ...parametrosDosFiltros(filtros, ingredientes, categorias), pagina: 1 }),
+    replace: true,
+    resetScroll: false,
+  }), [categorias, ingredientes, navigate]);
+  const { element: filtrosUI, filtrosServidor, ativos } = useDrinkFilters({
+    ingredientes, categorias, idPrefix: "busca-filtro", initialFilters: filtrosIniciais, onFiltersChange: atualizarFiltros,
+  });
   const [viewMode, setViewMode] = useViewMode("busca", "grid");
   const limite = pagina * POR_PAGINA;
   const { data, isFetching } = useQuery({
-    ...drinksPaginaQuery(FILTROS, limite, ordem, q),
+    ...drinksPaginaQuery(filtrosServidor, limite, ordem, q),
     placeholderData: keepPreviousData,
   });
   const lista = data?.drinks ?? [];
@@ -65,6 +76,10 @@ function BuscaPage() {
             <ViewModeToggle value={viewMode} onChange={setViewMode} />
           </div>
         </div>
+        <details open={ativos > 0} className="rounded-xl border border-border bg-card p-4">
+          <summary className="min-h-11 cursor-pointer font-medium">Filtros{ativos > 0 ? ` (${ativos})` : ""}</summary>
+          <div className="pt-4">{filtrosUI}</div>
+        </details>
         <p aria-live="polite" className="sr-only">{q.trim() ? `${total} resultados. Ordenado por ${nomeDaOrdem(ordem)}.` : ""}</p>
         {q.trim() && total === 0 ? (
           <div className="rounded-xl border border-dashed border-border p-12 text-center">

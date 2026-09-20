@@ -1,7 +1,7 @@
 import { drinkParam } from "@/lib/slug";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useQueryClient, useQuery, keepPreviousData } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, Martini, ArrowUp, Loader2, SlidersHorizontal, Check, Wine } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -34,6 +34,7 @@ import { estoqueQuery } from "@/lib/estoque";
 import { coberturaDrink, idsDoEstoque } from "@/lib/estoque-cobertura";
 import { SeloEstoque } from "@/components/selo-estoque";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { filtrosDaBusca, parametrosDosFiltros, validarBuscaDrinks } from "@/lib/drink-filter-search";
 
 const POR_PAGINA = 24;
 
@@ -46,17 +47,7 @@ const FILTROS_VAZIOS = {
 };
 
 export const Route = createFileRoute("/drinks/")({
-  validateSearch: (
-    search: Record<string, unknown>,
-  ): { pagina?: number; estoque?: boolean; ordem?: ReturnType<typeof ordemDrinksValida> } => {
-    const n = Number(search["pagina"]);
-    const estoque = search["estoque"] === true || search["estoque"] === "1";
-    return {
-      pagina: Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 100) : 1,
-      ...(estoque ? { estoque: true } : {}),
-      ordem: ordemDrinksValida(search["ordem"]),
-    };
-  },
+  validateSearch: validarBuscaDrinks,
   head: () => ({
     meta: [
       { property: "og:url", content: "https://coqueteis.lovable.app/drinks" },
@@ -142,14 +133,14 @@ function VoltarAoTopo() {
 function DrinksList() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
-  const { pagina = 1, estoque: soPossiveis = false, ordem = ORDEM_PADRAO } = Route.useSearch();
+  const search = Route.useSearch();
+  const { pagina = 1, estoque: soPossiveis = false, ordem = ORDEM_PADRAO, q: busca = "" } = search;
   const navigate = useNavigate({ from: "/drinks" });
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
   const [viewMode, setViewMode] = useViewMode("drinks", "grid");
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [filtrosAbertos, setFiltrosAbertos] = useState(false);
-  const [busca, setBusca] = useState("");
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
     const mql = window.matchMedia("(min-width: 1024px)");
@@ -158,20 +149,21 @@ function DrinksList() {
     mql.addEventListener("change", sync);
     return () => mql.removeEventListener("change", sync);
   }, []);
+  const filtrosIniciais = filtrosDaBusca(search, ingredientes, categorias);
+  const atualizarFiltros = useCallback((filtros: typeof filtrosIniciais) => {
+    navigate({
+      search: (prev) => ({ ...prev, ...parametrosDosFiltros(filtros, ingredientes, categorias), pagina: 1 }),
+      replace: true,
+      resetScroll: false,
+    });
+  }, [categorias, ingredientes, navigate]);
   const { element: filtrosUI, temFiltro, filtrosServidor, ativos, limparTudo } = useDrinkFilters({
     ingredientes,
     categorias,
     idPrefix: "drinks-filtro",
+    initialFilters: filtrosIniciais,
+    onFiltersChange: atualizarFiltros,
   });
-
-  // Ao mudar filtros, volta para a primeira página (sem poluir o histórico).
-  const chaveFiltros = JSON.stringify(filtrosServidor);
-  const chaveAnterior = useRef(chaveFiltros);
-  useEffect(() => {
-    if (chaveAnterior.current === chaveFiltros) return;
-    chaveAnterior.current = chaveFiltros;
-    navigate({ search: (prev) => ({ ...prev, pagina: 1 }), replace: true });
-  }, [chaveFiltros, navigate]);
 
   const { data: estoque } = useQuery(estoqueQuery(user?.id));
   const estoqueIds = idsDoEstoque(estoque);
@@ -259,7 +251,7 @@ function DrinksList() {
         <CampoBuscaDrinks
           id="drinks-busca"
           value={busca}
-          onChange={setBusca}
+          onChange={(valor) => navigate({ search: (prev) => ({ ...prev, q: valor || undefined, pagina: 1 }), replace: true, resetScroll: false })}
           className="max-w-xl"
         />
 
