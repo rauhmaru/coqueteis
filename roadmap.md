@@ -6,4 +6,4 @@
 - [x] Criar assistente de cadastro de ingredientes em 3 passos no Meu Bar
 - [x] Criar gestão administrativa de postagens de Mixologia
 - [x] Adicionar ordenação explícita ao catálogo, busca e categorias
-- [ ] Persistir filtros do catálogo, busca e categorias na URL
+- [x] Persistir filtros do catálogo, busca e categorias na URL

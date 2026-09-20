@@ -71,7 +71,6 @@ function CategoriaPage() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const categoria = categorias.find((item) => slugify(item.nome) === slug);
   const [viewMode, setViewMode] = useViewMode(`categoria:${slug}`, "grid");
-  if (!categoria) return null;
 
   const filtrosIniciais = filtrosDaBusca(search, ingredientes, categorias);
   const atualizarFiltros = useCallback((filtros: typeof filtrosIniciais) => navigate({
@@ -82,7 +81,8 @@ function CategoriaPage() {
   const { element: filtrosUI, filtrosServidor: filtrosAdicionais, ativos } = useDrinkFilters({
     ingredientes, categorias, idPrefix: `categoria-${slug}-filtro`, initialFilters: filtrosIniciais, onFiltersChange: atualizarFiltros,
   });
-  const filtrosServidor = { ...filtrosAdicionais, categorias: [...new Set([categoria.id, ...filtrosAdicionais.categorias])] };
+  const filtrosServidor = { ...filtrosAdicionais, categorias: [...new Set([...(categoria ? [categoria.id] : []), ...filtrosAdicionais.categorias])] };
+  if (!categoria) return null;
 
   const limite = pagina * POR_PAGINA;
   const { data, isFetching } = useQuery({
