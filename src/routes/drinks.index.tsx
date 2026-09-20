@@ -26,7 +26,7 @@ import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { DrinkOrderSelect } from "@/components/drink-order-select";
-import { nomeDaOrdem, ordemDrinksValida, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
+import { nomeDaOrdem, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
 import { useDrinkFilters } from "@/components/drink-filters";
 import { CampoBuscaDrinks } from "@/components/drink-search";
 import { combina } from "@/lib/busca";
@@ -269,6 +269,7 @@ function DrinksList() {
                     ...(soPossiveis ? { estoque: undefined } : { estoque: true }),
                   }),
                   replace: true,
+                  resetScroll: false,
                 })
               }
               className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${

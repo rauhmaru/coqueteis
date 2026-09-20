@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/site-header";
 import { Button } from "@/components/ui/button";
 import { DrinkCatalogCard } from "@/components/drink-catalog-card";
 import { DrinkOrderSelect } from "@/components/drink-order-select";
+import { CampoBuscaDrinks } from "@/components/drink-search";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { drinkCategoriasQuery, drinksPaginaQuery, ingredientesQuery } from "@/lib/queries";
