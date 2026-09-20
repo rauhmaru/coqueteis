@@ -23,7 +23,7 @@ const filtrosCategoria = (categoriaId: string) => ({
 type LoaderData = { nome: string; id: string; total: number };
 
 export const Route = createFileRoute("/drinks/categoria/$categoria")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { pagina?: number; ordem?: ReturnType<typeof ordemDrinksValida> } => {
     const pagina = Number(search["pagina"]);
     return {
       pagina: Number.isFinite(pagina) && pagina >= 1 ? Math.min(Math.floor(pagina), 100) : 1,
@@ -47,7 +47,10 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
       links: [{ rel: "canonical", href: url }],
     };
   },
-  loaderDeps: ({ search }) => ({ pagina: search.pagina, ordem: search.ordem }),
+  loaderDeps: ({ search: { pagina, ordem } }) => ({
+    pagina: pagina ?? 1,
+    ordem: ordem ?? ORDEM_PADRAO,
+  }),
   loader: async ({ context, params, deps }): Promise<LoaderData> => {
     const categorias = await context.queryClient.ensureQueryData(drinkCategoriasQuery);
     const categoria = categorias.find((item) => slugify(item.nome) === params.categoria);
@@ -64,7 +67,7 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
 
 function CategoriaPage() {
   const { categoria: slug } = Route.useParams();
-  const { pagina, ordem } = Route.useSearch();
+  const { pagina = 1, ordem = ORDEM_PADRAO } = Route.useSearch();
   const navigate = useNavigate({ from: "/drinks/categoria/$categoria" });
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
   const categoria = categorias.find((item) => slugify(item.nome) === slug);

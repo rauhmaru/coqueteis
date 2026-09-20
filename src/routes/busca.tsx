@@ -9,13 +9,13 @@ import { ViewModeToggle } from "@/components/view-mode-toggle";
 import { Button } from "@/components/ui/button";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { drinksPaginaQuery } from "@/lib/queries";
-import { nomeDaOrdem, ordemDrinksValida } from "@/lib/ordenacao-drinks";
+import { nomeDaOrdem, ordemDrinksValida, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
 
 const POR_PAGINA = 24;
 const FILTROS = { ingredientes: [] as string[], categorias: [] as string[], dificuldades: [] as string[], qtd: null, comparador: "igual" };
 
 export const Route = createFileRoute("/busca")({
-  validateSearch: (search: Record<string, unknown>) => {
+  validateSearch: (search: Record<string, unknown>): { q?: string; pagina?: number; ordem?: ReturnType<typeof ordemDrinksValida> } => {
     const pagina = Number(search["pagina"]);
     return {
       q: typeof search["q"] === "string" ? search["q"].slice(0, 100) : "",
@@ -38,7 +38,7 @@ export const Route = createFileRoute("/busca")({
 });
 
 function BuscaPage() {
-  const { q, pagina, ordem } = Route.useSearch();
+  const { q = "", pagina = 1, ordem = ORDEM_PADRAO } = Route.useSearch();
   const navigate = useNavigate({ from: "/busca" });
   const [viewMode, setViewMode] = useViewMode("busca", "grid");
   const limite = pagina * POR_PAGINA;
