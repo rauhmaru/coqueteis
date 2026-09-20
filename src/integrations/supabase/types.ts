@@ -698,6 +698,7 @@ export type Database = {
           imagem_url: string | null
           nome: string | null
           slug: string | null
+          total_curtidas: number | null
           total_ingredientes: number | null
         }
         Insert: {
@@ -707,6 +708,7 @@ export type Database = {
           imagem_url?: string | null
           nome?: string | null
           slug?: string | null
+          total_curtidas?: never
           total_ingredientes?: never
         }
         Update: {
@@ -716,6 +718,7 @@ export type Database = {
           imagem_url?: string | null
           nome?: string | null
           slug?: string | null
+          total_curtidas?: never
           total_ingredientes?: never
         }
         Relationships: []
@@ -735,18 +738,33 @@ export type Database = {
         }
         Returns: Json
       }
-      buscar_drinks_lista: {
-        Args: {
-          _categorias?: string[]
-          _comparador?: string
-          _dificuldades?: string[]
-          _ingredientes?: string[]
-          _limite?: number
-          _offset?: number
-          _qtd?: number
-        }
-        Returns: Json
-      }
+      buscar_drinks_lista:
+        | {
+            Args: {
+              _categorias?: string[]
+              _comparador?: string
+              _dificuldades?: string[]
+              _ingredientes?: string[]
+              _limite?: number
+              _offset?: number
+              _qtd?: number
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              _categorias?: string[]
+              _comparador?: string
+              _dificuldades?: string[]
+              _ingredientes?: string[]
+              _limite?: number
+              _offset?: number
+              _ordem?: string
+              _qtd?: number
+              _termo?: string
+            }
+            Returns: Json
+          }
       can_edit: { Args: { _user_id: string }; Returns: boolean }
       has_role: {
         Args: {

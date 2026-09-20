@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SplatRouteImport } from './routes/$'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BuscaRouteImport } from './routes/busca'
 import { Route as CalculadoraAbvRouteImport } from './routes/calculadora-abv'
 import { Route as CartaRouteImport } from './routes/carta'
 import { Route as ConfiancaRouteImport } from './routes/confianca'
@@ -77,6 +78,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscaRoute = BuscaRouteImport.update({
+  id: '/busca',
+  path: '/busca',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalculadoraAbvRoute = CalculadoraAbvRouteImport.update({
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/auth': typeof AuthRouteWithChildren
+  '/busca': typeof BuscaRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -376,6 +383,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$': typeof SplatRoute
   '/auth': typeof AuthRouteWithChildren
+  '/busca': typeof BuscaRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -425,6 +433,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/$': typeof SplatRoute
   '/auth': typeof AuthRouteWithChildren
+  '/busca': typeof BuscaRoute
   '/calculadora-abv': typeof CalculadoraAbvRoute
   '/carta': typeof CartaRoute
   '/confianca': typeof ConfiancaRoute
@@ -478,6 +487,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/auth'
+    | '/busca'
     | '/calculadora-abv'
     | '/carta'
     | '/confianca'
@@ -529,6 +539,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$'
     | '/auth'
+    | '/busca'
     | '/calculadora-abv'
     | '/carta'
     | '/confianca'
@@ -577,6 +588,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/$'
     | '/auth'
+    | '/busca'
     | '/calculadora-abv'
     | '/carta'
     | '/confianca'
@@ -630,6 +642,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   SplatRoute: typeof SplatRoute
   AuthRoute: typeof AuthRouteWithChildren
+  BuscaRoute: typeof BuscaRoute
   CalculadoraAbvRoute: typeof CalculadoraAbvRoute
   CartaRoute: typeof CartaRoute
   ConfiancaRoute: typeof ConfiancaRoute
@@ -676,6 +689,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/busca': {
+      id: '/busca'
+      path: '/busca'
+      fullPath: '/busca'
+      preLoaderRoute: typeof BuscaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calculadora-abv': {
@@ -1124,6 +1144,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   SplatRoute: SplatRoute,
   AuthRoute: AuthRouteWithChildren,
+  BuscaRoute: BuscaRoute,
   CalculadoraAbvRoute: CalculadoraAbvRoute,
   CartaRoute: CartaRoute,
   ConfiancaRoute: ConfiancaRoute,

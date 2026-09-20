@@ -25,6 +25,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { canManageItem } from "@/lib/permissions";
 import { useViewMode } from "@/hooks/use-view-mode";
 import { ViewModeToggle } from "@/components/view-mode-toggle";
+import { DrinkOrderSelect } from "@/components/drink-order-select";
+import { nomeDaOrdem, ordemDrinksValida, ORDEM_PADRAO } from "@/lib/ordenacao-drinks";
 import { useDrinkFilters } from "@/components/drink-filters";
 import { CampoBuscaDrinks } from "@/components/drink-search";
 import { combina } from "@/lib/busca";
@@ -46,12 +48,13 @@ const FILTROS_VAZIOS = {
 export const Route = createFileRoute("/drinks/")({
   validateSearch: (
     search: Record<string, unknown>,
-  ): { pagina?: number; estoque?: boolean } => {
+  ): { pagina?: number; estoque?: boolean; ordem?: ReturnType<typeof ordemDrinksValida> } => {
     const n = Number(search["pagina"]);
     const estoque = search["estoque"] === true || search["estoque"] === "1";
     return {
       pagina: Number.isFinite(n) && n >= 1 ? Math.min(Math.floor(n), 100) : 1,
       ...(estoque ? { estoque: true } : {}),
+      ordem: ordemDrinksValida(search["ordem"]),
     };
   },
   head: () => ({
@@ -73,11 +76,14 @@ export const Route = createFileRoute("/drinks/")({
     ],
     links: [{ rel: "canonical", href: "https://coqueteis.lovable.app/drinks" }],
   }),
-  loaderDeps: ({ search: { pagina } }) => ({ pagina: pagina ?? 1 }),
+  loaderDeps: ({ search: { pagina, ordem } }) => ({
+    pagina: pagina ?? 1,
+    ordem: ordem ?? ORDEM_PADRAO,
+  }),
   loader: ({ context, deps }) =>
     Promise.all([
       context.queryClient.ensureQueryData(
-        drinksPaginaQuery(FILTROS_VAZIOS, deps.pagina * POR_PAGINA),
+        drinksPaginaQuery(FILTROS_VAZIOS, deps.pagina * POR_PAGINA, deps.ordem),
       ),
       context.queryClient.ensureQueryData(ingredientesQuery),
       context.queryClient.ensureQueryData(drinkCategoriasQuery),
@@ -136,7 +142,7 @@ function VoltarAoTopo() {
 function DrinksList() {
   const { data: ingredientes } = useSuspenseQuery(ingredientesQuery);
   const { data: categorias } = useSuspenseQuery(drinkCategoriasQuery);
-  const { pagina = 1, estoque: soPossiveis = false } = Route.useSearch();
+  const { pagina = 1, estoque: soPossiveis = false, ordem = ORDEM_PADRAO } = Route.useSearch();
   const navigate = useNavigate({ from: "/drinks" });
   const qc = useQueryClient();
   const { canEdit, user, isAdmin } = useAuth();
@@ -177,7 +183,7 @@ function DrinksList() {
   // termo no cliente (nome, categoria ou ingrediente) com a mesma normalização.
   const limite = buscando || filtrandoEstoque ? 500 : pagina * POR_PAGINA;
   const { data, isPending, isFetching } = useQuery({
-    ...drinksPaginaQuery(filtrosServidor, limite),
+    ...drinksPaginaQuery(filtrosServidor, limite, ordem, busca),
     placeholderData: keepPreviousData,
   });
 
@@ -226,7 +232,21 @@ function DrinksList() {
               {total} {total === 1 ? "receita encontrada" : "receitas encontradas"}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
+            <DrinkOrderSelect
+              value={ordem}
+              onChange={(novaOrdem) =>
+                navigate({
+                  search: (prev) => ({
+                    ...prev,
+                    pagina: 1,
+                    ordem: novaOrdem === ORDEM_PADRAO ? ORDEM_PADRAO : novaOrdem,
+                  }),
+                  replace: true,
+                  resetScroll: false,
+                })
+              }
+            />
             <ViewModeToggle value={viewMode} onChange={setViewMode} />
             {canEdit && (
               <Button asChild>
@@ -251,7 +271,11 @@ function DrinksList() {
               aria-checked={soPossiveis}
               onClick={() =>
                 navigate({
-                  search: { pagina: 1, ...(soPossiveis ? {} : { estoque: true }) },
+                  search: (prev) => ({
+                    ...prev,
+                    pagina: 1,
+                    ...(soPossiveis ? { estoque: undefined } : { estoque: true }),
+                  }),
                   replace: true,
                 })
               }
@@ -331,7 +355,7 @@ function DrinksList() {
 
           <div className="min-w-0 space-y-8">
         <p aria-live="polite" className="sr-only">
-          {total} {total === 1 ? "drink encontrado" : "drinks encontrados"}
+          {total} {total === 1 ? "drink encontrado" : "drinks encontrados"}. Ordenado por {nomeDaOrdem(ordem)}.
         </p>
 
         {/* Resultados */}
@@ -492,7 +516,7 @@ function DrinksList() {
                   variant="outline"
                   onClick={() =>
                     navigate({
-                      search: { pagina: pagina + 1 },
+                      search: (prev) => ({ ...prev, pagina: pagina + 1 }),
                       resetScroll: false,
                     })
                   }
