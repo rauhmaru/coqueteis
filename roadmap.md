@@ -5,4 +5,4 @@
 - [x] Validar as correções e atualizar o estado dos achados
 - [x] Criar assistente de cadastro de ingredientes em 3 passos no Meu Bar
 - [x] Criar gestão administrativa de postagens de Mixologia
-- [ ] Adicionar ordenação explícita ao catálogo, busca e categorias
+- [x] Adicionar ordenação explícita ao catálogo, busca e categorias

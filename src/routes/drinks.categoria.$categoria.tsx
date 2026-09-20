@@ -47,18 +47,11 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
       links: [{ rel: "canonical", href: url }],
     };
   },
-  loaderDeps: ({ search: { pagina, ordem } }) => ({
-    pagina: pagina ?? 1,
-    ordem: ordem ?? ORDEM_PADRAO,
-  }),
-  loader: async ({ context, params, deps }): Promise<LoaderData> => {
+  loader: async ({ context, params }): Promise<LoaderData> => {
     const categorias = await context.queryClient.ensureQueryData(drinkCategoriasQuery);
     const categoria = categorias.find((item) => slugify(item.nome) === params.categoria);
     if (!categoria) throw notFound();
-    const data = await context.queryClient.ensureQueryData(
-      drinksPaginaQuery(filtrosCategoria(categoria.id), deps.pagina * POR_PAGINA, deps.ordem),
-    );
-    return { nome: categoria.nome, id: categoria.id, total: data.total };
+    return { nome: categoria.nome, id: categoria.id, total: 0 };
   },
   component: CategoriaPage,
   errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error.message}</div>,
