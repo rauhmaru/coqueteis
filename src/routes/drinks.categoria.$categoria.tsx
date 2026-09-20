@@ -51,7 +51,10 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
     const categorias = await context.queryClient.ensureQueryData(drinkCategoriasQuery);
     const categoria = categorias.find((item) => slugify(item.nome) === params.categoria);
     if (!categoria) throw notFound();
-    return { nome: categoria.nome, id: categoria.id, total: 0 };
+    const data = await context.queryClient.ensureQueryData(
+      drinksPaginaQuery(filtrosCategoria(categoria.id), 1),
+    );
+    return { nome: categoria.nome, id: categoria.id, total: data.total };
   },
   component: CategoriaPage,
   errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error.message}</div>,
