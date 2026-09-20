@@ -185,7 +185,7 @@ export const drinksPaginaQuery = (
     queryKey: ["drinks", "pagina", filtros, limite, ordem, termo],
     ...CACHE_DRINKS,
     queryFn: async (): Promise<DrinksPagina> => {
-      const { data, error } = await supabase.rpc("buscar_drinks_lista" as "buscar_drinks", {
+      const { data, error } = await supabase.rpc("buscar_drinks_lista", {
         _ingredientes: filtros.ingredientes,
         _categorias: filtros.categorias,
         _dificuldades: filtros.dificuldades,
