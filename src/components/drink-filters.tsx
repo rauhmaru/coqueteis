@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, X, ChevronDown, Search } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
@@ -142,6 +142,7 @@ function FiltroIngredientes({
   onToggle,
   onClear,
   idPrefix,
+  initiallyOpen = false,
 }: {
   ingredientes: Ingrediente[];
   selected: Set<string>;
@@ -149,8 +150,9 @@ function FiltroIngredientes({
   onToggle: (id: string) => void;
   onClear: () => void;
   idPrefix: string;
+  initiallyOpen?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initiallyOpen);
   const [busca, setBusca] = useState("");
 
   const visiveis = useMemo(() => {
@@ -297,21 +299,46 @@ export function useDrinkFilters({
   ingredientes,
   categorias,
   idPrefix = "filtro",
+  initialFilters,
+  onFiltersChange,
 }: {
   /** Opcional: quando informado, o hook também filtra no cliente (`filtered`). */
   drinks?: DrinkLista[];
   ingredientes: Ingrediente[];
   categorias: DrinkCategoria[];
   idPrefix?: string;
+  initialFilters?: {
+    ingredientes: string[];
+    categorias: string[];
+    dificuldades: string[];
+    qtd: number | null;
+    comparador: string;
+  };
+  onFiltersChange?: (filtros: {
+    ingredientes: string[];
+    categorias: string[];
+    dificuldades: string[];
+    qtd: number | null;
+    comparador: string;
+  }) => void;
 }) {
-  const [selected, setSelected] = useState<Set<string>>(new Set());
-  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set());
-  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(new Set());
-  const [qtd, setQtd] = useState("");
-  const [comparador, setComparador] = useState<QtdComparador>("igual");
-  const [openDif, setOpenDif] = useState(false);
-  const [openCat, setOpenCat] = useState(false);
-  const [openQtd, setOpenQtd] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(() => new Set(initialFilters?.ingredientes ?? []));
+  const [selectedCats, setSelectedCats] = useState<Set<string>>(() => new Set(initialFilters?.categorias ?? []));
+  const [selectedDifs, setSelectedDifs] = useState<Set<string>>(() => new Set(initialFilters?.dificuldades ?? []));
+  const [qtd, setQtd] = useState(() => initialFilters?.qtd?.toString() ?? "");
+  const [comparador, setComparador] = useState<QtdComparador>(() =>
+    initialFilters?.comparador === "ate" || initialFilters?.comparador === "acima" ? initialFilters.comparador : "igual",
+  );
+  const [openDif, setOpenDif] = useState((initialFilters?.dificuldades.length ?? 0) > 0);
+  const [openCat, setOpenCat] = useState((initialFilters?.categorias.length ?? 0) > 0);
+  const [openQtd, setOpenQtd] = useState(initialFilters?.qtd !== null && initialFilters?.qtd !== undefined);
+  const ultimaEmissao = useRef(JSON.stringify({
+    ingredientes: initialFilters?.ingredientes ?? [],
+    categorias: initialFilters?.categorias ?? [],
+    dificuldades: initialFilters?.dificuldades ?? [],
+    qtd: initialFilters?.qtd ?? null,
+    comparador: initialFilters?.comparador ?? "igual",
+  }));
 
   const { data: indice } = useQuery(drinksIndiceQuery);
 
@@ -491,6 +518,7 @@ export function useDrinkFilters({
         onToggle={(id) => toggleIn(setSelected, id)}
         onClear={() => setSelected(new Set())}
         idPrefix={idPrefix}
+        initiallyOpen={(initialFilters?.ingredientes.length ?? 0) > 0}
       />
     </div>
   );
@@ -505,6 +533,13 @@ export function useDrinkFilters({
     }),
     [selected, selectedCats, selectedDifs, qtdNum, comparador],
   );
+
+  useEffect(() => {
+    const chave = JSON.stringify(filtrosServidor);
+    if (ultimaEmissao.current === chave) return;
+    ultimaEmissao.current = chave;
+    onFiltersChange?.(filtrosServidor);
+  }, [filtrosServidor, onFiltersChange]);
 
   return {
     filtered,
