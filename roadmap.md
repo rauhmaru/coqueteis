@@ -7,4 +7,4 @@
 - [x] Criar gestão administrativa de postagens de Mixologia
 - [x] Adicionar ordenação explícita ao catálogo, busca e categorias
 - [x] Persistir filtros do catálogo, busca e categorias na URL
-- [ ] Corrigir as divergências de ingredientes e preparo apontadas na auditoria
+- [x] Corrigir as divergências de ingredientes e preparo apontadas na auditoria
