@@ -8,4 +8,4 @@
 - [x] Adicionar ordenação explícita ao catálogo, busca e categorias
 - [x] Persistir filtros do catálogo, busca e categorias na URL
 - [x] Corrigir as divergências de ingredientes e preparo apontadas na auditoria
-- [ ] Criar novas postagens de Mixologia a partir de receitas_coqueteis.md
+- [x] Criar novas postagens de Mixologia a partir de receitas_coqueteis.md
