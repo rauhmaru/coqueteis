@@ -9,3 +9,4 @@
 - [x] Persistir filtros do catálogo, busca e categorias na URL
 - [x] Corrigir as divergências de ingredientes e preparo apontadas na auditoria
 - [x] Criar novas postagens de Mixologia a partir de receitas_coqueteis.md
+- [ ] Comparar receitas de receitas_coqueteis.md com /drinks e cadastrar apenas receitas inéditas com imagens
