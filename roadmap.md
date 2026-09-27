@@ -10,3 +10,4 @@
 - [x] Corrigir as divergências de ingredientes e preparo apontadas na auditoria
 - [x] Criar novas postagens de Mixologia a partir de receitas_coqueteis.md
 - [x] Comparar receitas de receitas_coqueteis.md com /drinks e cadastrar apenas receitas inéditas com imagens
+- [ ] Substituir a história genérica dos drinks recém-adicionados pelo link do vídeo correspondente
