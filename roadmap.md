@@ -11,3 +11,5 @@
 - [x] Criar novas postagens de Mixologia a partir de receitas_coqueteis.md
 - [x] Comparar receitas de receitas_coqueteis.md com /drinks e cadastrar apenas receitas inéditas com imagens
 - [x] Substituir a história genérica dos drinks recém-adicionados pelo link do vídeo correspondente
+
+- [ ] Importar receitas inéditas analisadas em 2026-09-29, com imagem e vídeo de origem na história
