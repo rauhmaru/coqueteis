@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authenticated/admin/mixologia")({
     { name: "twitter:card", content: "summary" },
   ] }),
   component: AdminMixologiaPage,
-  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error.message}</div>,
+  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</div>,
 });
 
 type FormState = {

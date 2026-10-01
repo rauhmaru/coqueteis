@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
+  ErrorComponentProps,
   Outlet,
   createRootRouteWithContext,
   useRouter,
@@ -17,12 +18,13 @@ import { A11yProvider } from "@/hooks/use-a11y";
 import { Pagina404 } from "@/components/pagina-404";
 import { PwaManager, OfflineIndicator } from "@/components/pwa-manager";
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
+  const normalizedError = error instanceof Error ? error : new Error(String(error));
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
+    reportLovableError(normalizedError, { boundary: "tanstack_root_error_component" });
+  }, [normalizedError]);
 
   return (
     <div className="flex min-h-dvh items-center justify-center bg-background px-4">

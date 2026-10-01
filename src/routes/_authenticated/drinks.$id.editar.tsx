@@ -21,7 +21,7 @@ export const Route = createFileRoute("/_authenticated/drinks/$id/editar")({
   },
   component: EditDrink,
   errorComponent: ({ error }) => (
-    <div className="p-8 text-center text-destructive">Erro: {error.message}</div>
+    <div className="p-8 text-center text-destructive">Erro: {error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</div>
   ),
   notFoundComponent: () => <div className="p-8 text-center">Drink não encontrado.</div>,
 });
