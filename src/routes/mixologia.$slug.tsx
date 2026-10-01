@@ -46,7 +46,7 @@ export const Route = createFileRoute("/mixologia/$slug")({
   },
   component: PostagemMixologia,
   notFoundComponent: () => <div className="mx-auto max-w-3xl px-4 py-20 text-center"><h1 className="font-serif text-3xl">Postagem não encontrada</h1><p className="mt-2 text-muted-foreground">Este conteúdo não está disponível.</p></div>,
-  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error.message}</div>,
+  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</div>,
 });
 
 function PostagemMixologia() {

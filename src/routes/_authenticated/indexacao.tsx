@@ -44,7 +44,7 @@ export const Route = createFileRoute("/_authenticated/indexacao")({
   errorComponent: ({ error }) => (
     <div className="min-h-dvh">
       <SiteHeader />
-      <div className="p-12 text-center text-destructive">{error.message}</div>
+      <div className="p-12 text-center text-destructive">{error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</div>
     </div>
   ),
 });

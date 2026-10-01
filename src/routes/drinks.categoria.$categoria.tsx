@@ -58,7 +58,7 @@ export const Route = createFileRoute("/drinks/categoria/$categoria")({
     return { nome: categoria.nome, id: categoria.id, total: data.total };
   },
   component: CategoriaPage,
-  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error.message}</div>,
+  errorComponent: ({ error }) => <div className="p-8 text-center text-destructive">Erro: {error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</div>,
   notFoundComponent: () => <div className="p-12 text-center text-muted-foreground">Categoria não encontrada.</div>,
 });
 
