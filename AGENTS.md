@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Importações de receitas externas devem deduplicar por nome, preservar medidas incertas sem inventar valores, usar imagem própria e registrar o vídeo de origem na história; isso mantém o catálogo auditável e fiel à fonte.
