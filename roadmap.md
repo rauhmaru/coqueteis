@@ -13,3 +13,4 @@
 - [x] Substituir a história genérica dos drinks recém-adicionados pelo link do vídeo correspondente
 
 - [x] Importar receitas inéditas analisadas em 2026-09-29, com imagem e vídeo de origem na história
+- [x] Revisar fotos do catálogo e restaurar imagens ausentes das receitas
