@@ -1,6 +1,7 @@
 export const ORDENS_DRINKS = [
   { id: "nome-asc", nome: "Alfabética (A–Z)" },
   { id: "nome-desc", nome: "Alfabética (Z–A)" },
+  { id: "recentes", nome: "Adicionados recentemente" },
   { id: "facilidade", nome: "Mais fáceis primeiro" },
   { id: "ingredientes", nome: "Menos ingredientes primeiro" },
   { id: "curtidas", nome: "Mais curtidos" },
