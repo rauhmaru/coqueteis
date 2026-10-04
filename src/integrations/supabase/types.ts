@@ -692,6 +692,7 @@ export type Database = {
     Views: {
       drinks_lista: {
         Row: {
+          created_at: string | null
           created_by: string | null
           dificuldade: string | null
           id: string | null
@@ -702,6 +703,7 @@ export type Database = {
           total_ingredientes: number | null
         }
         Insert: {
+          created_at?: string | null
           created_by?: string | null
           dificuldade?: string | null
           id?: string | null
@@ -712,6 +714,7 @@ export type Database = {
           total_ingredientes?: never
         }
         Update: {
+          created_at?: string | null
           created_by?: string | null
           dificuldade?: string | null
           id?: string | null
