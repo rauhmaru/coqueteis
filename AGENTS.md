@@ -10,3 +10,4 @@
 <!-- LOVABLE:END -->
 
 - Importações de receitas externas devem deduplicar por nome, preservar medidas incertas sem inventar valores, usar imagem própria e registrar o vídeo de origem na história; isso mantém o catálogo auditável e fiel à fonte.
+- Catalog ordering is applied by the paginated database function before limiting results; this keeps ordering stable across filters and pages.
