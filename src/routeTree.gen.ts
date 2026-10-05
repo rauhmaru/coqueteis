@@ -54,6 +54,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminCategoriasRouteImport } from './routes/_authenticated/admin.categorias'
 import { Route as AuthenticatedAdminMetricasRouteImport } from './routes/_authenticated/admin.metricas'
 import { Route as AuthenticatedAdminMixologiaRouteImport } from './routes/_authenticated/admin.mixologia'
+import { Route as AuthenticatedAdminRascunhosRouteImport } from './routes/_authenticated/admin.rascunhos'
 import { Route as AuthenticatedDrinksNovoRouteImport } from './routes/_authenticated/drinks.novo'
 import { Route as ApiPublicWebVitalsRouteImport } from './routes/api/public/web-vitals'
 import { Route as DrinksIdIndexRouteImport } from './routes/drinks.$id.index'
@@ -293,6 +294,12 @@ const AuthenticatedAdminMixologiaRoute =
     path: '/mixologia',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminRascunhosRoute =
+  AuthenticatedAdminRascunhosRouteImport.update({
+    id: '/rascunhos',
+    path: '/rascunhos',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedDrinksNovoRoute = AuthenticatedDrinksNovoRouteImport.update({
   id: '/drinks/novo',
   path: '/drinks/novo',
@@ -371,6 +378,7 @@ export interface FileRoutesByFullPath {
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
+  '/admin/rascunhos': typeof AuthenticatedAdminRascunhosRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -419,6 +427,7 @@ export interface FileRoutesByTo {
   '/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
+  '/admin/rascunhos': typeof AuthenticatedAdminRascunhosRoute
   '/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -473,6 +482,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/categorias': typeof AuthenticatedAdminCategoriasRoute
   '/_authenticated/admin/metricas': typeof AuthenticatedAdminMetricasRoute
   '/_authenticated/admin/mixologia': typeof AuthenticatedAdminMixologiaRoute
+  '/_authenticated/admin/rascunhos': typeof AuthenticatedAdminRascunhosRoute
   '/_authenticated/drinks/novo': typeof AuthenticatedDrinksNovoRoute
   '/api/public/web-vitals': typeof ApiPublicWebVitalsRoute
   '/drinks/categoria/$categoria': typeof DrinksCategoriaCategoriaRoute
@@ -527,6 +537,7 @@ export interface FileRouteTypes {
     | '/admin/categorias'
     | '/admin/metricas'
     | '/admin/mixologia'
+    | '/admin/rascunhos'
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -575,6 +586,7 @@ export interface FileRouteTypes {
     | '/admin/categorias'
     | '/admin/metricas'
     | '/admin/mixologia'
+    | '/admin/rascunhos'
     | '/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -628,6 +640,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/categorias'
     | '/_authenticated/admin/metricas'
     | '/_authenticated/admin/mixologia'
+    | '/_authenticated/admin/rascunhos'
     | '/_authenticated/drinks/novo'
     | '/api/public/web-vitals'
     | '/drinks/categoria/$categoria'
@@ -978,6 +991,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMixologiaRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/rascunhos': {
+      id: '/_authenticated/admin/rascunhos'
+      path: '/rascunhos'
+      fullPath: '/admin/rascunhos'
+      preLoaderRoute: typeof AuthenticatedAdminRascunhosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/drinks/novo': {
       id: '/_authenticated/drinks/novo'
       path: '/drinks/novo'
@@ -1027,6 +1047,7 @@ interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCategoriasRoute: typeof AuthenticatedAdminCategoriasRoute
   AuthenticatedAdminMetricasRoute: typeof AuthenticatedAdminMetricasRoute
   AuthenticatedAdminMixologiaRoute: typeof AuthenticatedAdminMixologiaRoute
+  AuthenticatedAdminRascunhosRoute: typeof AuthenticatedAdminRascunhosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
@@ -1034,6 +1055,7 @@ const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCategoriasRoute: AuthenticatedAdminCategoriasRoute,
   AuthenticatedAdminMetricasRoute: AuthenticatedAdminMetricasRoute,
   AuthenticatedAdminMixologiaRoute: AuthenticatedAdminMixologiaRoute,
+  AuthenticatedAdminRascunhosRoute: AuthenticatedAdminRascunhosRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 

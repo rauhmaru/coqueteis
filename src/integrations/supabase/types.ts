@@ -353,6 +353,7 @@ export type Database = {
           nome: string
           passos: Json
           preparo: string
+          publicado: boolean
           slug: string | null
         }
         Insert: {
@@ -368,6 +369,7 @@ export type Database = {
           nome: string
           passos?: Json
           preparo?: string
+          publicado?: boolean
           slug?: string | null
         }
         Update: {
@@ -383,6 +385,7 @@ export type Database = {
           nome?: string
           passos?: Json
           preparo?: string
+          publicado?: boolean
           slug?: string | null
         }
         Relationships: []
