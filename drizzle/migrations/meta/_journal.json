@@ -15,6 +15,13 @@
       "when": 1791160761678,
       "tag": "0001_drink_drafts_visibility",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791160793473,
+      "tag": "0002_hide_draft_drinks_from_catalog",
+      "breakpoints": true
     }
   ]
 }
