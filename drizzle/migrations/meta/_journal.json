@@ -8,6 +8,13 @@
       "when": 1791089935888,
       "tag": "0000_ordenar_drinks_por_adicao_recente",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791160761678,
+      "tag": "0001_drink_drafts_visibility",
+      "breakpoints": true
     }
   ]
 }
