@@ -15,3 +15,4 @@
 - [x] Importar receitas inéditas analisadas em 2026-09-29, com imagem e vídeo de origem na história
 - [x] Revisar fotos do catálogo e restaurar imagens ausentes das receitas
 - [x] Ordenar drinks por data de cadastro mais recente no catálogo, busca e categorias
+- [x] Criar seleção em lote e área administrativa de rascunhos para revisar e publicar drinks

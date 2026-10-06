@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   BarChart3,
+  Archive,
   FlaskConical,
   FolderTree,
   Gauge,
@@ -67,6 +68,13 @@ function AdminPage() {
       desc: "Consultar o catálogo, editar receitas e cadastrar novas.",
       Icon: Martini,
       admin: false,
+    },
+    {
+      to: "/admin/rascunhos" as const,
+      titulo: "Revisão de drinks",
+      desc: "Selecionar receitas, mover para rascunhos e publicar após a revisão.",
+      Icon: Archive,
+      admin: true,
     },
     {
       to: "/admin/mixologia" as const,

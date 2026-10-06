@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authenticated/admin/rascunhos")({
     { name: "twitter:card", content: "summary" },
   ] }),
   component: RascunhosPage,
-  errorComponent: ({ error }) => <p role="alert" className="p-8 text-destructive">{error.message}</p>,
+  errorComponent: ({ error }) => <p role="alert" className="p-8 text-destructive">{error instanceof Error ? error.message : "Ocorreu um erro inesperado."}</p>,
 });
 
 function RascunhosPage() {
