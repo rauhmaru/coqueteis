@@ -25,7 +25,7 @@ export const Route = createFileRoute("/mixologia/videos")({
     links: [{ rel: "canonical", href: URL }],
   }),
   errorComponent: ({ error }) => (
-    <div role="alert" className="p-8 text-center text-destructive">Não foi possível carregar as receitas: {error instanceof Error ? error.message : "erro desconhecido"}
+    <div role="alert" className="p-8 text-center text-destructive">Não foi possível carregar as receitas: {error instanceof Error ? error.message : "erro desconhecido"}</div>
   ),
   notFoundComponent: () => <div className="p-8 text-center">Nenhuma receita encontrada.</div>,
   component: ReceitasEmVideo,
