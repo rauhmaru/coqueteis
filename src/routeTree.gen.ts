@@ -47,6 +47,7 @@ import { Route as MixologiaOrigemRouteImport } from './routes/mixologia.origem'
 import { Route as MixologiaSaboresRouteImport } from './routes/mixologia.sabores'
 import { Route as MixologiaTecnicasRouteImport } from './routes/mixologia.tecnicas'
 import { Route as MixologiaTiposRouteImport } from './routes/mixologia.tipos'
+import { Route as MixologiaVideosRouteImport } from './routes/mixologia.videos'
 import { Route as MixologiaXaropesRouteImport } from './routes/mixologia.xaropes'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as Char91DotmcpChar93InvokeToolToolRouteImport } from './routes/[.mcp]/invoke-tool/$tool'
@@ -255,6 +256,11 @@ const MixologiaTiposRoute = MixologiaTiposRouteImport.update({
   path: '/tipos',
   getParentRoute: () => MixologiaRoute,
 } as any)
+const MixologiaVideosRoute = MixologiaVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => MixologiaRoute,
+} as any)
 const MixologiaXaropesRoute = MixologiaXaropesRouteImport.update({
   id: '/xaropes',
   path: '/xaropes',
@@ -370,6 +376,7 @@ export interface FileRoutesByFullPath {
   '/mixologia/sabores': typeof MixologiaSaboresRoute
   '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/videos': typeof MixologiaVideosRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
@@ -419,6 +426,7 @@ export interface FileRoutesByTo {
   '/mixologia/sabores': typeof MixologiaSaboresRoute
   '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/videos': typeof MixologiaVideosRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks': typeof DrinksIndexRoute
   '/mixologia': typeof MixologiaIndexRoute
@@ -474,6 +482,7 @@ export interface FileRoutesById {
   '/mixologia/sabores': typeof MixologiaSaboresRoute
   '/mixologia/tecnicas': typeof MixologiaTecnicasRoute
   '/mixologia/tipos': typeof MixologiaTiposRoute
+  '/mixologia/videos': typeof MixologiaVideosRoute
   '/mixologia/xaropes': typeof MixologiaXaropesRoute
   '/drinks/': typeof DrinksIndexRoute
   '/mixologia/': typeof MixologiaIndexRoute
@@ -529,6 +538,7 @@ export interface FileRouteTypes {
     | '/mixologia/sabores'
     | '/mixologia/tecnicas'
     | '/mixologia/tipos'
+    | '/mixologia/videos'
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
@@ -578,6 +588,7 @@ export interface FileRouteTypes {
     | '/mixologia/sabores'
     | '/mixologia/tecnicas'
     | '/mixologia/tipos'
+    | '/mixologia/videos'
     | '/mixologia/xaropes'
     | '/drinks'
     | '/mixologia'
@@ -632,6 +643,7 @@ export interface FileRouteTypes {
     | '/mixologia/sabores'
     | '/mixologia/tecnicas'
     | '/mixologia/tipos'
+    | '/mixologia/videos'
     | '/mixologia/xaropes'
     | '/drinks/'
     | '/mixologia/'
@@ -942,6 +954,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MixologiaTiposRouteImport
       parentRoute: typeof MixologiaRoute
     }
+    '/mixologia/videos': {
+      id: '/mixologia/videos'
+      path: '/videos'
+      fullPath: '/mixologia/videos'
+      preLoaderRoute: typeof MixologiaVideosRouteImport
+      parentRoute: typeof MixologiaRoute
+    }
     '/mixologia/xaropes': {
       id: '/mixologia/xaropes'
       path: '/xaropes'
@@ -1139,6 +1158,7 @@ interface MixologiaRouteChildren {
   MixologiaSaboresRoute: typeof MixologiaSaboresRoute
   MixologiaTecnicasRoute: typeof MixologiaTecnicasRoute
   MixologiaTiposRoute: typeof MixologiaTiposRoute
+  MixologiaVideosRoute: typeof MixologiaVideosRoute
   MixologiaXaropesRoute: typeof MixologiaXaropesRoute
   MixologiaIndexRoute: typeof MixologiaIndexRoute
 }
@@ -1153,6 +1173,7 @@ const MixologiaRouteChildren: MixologiaRouteChildren = {
   MixologiaSaboresRoute: MixologiaSaboresRoute,
   MixologiaTecnicasRoute: MixologiaTecnicasRoute,
   MixologiaTiposRoute: MixologiaTiposRoute,
+  MixologiaVideosRoute: MixologiaVideosRoute,
   MixologiaXaropesRoute: MixologiaXaropesRoute,
   MixologiaIndexRoute: MixologiaIndexRoute,
 }
