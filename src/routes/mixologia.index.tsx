@@ -60,6 +60,9 @@ function MixologiaIndex() {
             Um guia para amantes da coquetelaria — da origem histórica dos drinks aos utensílios,
             copos, ingredientes e técnicas que transformam bebidas em experiências.
           </p>
+          <Link to="/mixologia/videos" className="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm text-primary-foreground hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring">
+            Ver receitas em vídeo
+          </Link>
         </section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

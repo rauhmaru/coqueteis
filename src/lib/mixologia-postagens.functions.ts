@@ -120,3 +120,30 @@ export const removerPostagem = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+export type ReceitaComVideo = {
+  id: string;
+  slug: string;
+  nome: string;
+  imagem_url: string | null;
+  dificuldade: string;
+  video_url: string;
+};
+
+const VIDEO_RE = /https?:\/\/(?:www\.|m\.)?(?:youtube\.com|youtu\.be)\/[^\s)\]"'<>]+/i;
+
+export const listarReceitasComVideo = createServerFn({ method: "GET" }).handler(
+  async (): Promise<ReceitaComVideo[]> => {
+    const { data, error } = await publicClient()
+      .from("drinks")
+      .select("id, slug, nome, imagem_url, dificuldade, historia")
+      .eq("publicado", true)
+      .or("historia.ilike.%youtube.com%,historia.ilike.%youtu.be%")
+      .order("nome");
+    if (error) throw new Error(error.message);
+    return (data ?? []).flatMap((d) => {
+      const m = d.historia?.match(VIDEO_RE);
+      if (!m || !d.slug) return [];
+      return [{ id: d.id, slug: d.slug, nome: d.nome, imagem_url: d.imagem_url, dificuldade: d.dificuldade, video_url: m[0].replace(/[.,;]+$/, "") }];
+    });
+  },
+);
