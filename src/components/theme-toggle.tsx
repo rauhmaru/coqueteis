@@ -16,7 +16,7 @@ export function ThemeToggle() {
           <Palette className="h-5 w-5" aria-hidden="true" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-60">
+      <DropdownMenuContent align="end" className="z-60 w-60">
         <DropdownMenuLabel>Cores do site</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={colorTheme} onValueChange={(value) => {
           if (value === "classic" || value === "bar") setColorTheme(value);
