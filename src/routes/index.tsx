@@ -86,9 +86,8 @@ function HomePage() {
       <SiteHeader />
       <main id="conteudo" className="mx-auto max-w-6xl px-4 py-12 space-y-12">
         <section className="text-center space-y-4">
-          <p className="text-xs uppercase tracking-[0.3em] text-primary">Bem-vindo ao seu bar</p>
           <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-foreground">
-            Sua coqueteleria,<br />organizada com elegância.
+            Organize seu bar com elegância
           </h1>
           <p className="text-muted-foreground max-w-xl mx-auto">
             Cadastre ingredientes, descubra quais drinks você pode preparar agora mesmo e
