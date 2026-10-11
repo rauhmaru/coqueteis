@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 
 type Theme = "light" | "dark";
-type ColorTheme = "classic" | "bar";
+type ColorTheme = "classic" | "bar" | "blue" | "black";
 
 type ThemeState = {
   theme: Theme;
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     const initial: Theme = stored === "light" || stored === "dark" ? stored : "dark";
     setThemeState(initial);
     applyThemeClass(initial);
-    const initialColor = storedColor === "classic" ? "classic" : "bar";
+    const initialColor: ColorTheme = storedColor === "classic" || storedColor === "blue" || storedColor === "black" ? storedColor : "bar";
     setColorThemeState(initialColor);
     document.documentElement.dataset.colorTheme = initialColor;
   }, []);
