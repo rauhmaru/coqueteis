@@ -19,13 +19,19 @@ export function ThemeToggle() {
       <DropdownMenuContent align="end" className="z-60 w-60">
         <DropdownMenuLabel>Cores do site</DropdownMenuLabel>
         <DropdownMenuRadioGroup value={colorTheme} onValueChange={(value) => {
-          if (value === "classic" || value === "bar") setColorTheme(value);
+          if (value === "classic" || value === "bar" || value === "blue" || value === "black") setColorTheme(value);
         }}>
           <DropdownMenuRadioItem value="classic" className="min-h-11 gap-2">
             <span className="theme-swatch theme-swatch-classic" aria-hidden="true" /> Clássico · âmbar
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="bar" className="min-h-11 gap-2">
             <span className="theme-swatch theme-swatch-bar" aria-hidden="true" /> Mixologia · verde e vinho
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="blue" className="min-h-11 gap-2">
+            <span className="theme-swatch theme-swatch-blue" aria-hidden="true" /> Azul · safira
+          </DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="black" className="min-h-11 gap-2">
+            <span className="theme-swatch theme-swatch-black" aria-hidden="true" /> Preto · grafite
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
         <DropdownMenuSeparator />
