@@ -17,3 +17,4 @@
 - [x] Ordenar drinks por data de cadastro mais recente no catálogo, busca e categorias
 - [x] Criar seleção em lote e área administrativa de rascunhos para revisar e publicar drinks
 - [x] Disponibilizar os visuais anterior e Mixologia como opções de cores independentes da aparência clara ou escura
+- [x] Auditar quantidades de todas as receitas tratando o passo a passo como fonte correta e alinhar o cadastro de ingredientes
